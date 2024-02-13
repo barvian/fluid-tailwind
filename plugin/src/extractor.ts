@@ -96,15 +96,17 @@ function* buildRegExps({ separator = ':', prefix: _prefix = '' }: ExtractorOptio
     let variantPatterns = [
       // Without quotes
       regex.any([
-        // This is here to provide special support for the `@` variant
+        // This is here to provide special support for the `@[]` variant
         regex.pattern([/~?@\[[^\s"'`]+\](\/[^\s"'`]+)?/, separator]),
         //              ^ NEW:
+
+        // NEW: ~/[arbitrary] and ~@/[arbitrary]
+        regex.pattern([/~@?(\w+)?\/\[[^\s"'`]+\]/, separator]),
+
 
         // With variant modifier (e.g.: group-[..]/modifier)
         regex.pattern([/([^\s"'`\[\\]+-)?\[[^\s"'`]+\]\/\w+/, separator]),
 
-        // NEW: ~/[arbitrary]
-        regex.pattern([/~\/\[[^\s"'`]+\]/, separator]),
 
         regex.pattern([/([^\s"'`\[\\]+-)?\[[^\s"'`]+\]/, separator]),
         regex.pattern([/[^\s"'`\[\\]+/, separator]),

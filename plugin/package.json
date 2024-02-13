@@ -1,6 +1,6 @@
 {
 	"name": "@fluid.tw/plugin",
-	"version": "1.0.0",
+	"version": "0.1.0",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"license": "MIT",
@@ -43,7 +43,8 @@
 		"postcss": "^8.4.17",
 		"prettier": "^2.7.1",
 		"tailwindcss": "^3.2.0",
-		"typescript": ">=5.0.0"
+		"typescript": ">=5.0.0",
+		"@tailwindcss/container-queries": "^0.1.1"
 	},
 	"dependencies": {
 		"filter-obj": "^5.1.0",

@@ -1,6 +1,7 @@
 import path from 'path'
 import postcss from 'postcss'
 import tailwind, { Config } from 'tailwindcss'
+import containerQueries from '@tailwindcss/container-queries'
 import {
 	fluidCorePlugins,
 	fluidExtractor,
@@ -36,6 +37,9 @@ export function run(
 	config.plugins ??= []
 	if (!config.plugins.includes(fluidCorePlugins)) {
 		config.plugins.push(fluidCorePlugins)
+	}
+	if (!config.plugins.includes(containerQueries)) {
+		config.plugins.push(containerQueries)
 	}
 
 	return postcss(plugin(config)).process(input, {
