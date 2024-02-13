@@ -10,11 +10,10 @@
 	},
 	"scripts": {
 		"test": "jest",
-		"swcify": "swc ./src -d ./dist",
-		"build": "npm run swcify",
-		"dev": "npm run swcify -- --watch",
-		"postbuild": "tsc --emitDeclarationOnly",
-		"prepublishOnly": "npm run build"
+		"build": "bun build ./src/* --outdir ./dist",
+		"dev": "bun run build --watch",
+		"postbuild": "tsc -p tsconfig.build.json --emitDeclarationOnly",
+		"prepublishOnly": "bun run build"
 	},
 	"jest": {
 		"setupFilesAfterEnv": [

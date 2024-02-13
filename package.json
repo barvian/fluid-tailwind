@@ -10,7 +10,8 @@
 		"prettier": "^3.2.5",
 		"prettier-plugin-astro": "^0.13.0",
 		"prettier-plugin-svelte": "^3.1.2",
-		"prettier-plugin-tailwindcss": "^0.5.11"
+		"prettier-plugin-tailwindcss": "^0.5.11",
+		"turbo": "^1.12.3"
 	},
 	"scripts": {
 		"format": "prettier --write ."
