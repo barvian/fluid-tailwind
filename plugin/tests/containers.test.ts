@@ -1,5 +1,6 @@
 import { expect } from '@jest/globals'
 import { html, css, run } from './run'
+import { type FluidConfig } from '../src'
 
 it(`allows ~@container/container variant`, async () => {
 	const result = await run({
@@ -210,4 +211,82 @@ it(`fails if ~@ variant is used on non-fluid utility`, async () => {
 		]
 	})
 	expect(result.css).toMatchFormattedCss(css``)
+})
+
+it(`respects defaultContainers config`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~@:~p-1/2"></div>`
+			}
+		],
+		theme: {
+			fluid: {
+				defaultContainers: ['30rem', '80rem']
+			} satisfies FluidConfig
+		}
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~\@\:\~p-1\/2 {
+			padding: clamp(
+				0.25rem,
+				0.1rem + 0.5cqw,
+				0.5rem
+			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem (container) */
+		}
+	`)
+})
+
+it(`supports missing start defaultContainer`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~@:~p-1/2"></div>`
+			}
+		],
+		theme: {
+			fluid: {
+				defaultContainers: [, '80rem']
+			} satisfies FluidConfig,
+			containers: {
+				sm: '30rem'
+			}
+		}
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~\@\:\~p-1\/2 {
+			padding: clamp(
+				0.25rem,
+				0.1rem + 0.5cqw,
+				0.5rem
+			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem (container) */
+		}
+	`)
+})
+
+it(`supports missing end defaultContainer`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~@:~p-1/2"></div>`
+			}
+		],
+		theme: {
+			fluid: {
+				defaultContainers: ['30rem']
+			} satisfies FluidConfig,
+			containers: {
+				lg: '80rem'
+			}
+		}
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~\@\:\~p-1\/2 {
+			padding: clamp(
+				0.25rem,
+				0.1rem + 0.5cqw,
+				0.5rem
+			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem (container) */
+		}
+	`)
 })
