@@ -7,8 +7,7 @@ type ExtractorOptions = {
     prefix?: string
 }
 
-// This is the default extractor:
-// https://github.com/tailwindlabs/tailwindcss/blob/8f1987567b6f8b4dba463d9db624398e6f6a70ab/src/lib/defaultExtractor.js
+// This is the default extractor from 'tailwindcss-priv/src/lib/defaultExtractor'
 // with two extra chars to support the ~ prefix
 export default (options: ExtractorOptions = {}): ExtractorFn => {
     let patterns = Array.from(buildRegExps(options))
@@ -17,10 +16,12 @@ export default (options: ExtractorOptions = {}): ExtractorFn => {
       let results: string[] = []
   
       for (let pattern of patterns) {
-        results = [...results, ...(content.match(pattern) ?? [])]
+        for (let result of content.match(pattern) ?? []) {
+          results.push(clipAtBalancedParens(result))
+        }
       }
   
-      return results.filter((v) => v !== undefined).map(clipAtBalancedParens)
+      return results
     }
 }
 
@@ -42,11 +43,13 @@ function* buildRegExps({ separator = ':', prefix: _prefix = '' }: ExtractorOptio
       // Utilities
       regex.pattern([
         // Utility Name / Group Name
-        /-?~?\|?(?:\w+)/,
-        // ^ the only new thing, essentially
+        regex.any([
+          /-?~?(?:\w+)/,
+          // ^ the only new thing, essentially
 
-        // This is here to make sure @container supports everything that other utilities do
-        /@(?:\w+)/,
+          // This is here to make sure @container supports everything that other utilities do
+          /@(?:\w+)/,
+        ]),
   
         // Normal/Arbitrary values
         regex.optional(
@@ -150,6 +153,8 @@ function* buildRegExps({ separator = ':', prefix: _prefix = '' }: ExtractorOptio
    *   ┬    ┬          ┬┬       ┬        ┬┬   ┬┬┬┬┬┬┬
    *   1    2          3        4        34   3 210 END
    *   ╰────┴──────────┴────────┴────────┴┴───┴─┴┴┴
+   *
+   * @param {string} input
    */
   function clipAtBalancedParens(input: string) {
     // We are care about this for arbitrary values
