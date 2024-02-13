@@ -79,8 +79,8 @@ type FilterFn = (
  */
 function getFluidAPI(
 	api: PluginAPI,
-	{ addOriginal = true, filter }: Partial<{ addOriginal: boolean; filter: FilterFn }> = {},
-	context: Context
+	context: Context,
+	{ addOriginal = true, filter }: Partial<{ addOriginal: boolean; filter: FilterFn }> = {}
 ): PluginAPI {
 	const addFluid =
 		(orig: MatchUtilOrComp): MatchUtilOrComp =>
@@ -293,12 +293,12 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 	// Add fluid versions for enabled core plugins
 	const fluidAPI = getFluidAPI(
 		api,
+		context,
 		{
 			addOriginal: false,
 			// Filter out fontSize plugin
 			filter: (utils, options) => !utils.includes('text') || !options?.type?.includes('length')
-		},
-		context
+		}
 	)
 	Object.entries(corePlugins).forEach(([name, _p]) => {
 		if (!corePluginEnabled(name)) return
@@ -483,8 +483,8 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 /**
  * Create fluid versions for a plugin's utilities.
  */
-export const fluidize = ({ handler, config }: Plugin, filter?: FilterFn): Plugin => ({
-	handler: (api) => handler(getFluidAPI(api, { filter }, getContext(api.theme))),
+export const fluidize = ({ handler, config }: Plugin): Plugin => ({
+	handler: (api) => handler(getFluidAPI(api, getContext(api.theme))),
 	config
 })
 

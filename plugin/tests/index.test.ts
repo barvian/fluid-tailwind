@@ -1,7 +1,13 @@
 import { expect } from '@jest/globals'
 import { html, css, run } from './run'
-import { defaultThemeFontSizeInRems, defaultThemeScreensInRems, fluidExtractor } from '../src'
+import {
+	defaultThemeFontSizeInRems,
+	defaultThemeScreensInRems,
+	fluidExtractor,
+	fluidize
+} from '../src'
 import { type FluidConfig } from '../src'
+import plugin from 'tailwindcss/plugin'
 
 it(`should be possible to use defaultTheme...InRems values`, async () => {
 	const result = await run({
@@ -130,15 +136,21 @@ it(`supports custom prefix`, async () => {
 			],
 			extract: fluidExtractor({ prefix: 'tw-' })
 		},
-		prefix: 'tw-'
+		prefix: 'tw-',
+		theme: {
+			screens: {
+				sm: '30rem',
+				lg: '80rem'
+			}
+		}
 	})
 	expect(result.css).toMatchFormattedCss(css`
 		.tw-\~p-1\/2 {
 			padding: clamp(
 				0.25rem,
-				0.07rem + 0.45vw,
+				0.1rem + 0.5vw,
 				0.5rem
-			); /* fluid from 0.25rem at 40rem to 0.5rem at 96rem */
+			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem */
 		}
 	`)
 })
@@ -168,6 +180,50 @@ it(`supports custom separator`, async () => {
 				0.1rem + 0.5cqw,
 				0.5rem
 			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem (container) */
+		}
+	`)
+})
+
+it(`supports fluidized utilities`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="test-p-1 ~test-p-1/2"></div>`
+			}
+		],
+		plugins: [
+			fluidize(
+				plugin(({ matchUtilities, theme }) => {
+					matchUtilities(
+						{
+							'test-p': (val) => ({
+								padding: val
+							})
+						},
+						{
+							values: theme('padding')
+						}
+					)
+				})
+			)
+		],
+		theme: {
+			screens: {
+				sm: '30rem',
+				lg: '80rem'
+			}
+		}
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.test-p-1 {
+			padding: 0.25rem;
+		}
+		.\~test-p-1\/2 {
+			padding: clamp(
+				0.25rem,
+				0.1rem + 0.5vw,
+				0.5rem
+			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem */
 		}
 	`)
 })
