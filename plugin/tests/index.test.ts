@@ -59,6 +59,53 @@ it(`requires a change in values`, async () => {
 	expect(result.css).toMatchFormattedCss(css``)
 })
 
+it(`requires values with same units`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~p-[1px]/[2rem]"></div>`
+			}
+		]
+	})
+	expect(result.css).toMatchFormattedCss(css``)
+})
+
+it(`requires length literals`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~p-[1rem]/[calc(2rem)]"></div>`
+			}
+		]
+	})
+	expect(result.css).toMatchFormattedCss(css``)
+})
+
+it(`supports negative length literals`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~mt-[1rem]/[-2rem]"></div>`
+			}
+		],
+		theme: {
+			screens: {
+				sm: '30rem',
+				lg: '80rem'
+			}
+		}
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~mt-\[1rem\]\/\[-2rem\] {
+			margin-top: clamp(
+				-2rem,
+				2.8rem + -6vw,
+				1rem
+			); /* fluid from 1rem at 30rem to -2rem at 80rem */
+		}
+	`)
+})
+
 it(`respects defaultScreens config`, async () => {
 	const result = await run({
 		content: [

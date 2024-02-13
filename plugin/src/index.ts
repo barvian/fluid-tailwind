@@ -291,15 +291,11 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 	const { screens, containers } = context
 
 	// Add fluid versions for enabled core plugins
-	const fluidAPI = getFluidAPI(
-		api,
-		context,
-		{
-			addOriginal: false,
-			// Filter out fontSize plugin
-			filter: (utils, options) => !utils.includes('text') || !options?.type?.includes('length')
-		}
-	)
+	const fluidAPI = getFluidAPI(api, context, {
+		addOriginal: false,
+		// Filter out fontSize plugin
+		filter: (utils, options) => !utils.includes('text') || !options?.type?.includes('length')
+	})
 	Object.entries(corePlugins).forEach(([name, _p]) => {
 		if (!corePluginEnabled(name)) return
 		const p = _p as PluginCreator
