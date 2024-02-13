@@ -4,7 +4,7 @@
 	import * as Tip from '/components/Tip'
 
 	let well: HTMLDivElement
-	
+
 	let margin = writable(0),
 		resizing = writable(false)
 	export let height = 'h-auto'
@@ -25,7 +25,12 @@
 		class="group absolute left-full top-1/2 -mt-6 cursor-ew-resize touch-pan-y p-2"
 		aria-label="Resize"
 		style:transform="translateX(clamp(-50cqw, {-$margin}px, 0px))"
-		use:resize={{ direction: 'right', value: margin, resizing, onStop: () => $margin = parseFloat(getComputedStyle(well).marginRight) }}
+		use:resize={{
+			direction: 'right',
+			value: margin,
+			resizing,
+			onStop: () => ($margin = parseFloat(getComputedStyle(well).marginRight))
+		}}
 	>
 		<div
 			class="h-8 w-1.5 rounded-full bg-slate-500/60 group-hover:bg-slate-500/80 {$resizing

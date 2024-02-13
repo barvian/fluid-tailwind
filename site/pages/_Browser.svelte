@@ -147,7 +147,16 @@
 				draggable="false"
 				class="absolute -right-2 top-0 h-full w-4 cursor-ew-resize touch-pan-y opacity-0"
 				aria-label="Resize"
-				use:resize={{ direction: 'right', value: margin, resizing, onStop: () => margin.set(parseFloat(getComputedStyle(resizable).marginRight), { duration: 0, delay: 0 }) }}
+				use:resize={{
+					direction: 'right',
+					value: margin,
+					resizing,
+					onStop: () =>
+						margin.set(parseFloat(getComputedStyle(resizable).marginRight), {
+							duration: 0,
+							delay: 0
+						})
+				}}
 			/>
 		{/if}
 	</div>
