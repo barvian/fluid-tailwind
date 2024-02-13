@@ -95,14 +95,6 @@ export function generateExpr(
 	// Return the from value if it fails SC 1.4.4, so that it could be potentially corrected with a fluid variant
 	if (failingBP) return `${from.cssText}${comment}` // only output the from value to not create an AA violation
 
-	// Write it without the intercept if it's 0
-	if (intercept === 0)
-		return `clamp(${min},${toPrecision(slope * 100, p)}${atContainer ? 'cqw' : 'vw'},${max})${comment}`
-	
-	// Write it as slope - intercept if intercept is negative (to save a character)
-	if (intercept < 0 && slope > 0)
-		return `clamp(${min},${toPrecision(slope * 100, p)}${atContainer ? 'cqw' : 'vw'} - ${toPrecision(intercept * -1, p)}${unit},${max})${comment}`
-
 	return `clamp(${min},${toPrecision(intercept, p)}${unit} + ${toPrecision(slope * 100, p)}${atContainer ? 'cqw' : 'vw'},${max})${comment}`
 }
 

@@ -26,6 +26,9 @@ export function run(
 		}
 	}
 
+	config.corePlugins ??= {}
+	if (!Array.isArray(config.corePlugins)) config.corePlugins.preflight ??= false
+
 	config.theme ??= {}
 	config.theme.fontSize ??= defaultThemeFontSizeInRems
 	config.theme.screens ??= defaultThemeScreensInRems

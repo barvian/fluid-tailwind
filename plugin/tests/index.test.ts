@@ -27,31 +27,16 @@ it(`should be possible to use defaultTheme...InRems values`, async () => {
 	`)
 })
 
-it(`should not output intercept if it's 0`, async () => {
+it(`respects disabled core plugins`, async () => {
 	const result = await run({
 		content: [
 			{
-				raw: html`<h1 class="~text-lg/5xl"></h1>`
+				raw: html`<div class="~p-1/2"></div>`
 			}
 		],
-		theme: {
-			fontSize: {
-				lg: '1.25rem',
-				'5xl': '3rem'
-			},
-			screens: {
-				sm: '40rem',
-				xl: '96rem'
-			}
+		corePlugins: {
+			padding: false
 		}
 	})
-	expect(result.css).toMatchFormattedCss(css`
-		.\~text-lg\/5xl {
-			font-size: clamp(
-				1.25rem,
-				3.13vw,
-				3rem
-			); /* fluid from 1.25rem at 40rem to 3rem at 96rem; passes WCAG SC 1.4.4 */
-		}
-	`)
+	expect(result.css).toMatchFormattedCss(css``)
 })
