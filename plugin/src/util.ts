@@ -1,7 +1,6 @@
 import { Container } from 'postcss'
 import { PluginAPI } from 'tailwindcss/types/config'
-// @ts-expect-error untyped source file
-export { default as log } from 'tailwindcss/lib/util/log'
+export { default as log } from 'tailwindcss-priv/lib/util/log'
 export enum LogLevel {
     WARN = 'warn',
     RISK = 'risk'
@@ -54,9 +53,6 @@ export const precision = (num: number) => {
 export const clamp = (min: number, n: number, max: number) => Math.min(Math.max(n, min), max)
 
 export const unique = (iter: Iterable<any>) => new Set(iter).size
-
-// Like nullish coalesce except it's just for undefined:
-export const coalesce = <T, U>(first: T, second: U) => first === undefined ? second : first
 
 export function generateExpr(
     from: CSSLength, fromBP: CSSLength, to: CSSLength, toBP: CSSLength,

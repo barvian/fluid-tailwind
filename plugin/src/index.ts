@@ -2,7 +2,7 @@ import plugin from 'tailwindcss/plugin'
 type Plugin = ReturnType<typeof plugin>
 import { corePlugins } from 'tailwindcss-priv/lib/corePlugins'
 import { CSSRuleObject, PluginAPI, PluginCreator } from 'tailwindcss/types/config'
-import { noop, log, LogLevel, CSSLength, type RawValue, generateExpr, addVariantWithModifier, parseExpr, unique, coalesce, tuple } from './util'
+import { noop, log, LogLevel, CSSLength, type RawValue, generateExpr, addVariantWithModifier, parseExpr, unique, tuple } from './util'
 import defaultTheme from 'tailwindcss/defaultTheme'
 import { Container } from 'postcss'
 import mapObject, { mapObjectSkip } from 'map-obj'
@@ -27,14 +27,14 @@ function parseValue(_val: any, { unit, theme }: Context, level?: LogLevel) {
     }
     const val = CSSLength.parse(_val)
     if (!val) {
-        if (level) log.warn('non-lengths', [
+        if (level) log[level]('non-lengths', [
             'Fluid utilities can only work with length values'
         ])
         if (level === LogLevel.RISK) throw new Error()
         return null
     }
     if (val.unit !== unit) {
-        if (level) log.warn('mismatching-units', [
+        if (level) log[level]('mismatching-units', [
             `Fluid units must all match`
         ])
         if (level === LogLevel.RISK) throw new Error()
@@ -49,7 +49,7 @@ function parseValues(
     level?: LogLevel
 ) {
     if (!_from || !_to) {
-        if (level) log.warn('missing-values', [
+        if (level) log[level]('missing-values', [
             'Fluid utilities require two values'
         ])
         if (level === LogLevel.RISK) throw new Error()
@@ -60,7 +60,7 @@ function parseValues(
     if (!from || !to) return null
 
     if (from.number === to.number) {
-        if (level) log.warn('no-change', [
+        if (level) log[level]('no-change', [
             'Fluid utilities require two distinct values'
         ])
         if (level === LogLevel.RISK) throw new Error()

@@ -6,3 +6,14 @@ declare module 'tailwindcss-priv/lib/corePlugins' {
 declare module 'tailwindcss-priv/src/util/dataTypes' {
     export function length(val: unknown): boolean
 }
+
+declare module 'tailwindcss-priv/lib/util/log' {
+    type LogFn = (key: string | string[], messages: string[]) => void
+    
+    declare const log: {
+        info: LogFn
+        warn: LogFn
+        risk: LogFn
+    }
+    export default log
+}
