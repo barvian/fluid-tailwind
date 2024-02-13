@@ -290,3 +290,14 @@ it(`supports missing end defaultContainer`, async () => {
 		}
 	`)
 })
+
+it(`fails if ~@ variant is used with same start/end containers`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~@md/md:~p-1/2"></div>`
+			}
+		]
+	})
+	expect(result.css).toMatchFormattedCss(css``)
+})

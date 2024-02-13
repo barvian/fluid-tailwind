@@ -201,3 +201,14 @@ it(`fails if ~ variant is used on non-fluid utility`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css``)
 })
+
+it(`fails if ~ variant is used with same start/end screens`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~md/md:~p-1/2"></div>`
+			}
+		]
+	})
+	expect(result.css).toMatchFormattedCss(css``)
+})

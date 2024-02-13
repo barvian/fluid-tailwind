@@ -48,6 +48,17 @@ it(`respects disabled core plugins`, async () => {
 	expect(result.css).toMatchFormattedCss(css``)
 })
 
+it(`requires a change in values`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~p-1/1"></div>`
+			}
+		]
+	})
+	expect(result.css).toMatchFormattedCss(css``)
+})
+
 it(`respects defaultScreens config`, async () => {
 	const result = await run({
 		content: [
