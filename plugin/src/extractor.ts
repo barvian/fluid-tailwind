@@ -44,8 +44,8 @@ function* buildRegExps({ separator = ':', prefix: _prefix = '' }: ExtractorOptio
       regex.pattern([
         // Utility Name / Group Name
         regex.any([
-          /-?~?(?:\w+)/,
-          // ^ the only new thing, essentially
+          /[-~]?(?:\w+)/,
+          // ^ NEW:
 
           // This is here to make sure @container supports everything that other utilities do
           /@(?:\w+)/,
