@@ -185,46 +185,18 @@ it(`supports missing end defaultScreen`, async () => {
 	`)
 })
 
-it(`supports custom prefix`, async () => {
+it(`supports custom separator and prefix`, async () => {
 	const result = await run({
 		content: {
 			files: [
 				{
-					raw: html`<div class="tw-~p-1/2"></div>`
+					raw: html`<div class="~@_tw-~p-1/2"></div>`
 				}
 			],
-			extract: fluidExtractor({ prefix: 'tw-' })
-		},
-		prefix: 'tw-',
-		theme: {
-			screens: {
-				sm: '30rem',
-				lg: '80rem'
-			}
-		}
-	})
-	expect(result.css).toMatchFormattedCss(css`
-		.tw-\~p-1\/2 {
-			padding: clamp(
-				0.25rem,
-				0.1rem + 0.5vw,
-				0.5rem
-			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem */
-		}
-	`)
-})
-
-it(`supports custom separator`, async () => {
-	const result = await run({
-		content: {
-			files: [
-				{
-					raw: html`<div class="~@_~p-1/2"></div>`
-				}
-			],
-			extract: fluidExtractor({ separator: '_' })
+			extract: fluidExtractor({ separator: '_', prefix: 'tw-' })
 		},
 		separator: '_',
+		prefix: 'tw-',
 		theme: {
 			containers: {
 				sm: '30rem',
@@ -233,7 +205,7 @@ it(`supports custom separator`, async () => {
 		}
 	})
 	expect(result.css).toMatchFormattedCss(css`
-		.\~\@_\~p-1\/2 {
+		.\~\@_tw-\~p-1\/2 {
 			padding: clamp(
 				0.25rem,
 				0.1rem + 0.5cqw,
