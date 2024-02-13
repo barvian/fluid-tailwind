@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals'
 import { html, css, run } from './run'
-import { defaultThemeFontSizeInRems, defaultThemeScreensInRems } from '../src'
+import { defaultThemeFontSizeInRems, defaultThemeScreensInRems, fluidExtractor } from '../src'
 import { type FluidConfig } from '../src'
 
 it(`should be possible to use defaultTheme...InRems values`, async () => {
@@ -116,6 +116,58 @@ it(`supports missing end defaultScreen`, async () => {
 				0.14rem + 0.38vw,
 				0.5rem
 			); /* fluid from 0.25rem at 30rem to 0.5rem at 96rem */
+		}
+	`)
+})
+
+it(`supports custom prefix`, async () => {
+	const result = await run({
+		content: {
+			files: [
+				{
+					raw: html`<div class="tw-~p-1/2"></div>`
+				}
+			],
+			extract: fluidExtractor({ prefix: 'tw-' })
+		},
+		prefix: 'tw-'
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.tw-\~p-1\/2 {
+			padding: clamp(
+				0.25rem,
+				0.07rem + 0.45vw,
+				0.5rem
+			); /* fluid from 0.25rem at 40rem to 0.5rem at 96rem */
+		}
+	`)
+})
+
+it(`supports custom separator`, async () => {
+	const result = await run({
+		content: {
+			files: [
+				{
+					raw: html`<div class="~@_~p-1/2"></div>`
+				}
+			],
+			extract: fluidExtractor({ separator: '_' })
+		},
+		separator: '_',
+		theme: {
+			containers: {
+				sm: '30rem',
+				lg: '80rem'
+			}
+		}
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~\@_\~p-1\/2 {
+			padding: clamp(
+				0.25rem,
+				0.1rem + 0.5cqw,
+				0.5rem
+			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem (container) */
 		}
 	`)
 })
