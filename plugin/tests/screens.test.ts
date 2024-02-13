@@ -1,4 +1,5 @@
-import { expect, it } from '@jest/globals'
+import { expect, it } from 'bun:test'
+import './matchers'
 import { html, css, run } from './run'
 
 it(`allows ~screen/screen variant`, async () => {

@@ -1,4 +1,5 @@
-import { expect, it } from '@jest/globals'
+import { expect, it } from 'bun:test'
+import './matchers'
 import { html, css, run } from './run'
 import {
 	defaultThemeFontSizeInRems,
@@ -140,7 +141,7 @@ it(`supports missing start defaultScreen`, async () => {
 		],
 		theme: {
 			fluid: {
-				defaultContainers: [, '80rem']
+				defaultScreens: [, '80rem']
 			} satisfies FluidConfig,
 			screens: {
 				sm: '30rem'
@@ -151,9 +152,9 @@ it(`supports missing start defaultScreen`, async () => {
 		.\~p-1\/2 {
 			padding: clamp(
 				0.25rem,
-				-∞rem + ∞vw,
+				0.1rem + 0.5vw,
 				0.5rem
-			); /* fluid from 0.25rem at 30rem to 0.5rem at 30rem */
+			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem */
 		}
 	`)
 })

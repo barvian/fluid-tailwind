@@ -18,8 +18,6 @@ export function run(
 	input = `@tailwind utilities;@tailwind components;`,
 	plugin = tailwind
 ) {
-	let { currentTestName } = expect.getState()
-
 	if (Array.isArray(config.content)) {
 		config.content = {
 			files: config.content,
@@ -45,6 +43,6 @@ export function run(
 	}
 
 	return postcss(plugin(config)).process(input, {
-		from: `${path.resolve(__filename)}?test=${currentTestName}`
+		from: `${path.resolve(__filename)}?test=${crypto.randomUUID()}`
 	})
 }

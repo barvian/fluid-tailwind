@@ -1,53 +1,37 @@
 {
-	"name": "@barvian/tailwindcss-fluid",
-	"version": "0.1.0",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
-	"license": "MIT",
-	"repository": "https://github.com/barvian/tailwindcss-fluid",
-	"publishConfig": {
-		"access": "public"
-	},
-	"scripts": {
-		"test": "jest",
-		"build": "bun build ./src/* --outdir ./dist",
-		"dev": "bun run build --watch",
-		"postbuild": "tsc -p tsconfig.build.json --emitDeclarationOnly",
-		"prepublishOnly": "bun run build"
-	},
-	"jest": {
-		"setupFilesAfterEnv": [
-			"<rootDir>/jest/custom-matchers.ts"
-		],
-		"transform": {
-			"^.+\\.(t|j)sx?$": "@swc/jest"
-		},
-		"transformIgnorePatterns": [],
-		"moduleNameMapper": {
-			"^~/(.*)": "<rootDir>/$1"
-		}
-	},
-	"files": [
-		"dist"
-	],
-	"peerDependencies": {
-		"tailwindcss": "^3.2.0"
-	},
-	"devDependencies": {
-		"@swc/cli": "^0.1.65",
-		"@swc/core": "^1.4.1",
-		"@swc/jest": "^0.2.36",
-		"@types/jest": "^29.1.2",
-		"jest": "^29.1.2",
-		"postcss": "^8.4.17",
-		"prettier": "^2.7.1",
-		"tailwindcss": "^3.2.0",
-		"typescript": ">=5.0.0",
-		"@tailwindcss/container-queries": "^0.1.1"
-	},
-	"dependencies": {
-		"filter-obj": "^5.1.0",
-		"map-obj": "^5.0.2",
-		"tailwindcss-priv": "npm:tailwindcss@3.4.1"
-	}
+  "name": "@barvian/tailwindcss-fluid",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "repository": "https://github.com/barvian/tailwindcss-fluid",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "bun test",
+    "build": "bun build ./src/* --outdir ./dist",
+    "dev": "bun run build --watch",
+    "postbuild": "tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "prepublishOnly": "bun run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
+    "tailwindcss": "^3.2.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@types/bun": "^1.0.5",
+    "postcss": "^8.4.17",
+    "prettier": "^2.7.1",
+    "tailwindcss": "^3.2.0",
+    "typescript": ">=5.0.0"
+  },
+  "dependencies": {
+    "filter-obj": "^5.1.0",
+    "map-obj": "^5.0.2",
+    "tailwindcss-priv": "npm:tailwindcss@3.4.1"
+  }
 }
