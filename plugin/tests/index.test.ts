@@ -8,6 +8,7 @@ import {
 } from '../src'
 import { type FluidConfig } from '../src'
 import plugin from 'tailwindcss/plugin'
+import { type PluginAPI } from 'tailwindcss/types/config'
 
 it(`should be possible to use defaultTheme...InRems values`, async () => {
 	const result = await run({
@@ -242,7 +243,8 @@ it(`supports custom separator`, async () => {
 	`)
 })
 
-it(`supports fluidized utilities`, async () => {
+type MatchUtilOrComp = Extract<keyof PluginAPI, 'matchUtilities' | 'matchComponents'>
+const testFluidize = (key: MatchUtilOrComp) => async () => {
 	const result = await run({
 		content: [
 			{
@@ -251,15 +253,15 @@ it(`supports fluidized utilities`, async () => {
 		],
 		plugins: [
 			fluidize(
-				plugin(({ matchUtilities, theme }) => {
-					matchUtilities(
+				plugin((api) => {
+					api[key](
 						{
 							'test-p': (val) => ({
 								padding: val
 							})
 						},
 						{
-							values: theme('padding')
+							values: api.theme('padding')
 						}
 					)
 				})
@@ -284,4 +286,6 @@ it(`supports fluidized utilities`, async () => {
 			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem */
 		}
 	`)
-})
+}
+it(`supports fluidized utilities`, testFluidize('matchUtilities'))
+it(`supports fluidized components`, testFluidize('matchComponents'))
