@@ -3,10 +3,6 @@ declare module 'tailwindcss-priv/lib/corePlugins' {
     export const corePlugins: Record<string, PluginCreator>
 }
 
-declare module 'tailwindcss-priv/src/util/dataTypes' {
-    export function length(val: unknown): boolean
-}
-
 declare module 'tailwindcss-priv/lib/util/log' {
     type LogFn = (key: string | string[], messages: string[]) => void
     
