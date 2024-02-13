@@ -15,9 +15,6 @@ export type FluidConfig = Partial<{
     defaultContainers: Breakpoints
 }>
 
-type MatchUtilOrComp = PluginAPI['matchUtilities'] | PluginAPI['matchComponents']
-type FilterFn = (utilityOrComponentNames: string[], options: Parameters<MatchUtilOrComp>[1]) => boolean | null | undefined
-
 function parseValue(_val: any, { unit, theme }: Context, level?: LogLevel) {
     if (!_val) return null
     if (typeof _val === 'string') {
@@ -68,6 +65,9 @@ function parseValues(
     }
     return [from, to] as const
 }
+
+type MatchUtilOrComp = PluginAPI['matchUtilities'] | PluginAPI['matchComponents']
+type FilterFn = (utilityOrComponentNames: string[], options: Parameters<MatchUtilOrComp>[1]) => boolean | null | undefined
 
 /**
  * Return a modified PluginAPI that intercepts calls to matchUtilities and matchComponents
