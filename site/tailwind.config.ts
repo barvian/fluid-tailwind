@@ -9,7 +9,7 @@ import {
 	defaultThemeScreensInRems,
 	defaultThemeFontSizeInRems,
 	type FluidConfig
-} from '@fluid.tw/plugin'
+} from '@barvian/tailwindcss-fluid'
 const { '2xl': _, ...screens } = defaultThemeScreensInRems
 import svgToDataUri from 'mini-svg-data-uri'
 // @ts-expect-error undocumented API

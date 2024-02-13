@@ -1,5 +1,5 @@
 {
-	"name": "@fluid.tw/plugin",
+	"name": "@barvian/tailwindcss-fluid",
 	"version": "0.1.0",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
