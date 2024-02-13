@@ -184,24 +184,6 @@ export default {
 }
 ```
 
-### Customizing default containers
-
-The default containers can be set in the same way as screens.
-Either value can be omitted, in which case the plugin will use your smallest and
-largest container, respectively.
-
-```ts title="tailwind.config.ts" mark={6}
-import { ..., type FluidConfig } from '@barvian/tailwindcss-fluid'
-
-export default {
-  theme: {
-    fluid: {
-      defaultContainers: [, '30rem']
-    } satisfies FluidConfig
-  }
-}
-```
-
 ## Advanced
 
 ### Customize screens per-utility
@@ -266,6 +248,24 @@ Just like the `~` variant, both start and end containers are optional and will u
   <h1 class="~@/3xl/main:~text-lg/base">
 ```
 <Tip.Info>Browser support for named containers in fluid CSS expressions [should arrive soon](https://github.com/w3c/csswg-drafts/issues/7858)</Tip.Info>
+
+#### Customizing default containers
+
+The default containers can be set in the same way as screens.
+Either value can be omitted, in which case the plugin will use your smallest and
+largest container, respectively.
+
+```ts title="tailwind.config.ts" mark={6}
+import { ..., type FluidConfig } from '@barvian/tailwindcss-fluid'
+
+export default {
+  theme: {
+    fluid: {
+      defaultContainers: [, '30rem']
+    } satisfies FluidConfig
+  }
+}
+```
 
 ### Fluidize other plugins
 
