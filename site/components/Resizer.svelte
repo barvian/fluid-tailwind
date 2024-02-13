@@ -10,7 +10,7 @@
 </script>
 
 <Tip.Info class={tooNarrowClass}>Your browser isn't wide enough to see the full effect</Tip.Info>
-<div class="@container ~min-w-[16rem]/[24rem] relative -mb-8 max-w-full">
+<div class="not-prose @container ~min-w-[16rem]/[24rem] relative -mb-8 max-w-full">
 	<div
 		class="@container bg-grid-slate-100 dark:bg-grid-slate-700/25 relative box-content flex max-w-full flex-col items-center justify-center overflow-hidden rounded-t-xl border border-slate-900/5 bg-slate-50 p-6 pb-10 dark:bg-slate-800/25 {height}"
 		style:margin-right="clamp(0px, {$margin}px, 50cqw)"
