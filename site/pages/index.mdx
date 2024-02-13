@@ -301,3 +301,31 @@ Here's how this works:
 is our `md` screen
 1. When we get to our `lg` screen, we interpolate between the opposite `4xl` and `base`, starting
 when the viewport is our `lg` screen
+
+### Custom prefix and/or separator
+
+If you're using a custom [`separator`](https://tailwindcss.com/docs/configuration#separator) or
+[`prefix`](https://tailwindcss.com/docs/configuration#prefix) in your Tailwind config,
+you'll need to pass them in to the custom extractor as well:
+
+```ts title="tailwind.config.ts" ins={7,8}
+import { fluidExtractor } from '@fluid.tw/plugin'
+
+export default {
+  content: {
+    files: [/* ... */],
+    extract: fluidExtractor({
+      prefix: 'tw-',
+      separator: '_'
+    })
+  },
+  prefix: 'tw-',
+  separator: '_',
+  // ...
+}
+```
+
+<Tip.Good>Use fluid text with a custom prefix</Tip.Good>
+```html mark="tw-"
+<div class="tw-~text-sm/xl">
+```

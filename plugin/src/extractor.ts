@@ -1,15 +1,16 @@
 import { type ExtractorFn } from "tailwindcss/types/config"
 // @ts-expect-error untyped source file
-import * as regex from 'tailwindcss/src/lib/regex'
+import * as regex from 'tailwindcss-priv/src/lib/regex'
 
-type BuildExtractOptions = {
+type ExtractorOptions = {
     separator?: string
+    prefix?: string
 }
 
 // This is the default extractor:
 // https://github.com/tailwindlabs/tailwindcss/blob/8f1987567b6f8b4dba463d9db624398e6f6a70ab/src/lib/defaultExtractor.js
 // with two extra chars to support the ~ prefix
-export default (options: BuildExtractOptions = {}): ExtractorFn => {
+export default (options: ExtractorOptions = {}): ExtractorFn => {
     let patterns = Array.from(buildRegExps(options))
 
     return (content: string) => {
@@ -23,44 +24,61 @@ export default (options: BuildExtractOptions = {}): ExtractorFn => {
     }
 }
 
-function* buildRegExps({ separator = ':' }: BuildExtractOptions) {
+function* buildRegExps({ separator = ':', prefix: _prefix = '' }: ExtractorOptions) {
+  const prefix = _prefix !== ''
+      ? regex.optional(regex.pattern([/-?/, regex.escape(_prefix)]))
+      : ''
+
     let utility = regex.any([
       // Arbitrary properties (without square brackets)
       /\[[^\s:'"`]+:[^\s\[\]]+\]/,
-  
+
       // Arbitrary properties with balanced square brackets
       // This is a targeted fix to continue to allow theme()
       // with square brackets to work in arbitrary properties
       // while fixing a problem with the regex matching too much
-      /\[[^\s:'"`]+:[^\s]+?\[[^\s]+\][^\s]+?\]/,
+      /\[[^\s:'"`\]]+:[^\s]+?\[[^\s]+\][^\s]+?\]/,
   
       // Utilities
       regex.pattern([
         // Utility Name / Group Name
         /-?~?\|?(?:\w+)/,
         // ^ the only new thing, essentially
+
+        // This is here to make sure @container supports everything that other utilities do
+        /@(?:\w+)/,
   
         // Normal/Arbitrary values
         regex.optional(
           regex.any([
             regex.pattern([
               // Arbitrary values
-              /-(?:\w+-)*\[[^\s:]+\]/,
+              regex.any([
+                /-(?:\w+-)*\['[^\s]+'\]/,
+                /-(?:\w+-)*\["[^\s]+"\]/,
+                /-(?:\w+-)*\[`[^\s]+`\]/,
+                /-(?:\w+-)*\[(?:[^\s\[\]]+\[[^\s\[\]]+\])*[^\s:\[\]]+\]/,
+              ]),
   
               // Not immediately followed by an `{[(`
               /(?![{([]])/,
-  
+
               // optionally followed by an opacity modifier
               /(?:\/[^\s'"`\\><$]*)?/,
             ]),
   
             regex.pattern([
               // Arbitrary values
-              /-(?:\w+-)*\[[^\s]+\]/,
-  
+              regex.any([
+                /-(?:\w+-)*\['[^\s]+'\]/,
+                /-(?:\w+-)*\["[^\s]+"\]/,
+                /-(?:\w+-)*\[`[^\s]+`\]/,
+                /-(?:\w+-)*\[(?:[^\s\[\]]+\[[^\s\[\]]+\])*[^\s\[\]]+\]/,
+              ]),
+
               // Not immediately followed by an `{[(`
               /(?![{([]])/,
-  
+
               // optionally followed by an opacity modifier
               /(?:\/[^\s'"`\\$]*)?/,
             ]),
@@ -79,12 +97,18 @@ function* buildRegExps({ separator = ':' }: BuildExtractOptions) {
         regex.pattern([/~?@\[[^\s"'`]+\](\/[^\s"'`]+)?/, separator]),
         //              ^ the only new thing, essentially
 
+        // With variant modifier (e.g.: group-[..]/modifier)
+        regex.pattern([/([^\s"'`\[\\]+-)?\[[^\s"'`]+\]\/\w+/, separator]),
+
         regex.pattern([/([^\s"'`\[\\]+-)?\[[^\s"'`]+\]/, separator]),
         regex.pattern([/[^\s"'`\[\\]+/, separator]),
       ]),
   
       // With quotes allowed
       regex.any([
+        // With variant modifier (e.g.: group-[..]/modifier)
+        regex.pattern([/([^\s"'`\[\\]+-)?\[[^\s`]+\]\/\w+/, separator]),
+
         regex.pattern([/([^\s"'`\[\\]+-)?\[[^\s`]+\]/, separator]),
         regex.pattern([/[^\s`\[\\]+/, separator]),
       ]),
@@ -100,7 +124,7 @@ function* buildRegExps({ separator = ':' }: BuildExtractOptions) {
         // Important (optional)
         /!?/,
   
-        /* prefix: */'', // set to default prefix
+        prefix,
   
         utility,
       ])
