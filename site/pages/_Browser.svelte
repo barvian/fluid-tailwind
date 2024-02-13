@@ -10,6 +10,8 @@
 	export { cls as class }
 	export let minWidth = '23.75rem'
 
+	let resizable: HTMLDivElement
+
 	let margin = tweened(30 /* biggest value in rems */, { duration: 800, easing: cubicOut }),
 		resizing = writable(false)
 	let showCursor = false,
@@ -29,6 +31,7 @@
 
 <div class="{cls} @container pointer-events-none h-full" role="presentation">
 	<div
+		bind:this={resizable}
 		class="@container pointer-events-auto relative h-full rounded-xl shadow-xl"
 		style:margin-right="clamp(0px, {$margin}{didAnimate ? 'px' : 'rem'}, 100cqw - {minWidth})"
 	>
@@ -144,7 +147,7 @@
 				draggable="false"
 				class="absolute -right-1 top-0 h-full w-2 cursor-ew-resize touch-pan-y opacity-0"
 				aria-label="Resize"
-				use:resize={{ direction: 'right', value: margin, resizing }}
+				use:resize={{ direction: 'right', value: margin, resizing, onStop: () => margin.set(parseFloat(getComputedStyle(resizable).marginRight), { duration: 0, delay: 0 }) }}
 			/>
 		{/if}
 	</div>

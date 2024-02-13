@@ -18,6 +18,7 @@ export const resize: Action<HTMLButtonElement, ResizeOptions> = (
 		start = e.pageX
 		initial = get(value)
 		resizing?.set(true)
+		document.documentElement.classList.add('cursor-ew-resize')
 		window.addEventListener('pointermove', handleResize)
 		window.addEventListener('pointerup', stopResize, { once: true })
 	}
@@ -29,6 +30,7 @@ export const resize: Action<HTMLButtonElement, ResizeOptions> = (
 	function stopResize() {
 		resizing?.set(false)
 		onStop?.()
+		document.documentElement.classList.remove('cursor-ew-resize')
 		window.removeEventListener('pointermove', handleResize)
 	}
 
