@@ -10,8 +10,7 @@
 		"strict": true,
 		"esModuleInterop": true,
 		"moduleResolution": "node",
-		"stripInternal": true,
 		"outDir": "dist"
 	},
-	"include": ["src/**/*.ts", "tests/**/*.ts"]
+	"include": ["src/**/*.ts", "jest/**/*.ts", "tests/**/*.ts"]
 }
