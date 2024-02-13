@@ -73,13 +73,13 @@ function parseValues(
  * Return a modified PluginAPI that intercepts calls to matchUtilities and matchComponents
  * to add fluidized versions of each
  */
-function interceptUtilities(api: PluginAPI, {
+function getFluidAPI(api: PluginAPI, {
     addOriginal = true,
     filter
 }: Partial<{ addOriginal: boolean, filter: FilterFn }> = {}, context: Context): PluginAPI {
-    const matchUtilities: MatchUtilOrComp = (utilities, options) => {
+    const addFluid = (orig: MatchUtilOrComp): MatchUtilOrComp => (utilities, options) => {
         // Add original
-        if (addOriginal) api.matchUtilities(utilities, options)
+        if (addOriginal) orig(utilities, options)
         // Skip ones with types that don't include length or any
         if (options?.type && !options.type.includes('length') && !options.type.includes('any')) return
         // Skip filtered out ones
@@ -93,7 +93,7 @@ function interceptUtilities(api: PluginAPI, {
         const { DEFAULT, ...modifiers } = values
         
         Object.entries(utilities).forEach(([util, origFn]) => {
-            api.matchUtilities({
+            orig({
                 [`~${util}`](_from, { modifier: _to }) {
                     // See note about default modifiers above
                     if (_to === null && DEFAULT) _to = DEFAULT
@@ -131,8 +131,8 @@ function interceptUtilities(api: PluginAPI, {
             matchVariant: noop,
             addDefaults: noop // private API used in corePlugins
         }),
-        matchUtilities,
-        matchComponents: matchUtilities
+        matchUtilities: addFluid(api.matchUtilities),
+        matchComponents: addFluid(api.matchComponents)
     }
 }
 
@@ -257,7 +257,7 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
     const { screens, containers } = context
 
     // Add fluid versions for enabled core plugins
-    const interceptedAPI = interceptUtilities(api, {
+    const fluidAPI = getFluidAPI(api, {
         addOriginal: false,
         // Filter out fontSize plugin
         filter: (utils, options) => !utils.includes('text') || !options?.type?.includes('length')
@@ -265,7 +265,7 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
     Object.entries(corePlugins).forEach(([name, _p]) => {
         if (!corePluginEnabled(name)) return
         const p = _p as PluginCreator
-        p(interceptedAPI)
+        p(fluidAPI)
     })
 
     // Add new fluid text utility to handle potentially complex theme values
@@ -278,7 +278,7 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
         return parseValue(fontSize, context) ? [k as string, v] : mapObjectSkip
     })
         
-    // See note about default modifiers in `interceptUtilities`
+    // See note about default modifiers in `getFluidAPI`
     const { DEFAULT, ...fontSizeModifiers } = fontSizeValues
     matchUtilities({
         '~text'(from, { modifier: to }) {
@@ -425,7 +425,7 @@ export const fluidize = (
     { handler, config }: Plugin,
     filter?: FilterFn
 ): Plugin => ({
-    handler: (api) => handler(interceptUtilities(api, { filter }, getContext(api.theme))),
+    handler: (api) => handler(getFluidAPI(api, { filter }, getContext(api.theme))),
     config
 })
 
