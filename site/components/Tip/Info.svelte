@@ -3,7 +3,7 @@
 	export { cls as class }
 </script>
 
-<div class="{cls} not-prose mb-5 flex space-x-2" data-info>
+<div class="{cls} mb-5 flex space-x-2" data-info>
 	<svg
 		class="h-5 w-5 flex-none text-slate-400 dark:text-slate-600"
 		viewBox="0 0 20 20"
@@ -17,5 +17,5 @@
 		/>
 	</svg>
 
-	<p class="m-0 max-w-prose text-sm font-medium text-slate-700 dark:text-slate-200"><slot /></p>
+	<p class="m-0 text-sm font-medium text-slate-700 dark:text-slate-200"><slot /></p>
 </div>
