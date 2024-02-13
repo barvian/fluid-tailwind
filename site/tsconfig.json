@@ -1,11 +1,11 @@
 {
-  "extends": "astro/tsconfigs/strict",
-  "compilerOptions": {
-    "allowJs": true,
-    "checkJs": true,
-    "jsx": "preserve",
-    "paths": {
-      "/*": ["./*"]
-    }
-  }
+	"extends": "astro/tsconfigs/strict",
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": true,
+		"jsx": "preserve",
+		"paths": {
+			"/*": ["./*"]
+		}
+	}
 }

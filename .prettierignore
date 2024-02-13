@@ -1,2 +1,6 @@
 # This is copied from a private Tailwind file, so ignore it to make it easy to compare:
 plugin/src/extractor.ts
+
+# There's just too much going on with these:
+site/pages/_example/
+site/pages/index.mdx

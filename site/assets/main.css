@@ -3,95 +3,99 @@
 @tailwind utilities;
 
 @layer base {
-    @font-face {
-        font-family: 'Inter var';
-        font-weight: 100 900;
-        font-display: block;
-        font-style: normal;
-        src: url('./fonts/Inter-roman-latin.var.woff2') format('woff2');
-    }
-    
-    @font-face {
-        font-family: 'Fira Code VF';
-        font-weight: 300 700;
-        font-style: normal;
-        src: url('./fonts/FiraCode-VF.woff2') format('woff2-variations'),
-            url('./fonts/FiraCode-VF.woff') format('woff-variations');
-    }
+	@font-face {
+		font-family: 'Inter var';
+		font-weight: 100 900;
+		font-display: block;
+		font-style: normal;
+		src: url('./fonts/Inter-roman-latin.var.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Fira Code VF';
+		font-weight: 300 700;
+		font-style: normal;
+		src:
+			url('./fonts/FiraCode-VF.woff2') format('woff2-variations'),
+			url('./fonts/FiraCode-VF.woff') format('woff-variations');
+	}
 }
 
 @layer components {
-    .container {
-        @apply max-w-7xl ~px-5/10 w-full mx-auto
-    }
+	.container {
+		@apply ~px-5/10 mx-auto w-full max-w-7xl;
+	}
 
-    .ec {
-        @apply relative z-10
-    }
-    
-    .ec .frame.has-title:not(.is-terminal) .title {
-        line-height: 1.625rem !important;
-        border-left: none !important;
-        border-top: none !important;
-        border-right-width: 1px !important;
-        padding-block: 0.4rem !important;
-    }
-    
-    .ec .ec-line ins::before, .ec .ec-line del::before, .ec .ec-line mark::before {
-        border: none !important;
-    }
-    
-    .ec .ec-line:has(ins, del, mark) {
-        margin-block: 0.15rem !important;
-    }
+	.ec {
+		@apply relative z-10;
+	}
 
-    /* Fix border radii */
-    .ec .frame {
-        overflow: hidden !important;
-    }
+	.ec .frame.has-title:not(.is-terminal) .title {
+		line-height: 1.625rem !important;
+		border-left: none !important;
+		border-top: none !important;
+		border-right-width: 1px !important;
+		padding-block: 0.4rem !important;
+	}
 
-    .ec .frame .header, .ec pre {
-        border-radius: 0 !important;
-    }
+	.ec .ec-line ins::before,
+	.ec .ec-line del::before,
+	.ec .ec-line mark::before {
+		border: none !important;
+	}
 
-    /* Fix background and borders */
-    .ec .frame {
-        background: var(--code-background) !important;
-    }
+	.ec .ec-line:has(ins, del, mark) {
+		margin-block: 0.15rem !important;
+	}
 
-    .ec pre {
-        background: none !important;
-        border: none !important;
-        border-left: 1px solid transparent !important; /* to pad between diff markers and edge */
-    }
+	/* Fix border radii */
+	.ec .frame {
+		overflow: hidden !important;
+	}
 
-    .ec .frame .header {
-        border: none !important;
-    }
+	.ec .frame .header,
+	.ec pre {
+		border-radius: 0 !important;
+	}
 
-    .ec .frame .header::after {
-        border-bottom-width: 1px !important;
-    }
+	/* Fix background and borders */
+	.ec .frame {
+		background: var(--code-background) !important;
+	}
 
-    .ec .frame.is-terminal .header {
-        padding-block: 0.4rem !important;
-    }
+	.ec pre {
+		background: none !important;
+		border: none !important;
+		border-left: 1px solid transparent !important; /* to pad between diff markers and edge */
+	}
 
-    .ec .copy button {
-        border-width: 1px !important;
-    }
+	.ec .frame .header {
+		border: none !important;
+	}
 
-    /* Fix copy button position */
-    .ec .frame.has-title.is-terminal {
-        --button-spacing: 2.5rem !important;
-    }
+	.ec .frame .header::after {
+		border-bottom-width: 1px !important;
+	}
 
-    .ec .frame:not(.is-terminal).has-title {
-        --button-spacing: 3rem !important;
-    }
+	.ec .frame.is-terminal .header {
+		padding-block: 0.4rem !important;
+	}
 
-    /* Fix vertical scrolling */
-    /* .ec .frame {
+	.ec .copy button {
+		border-width: 1px !important;
+	}
+
+	/* Fix copy button position */
+	.ec .frame.has-title.is-terminal {
+		--button-spacing: 2.5rem !important;
+	}
+
+	.ec .frame:not(.is-terminal).has-title {
+		--button-spacing: 3rem !important;
+	}
+
+	/* Fix vertical scrolling */
+	/* .ec .frame {
         display: flex !important;
         flex-flow: column !important;
         align-items: stretch !important;

@@ -1,3 +1,3 @@
-<ol class="relative pl-0 list-none max-w-none" style:counter-reset="step">
-    <slot />
+<ol class="relative max-w-none list-none pl-0" style:counter-reset="step">
+	<slot />
 </ol>
