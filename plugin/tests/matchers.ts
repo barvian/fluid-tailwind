@@ -12,8 +12,7 @@ expect.extend({
 	// Compare two CSS strings with all whitespace removed
 	// This is probably naive but it's fast and works well enough.
 	async toMatchFormattedCss(received, argument) {
-		if (typeof received !== 'string')
-			throw new Error('Invalid usage')
+		if (typeof received !== 'string') throw new Error('Invalid usage')
 
 		function stripped(str: string) {
 			return str
