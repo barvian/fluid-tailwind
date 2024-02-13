@@ -1,4 +1,4 @@
-import { expect } from '@jest/globals'
+import { expect, it } from '@jest/globals'
 import { html, css, run } from './run'
 
 it(`allows ~screen/screen variant`, async () => {
