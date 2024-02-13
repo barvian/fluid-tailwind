@@ -25,6 +25,8 @@ export function run(
 			files: config.content,
 			extract: fluidExtractor()
 		}
+	} else {
+		config.content.extract ??= fluidExtractor()
 	}
 
 	config.corePlugins ??= {}
