@@ -13,9 +13,6 @@
 		"prettier-plugin-tailwindcss": "^0.5.11",
 		"turbo": "^1.12.3"
 	},
-	"dependencies": {
-		"tailwindcss-priv": "npm:tailwindcss@3.4.1"
-	},
 	"scripts": {
 		"format": "prettier --write ."
 	}
