@@ -4,6 +4,7 @@ node_modules
 dist/
 .env
 build/
+.astro/
 .env.*
 !.env.example
 vite.config.js.timestamp-*
