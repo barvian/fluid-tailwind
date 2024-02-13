@@ -195,10 +195,10 @@ function rewriteExprs(container: Container, context: Context, [_fromBP, _toBP]: 
 function getContext(theme: PluginAPI['theme']) {
     const fluid: FluidConfig = theme('fluid') ?? {}
 
-    function getBreakpoints(bpsType: 'container' | 'screen') {
-        const bpsKey = bpsType === 'container' ? 'containers' : 'screens'
+    function getBreakpoints(container = false) {
+        const bpsKey = container ? 'containers' : 'screens'
         const rawBps = theme(bpsKey)
-        if (bpsType === 'container' && !rawBps) return [] as const
+        if (container && !rawBps) return [] as const
 
         // Get all "simple" breakpoints (i.e. just a length, not an object)
         const bps = mapObject(rawBps!, (k, v) => {
@@ -206,7 +206,7 @@ function getContext(theme: PluginAPI['theme']) {
             if (!len) return mapObjectSkip
             return [k as string, len]
          })
-        const defaultsKey = bpsType === 'container' ? 'defaultContainers' : 'defaultScreens'
+        const defaultsKey = container ? 'defaultContainers' : 'defaultScreens'
         
         let sortedBreakpoints: CSSLength[]
         function resolveDefaultBreakpoint(bpType: 'from' | 'to', rawBp: string | undefined) {    
@@ -237,8 +237,8 @@ function getContext(theme: PluginAPI['theme']) {
         return [bps, resolveDefaultBreakpoint('from', defaultFrom), resolveDefaultBreakpoint('to', defaultTo)] as const
     }
 
-    const [screens, defaultFromScreen, defaultToScreen] = getBreakpoints('screen')
-    const [containers, defaultFromContainer, defaultToContainer] = getBreakpoints('container')
+    const [screens, defaultFromScreen, defaultToScreen] = getBreakpoints()
+    const [containers, defaultFromContainer, defaultToContainer] = getBreakpoints(true)
     if (unique([defaultFromScreen!.unit, defaultToScreen!.unit]) !== 1 || defaultFromScreen!.unit == null) {
         throw new Error(`All default fluid breakpoints must have the same units`)
     }
