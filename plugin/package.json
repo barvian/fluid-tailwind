@@ -10,8 +10,9 @@
 	},
 	"scripts": {
 		"test": "bun test",
-		"build": "bun build ./src/* --outdir ./dist",
-		"dev": "bun run build --watch",
+		"swcify": "swc ./src/* -d ./dist",
+		"build": "npm run swcify",
+		"dev": "npm run swcify -- --watch",
 		"postbuild": "tsc -p tsconfig.build.json --emitDeclarationOnly",
 		"prepublishOnly": "bun run build"
 	},
@@ -23,6 +24,8 @@
 	},
 	"devDependencies": {
 		"@tailwindcss/container-queries": "^0.1.1",
+		"@swc/cli": "^0.1.65",
+		"@swc/core": "^1.4.1",
 		"@types/bun": "^1.0.5",
 		"postcss": "^8.4.17",
 		"prettier": "^2.7.1",
