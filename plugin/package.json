@@ -8,11 +8,11 @@
 	"publishConfig": {
 		"access": "public"
 	},
+	"type": "module",
 	"scripts": {
 		"test": "bun test",
-		"swcify": "swc ./src/* -d ./dist",
-		"build": "npm run swcify",
-		"dev": "npm run swcify -- --watch",
+		"build": "bun build ./src/* --outdir ./dist --target node --external '*'",
+		"dev": "bun run build --watch",
 		"postbuild": "tsc -p tsconfig.build.json --emitDeclarationOnly",
 		"prepublishOnly": "bun run build"
 	},
@@ -23,8 +23,6 @@
 		"tailwindcss": "^3.2.0"
 	},
 	"devDependencies": {
-		"@swc/cli": "^0.1.65",
-		"@swc/core": "^1.4.1",
 		"@tailwindcss/container-queries": "^0.1.1",
 		"@types/bun": "^1.0.5",
 		"jest-diff": "^29.7.0",
