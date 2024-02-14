@@ -1,41 +1,41 @@
 {
-  "name": "@barvian/tailwindcss-fluid",
-  "version": "0.1.0",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "license": "MIT",
-  "repository": "https://github.com/barvian/tailwindcss-fluid",
-  "publishConfig": {
-    "access": "public"
-  },
-  "scripts": {
-    "test": "bun test",
-    "swcify": "swc ./src/* -d ./dist",
-    "build": "npm run swcify",
-    "dev": "npm run swcify -- --watch",
-    "postbuild": "tsc -p tsconfig.build.json --emitDeclarationOnly",
-    "prepublishOnly": "bun run build"
-  },
-  "files": [
-    "dist"
-  ],
-  "peerDependencies": {
-    "tailwindcss": "^3.2.0"
-  },
-  "devDependencies": {
-    "@swc/cli": "^0.1.65",
-    "@swc/core": "^1.4.1",
-    "@tailwindcss/container-queries": "^0.1.1",
-    "@types/bun": "^1.0.5",
-    "jest-diff": "^29.7.0",
-    "postcss": "^8.4.17",
-    "prettier": "^2.7.1",
-    "tailwindcss": "^3.2.0",
-    "typescript": ">=5.0.0"
-  },
-  "dependencies": {
-    "filter-obj": "^5.1.0",
-    "map-obj": "^5.0.2",
-    "tailwindcss-priv": "npm:tailwindcss@3.4.1"
-  }
+	"name": "@barvian/tailwindcss-fluid",
+	"version": "0.1.0",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"license": "MIT",
+	"repository": "https://github.com/barvian/tailwindcss-fluid",
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"test": "bun test",
+		"swcify": "swc ./src/* -d ./dist",
+		"build": "npm run swcify",
+		"dev": "npm run swcify -- --watch",
+		"postbuild": "tsc -p tsconfig.build.json --emitDeclarationOnly",
+		"prepublishOnly": "bun run build"
+	},
+	"files": [
+		"dist"
+	],
+	"peerDependencies": {
+		"tailwindcss": "^3.2.0"
+	},
+	"devDependencies": {
+		"@swc/cli": "^0.1.65",
+		"@swc/core": "^1.4.1",
+		"@tailwindcss/container-queries": "^0.1.1",
+		"@types/bun": "^1.0.5",
+		"jest-diff": "^29.7.0",
+		"postcss": "^8.4.17",
+		"prettier": "^2.7.1",
+		"tailwindcss": "^3.2.0",
+		"typescript": ">=5.0.0"
+	},
+	"dependencies": {
+		"filter-obj": "^5.1.0",
+		"map-obj": "^5.0.2",
+		"tailwindcss-priv": "npm:tailwindcss@3.4.1"
+	}
 }

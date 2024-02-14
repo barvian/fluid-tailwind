@@ -1,6 +1,7 @@
 import { expect, it } from 'bun:test'
 import './matchers'
 import { html, css, run } from './run'
+import { type FluidConfig } from '../src'
 
 it(`allows ~screen/screen variant`, async () => {
 	const result = await run({
@@ -217,4 +218,91 @@ it(`fails if ~ variant is used with same start/end screens`, async () => {
 		}
 	})
 	expect(result.css).toMatchFormattedCss(css``)
+})
+
+it(`fails if no screens`, async () => {
+	expect(async () => {
+		await run({
+			content: [
+				{
+					raw: html`<div class="~p-1/2"></div>`
+				}
+			],
+			theme: {
+				screens: {}
+			}
+		})
+	}).toThrow()
+})
+
+it(`fails if screens with different units`, async () => {
+	expect(async () => {
+		await run({
+			content: [
+				{
+					raw: html`<div class="~p-1/2"></div>`
+				}
+			],
+			theme: {
+				screens: {
+					sm: '30rem',
+					lg: '960px'
+				}
+			}
+		})
+	}).toThrow()
+})
+
+it(`supports missing start defaultScreen`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~p-1/2"></div>`
+			}
+		],
+		theme: {
+			fluid: {
+				defaultScreens: [, '80rem']
+			} satisfies FluidConfig,
+			screens: {
+				sm: '30rem'
+			}
+		}
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~p-1\/2 {
+			padding: clamp(
+				0.25rem,
+				0.1rem + 0.5vw,
+				0.5rem
+			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem */
+		}
+	`)
+})
+
+it(`supports missing end defaultScreen`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~p-1/2"></div>`
+			}
+		],
+		theme: {
+			fluid: {
+				defaultScreens: ['30rem']
+			} satisfies FluidConfig,
+			screens: {
+				lg: '80rem'
+			}
+		}
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~p-1\/2 {
+			padding: clamp(
+				0.25rem,
+				0.1rem + 0.5vw,
+				0.5rem
+			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem */
+		}
+	`)
 })

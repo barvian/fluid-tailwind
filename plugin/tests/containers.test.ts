@@ -324,3 +324,21 @@ it(`fails if no containers`, async () => {
 		})
 	}).toThrow()
 })
+
+it(`fails if containers with different units`, async () => {
+	expect(async () => {
+		await run({
+			content: [
+				{
+					raw: html`<div class="~@:~p-1/2"></div>`
+				}
+			],
+			theme: {
+				containers: {
+					sm: '30rem',
+					lg: '960px'
+				}
+			}
+		})
+	}).toThrow()
+})

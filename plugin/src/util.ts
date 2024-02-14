@@ -94,6 +94,8 @@ export function generateExpr(
 	const comment = `/* ${failingBP ? 'not ' : ''}fluid from ${from.cssText} at ${fromBP.cssText} to ${to.cssText} at ${toBP.cssText}${atContainer ? ' (container)' : ''}${checkSC144 ? '; ' + (failingBP ? 'fails WCAG SC 1.4.4 at i.e. ' + failingBP.cssText : 'passes WCAG SC 1.4.4') : ''} */`
 	// Return the from value if it fails SC 1.4.4, so that it could be potentially corrected with a fluid variant
 	if (failingBP) return `${from.cssText}${comment}` // only output the from value to not create an AA violation
+	// Return the from value if the fromBP = toBP. We can't throw because they could change the breakpoints later with a variant
+	if (fromBP.number === toBP.number) return `${from.cssText}${comment}`
 
 	return `clamp(${min},${toPrecision(intercept, p)}${unit} + ${toPrecision(slope * 100, p)}${atContainer ? 'cqw' : 'vw'},${max})${comment}`
 }

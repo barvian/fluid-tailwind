@@ -61,19 +61,28 @@ it(`requires a change in values`, async () => {
 	expect(result.css).toMatchFormattedCss(css``)
 })
 
-it(`fails if no screens`, async () => {
-	expect(async () => {
-		await run({
-			content: [
-				{
-					raw: html`<div class="~p-1/2"></div>`
-				}
-			],
-			theme: {
-				screens: {}
+it(`simplifies when start = end screen`, async () => {
+	// Technically we can't throw here because they could change it with a variant
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~p-1/2"></div>`
 			}
-		})
-	}).toThrow()
+		],
+		theme: {
+			fluid: {
+				defaultScreens: ['30rem']
+			} satisfies FluidConfig,
+			screens: {
+				md: '30rem'
+			}
+		}
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~p-1\/2 {
+			padding: 0.25rem; /* fluid from 0.25rem at 30rem to 0.5rem at 30rem */
+		}
+	`)
 })
 
 it(`requires values with same units`, async () => {
@@ -134,60 +143,6 @@ it(`respects defaultScreens config`, async () => {
 			fluid: {
 				defaultScreens: ['30rem', '80rem']
 			} satisfies FluidConfig
-		}
-	})
-	expect(result.css).toMatchFormattedCss(css`
-		.\~p-1\/2 {
-			padding: clamp(
-				0.25rem,
-				0.1rem + 0.5vw,
-				0.5rem
-			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem */
-		}
-	`)
-})
-
-it(`supports missing start defaultScreen`, async () => {
-	const result = await run({
-		content: [
-			{
-				raw: html`<div class="~p-1/2"></div>`
-			}
-		],
-		theme: {
-			fluid: {
-				defaultScreens: [, '80rem']
-			} satisfies FluidConfig,
-			screens: {
-				sm: '30rem'
-			}
-		}
-	})
-	expect(result.css).toMatchFormattedCss(css`
-		.\~p-1\/2 {
-			padding: clamp(
-				0.25rem,
-				0.1rem + 0.5vw,
-				0.5rem
-			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem */
-		}
-	`)
-})
-
-it(`supports missing end defaultScreen`, async () => {
-	const result = await run({
-		content: [
-			{
-				raw: html`<div class="~p-1/2"></div>`
-			}
-		],
-		theme: {
-			fluid: {
-				defaultScreens: ['30rem']
-			} satisfies FluidConfig,
-			screens: {
-				lg: '80rem'
-			}
 		}
 	})
 	expect(result.css).toMatchFormattedCss(css`
