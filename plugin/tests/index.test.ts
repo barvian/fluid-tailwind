@@ -10,6 +10,9 @@ import {
 import { type FluidConfig } from '../src'
 import plugin from 'tailwindcss/plugin'
 import { type PluginAPI } from 'tailwindcss/types/config'
+import tailwindDefaultConfig from 'tailwindcss/defaultConfig'
+import tailwindDefaultTheme from 'tailwindcss/defaultTheme'
+import dlv from 'dlv'
 
 it(`should be possible to use defaultTheme...InRems values`, async () => {
 	const result = await run({
@@ -274,3 +277,51 @@ const testFluidize = (key: MatchUtilOrComp) => async () => {
 }
 it(`supports fluidized utilities`, testFluidize('matchUtilities'))
 it(`supports fluidized components`, testFluidize('matchComponents'))
+
+it(`creates the right utility config`, () => {
+	const fluidized = fluidize(
+		plugin(({ matchUtilities }) => {
+			matchUtilities(
+				{
+					'test-p': (val) => ({
+						padding: val
+					})
+				},
+				{
+					values: {
+						red: 'red',
+						px: '5px',
+						rem: '1rem'
+					}
+				}
+			)
+		})
+	)
+
+	const utilities: Record<string, Parameters<PluginAPI['matchUtilities']>[1]> = {}
+	fluidized.handler({
+		addUtilities: () => {},
+		addComponents: () => {},
+		matchComponents: () => {},
+		addBase: () => {},
+		addVariant: () => {},
+		matchVariant: () => {},
+		e: (val) => val,
+		theme: (key, defaultValue) =>
+			key
+				? dlv({ ...tailwindDefaultTheme, screens: defaultThemeScreensInRems }, key, defaultValue)
+				: defaultValue,
+		config: (option, defaultValue) =>
+			option ? dlv(tailwindDefaultConfig, option, defaultValue) : defaultValue,
+		corePlugins: () => true,
+		matchUtilities(utils, config) {
+			Object.keys(utils).forEach((k) => (utilities[k] = config))
+		}
+	})
+
+	expect(utilities['~test-p']).toEqual({
+		values: { rem: '1rem', px: '5px' },
+		modifiers: { rem: '1rem', px: '5px' },
+		supportsNegativeValues: false
+	})
+})
