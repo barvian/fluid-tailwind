@@ -267,7 +267,7 @@ function getContext(theme: PluginAPI['theme']) {
 	const [screens, defaultFromScreen, defaultToScreen] = getBreakpoints()
 	const [containers, defaultFromContainer, defaultToContainer] = getBreakpoints(true)
 
-	// We need to validate only the screens immediately, so we can get a unit to 
+	// We need to validate only the screens immediately, so we can get a unit to
 	// use when setting up values for fluid utilities (which Intellisense uses)
 	if (
 		unique([defaultFromScreen!.unit, defaultToScreen!.unit]) !== 1 ||

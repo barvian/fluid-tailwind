@@ -61,6 +61,48 @@ it(`requires a change in values`, async () => {
 	expect(result.css).toMatchFormattedCss(css``)
 })
 
+it(`respects DEFAULT from value`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~p/8"></div>`
+			}
+		],
+		theme: {
+			padding: {
+				DEFAULT: '1rem',
+				8: '2rem'
+			}
+		}
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~p\/8 {
+			padding: clamp(1rem, 0.29rem + 1.79vw, 2rem); /* fluid from 1rem at 40rem to 2rem at 96rem */
+		}
+	`)
+})
+
+it(`respects DEFAULT to value`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~p-8"></div>`
+			}
+		],
+		theme: {
+			padding: {
+				DEFAULT: '1rem',
+				8: '2rem'
+			}
+		}
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~p-8 {
+			padding: clamp(1rem, 2.71rem + -1.79vw, 2rem); /* fluid from 2rem at 40rem to 1rem at 96rem */
+		}
+	`)
+})
+
 it(`simplifies when start = end screen`, async () => {
 	// Technically we can't throw here because they could change it with a variant
 	const result = await run({
