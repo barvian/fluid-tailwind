@@ -8,6 +8,12 @@ const format = (input: string) =>
 		printWidth: 100
 	})
 
+declare module 'bun:test' {
+	interface Matchers<T> {
+		toMatchFormattedCss(expected: string): T
+	}
+}
+
 expect.extend({
 	// Compare two CSS strings with all whitespace removed
 	// This is probably naive but it's fast and works well enough.

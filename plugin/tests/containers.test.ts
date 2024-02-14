@@ -298,9 +298,29 @@ it(`fails if ~@ variant is used with same start/end containers`, async () => {
 	const result = await run({
 		content: [
 			{
-				raw: html`<div class="~@md/md:~p-1/2"></div>`
+				raw: html`<div class="~@[30rem]/md:~p-1/2"></div>`
 			}
-		]
+		],
+		theme: {
+			containers: {
+				md: '30rem'
+			}
+		}
 	})
 	expect(result.css).toMatchFormattedCss(css``)
+})
+
+it(`fails if no containers`, async () => {
+	expect(async () => {
+		await run({
+			content: [
+				{
+					raw: html`<div class="~@:~p-1/2"></div>`
+				}
+			],
+			theme: {
+				containers: {}
+			}
+		})
+	}).toThrow()
 })

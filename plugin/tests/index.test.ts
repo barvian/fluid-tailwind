@@ -61,6 +61,21 @@ it(`requires a change in values`, async () => {
 	expect(result.css).toMatchFormattedCss(css``)
 })
 
+it(`fails if no screens`, async () => {
+	expect(async () => {
+		await run({
+			content: [
+				{
+					raw: html`<div class="~p-1/2"></div>`
+				}
+			],
+			theme: {
+				screens: {}
+			}
+		})
+	}).toThrow()
+})
+
 it(`requires values with same units`, async () => {
 	const result = await run({
 		content: [
@@ -170,7 +185,7 @@ it(`supports missing end defaultScreen`, async () => {
 			fluid: {
 				defaultScreens: ['30rem']
 			} satisfies FluidConfig,
-			containers: {
+			screens: {
 				lg: '80rem'
 			}
 		}
@@ -179,9 +194,9 @@ it(`supports missing end defaultScreen`, async () => {
 		.\~p-1\/2 {
 			padding: clamp(
 				0.25rem,
-				0.14rem + 0.38vw,
+				0.1rem + 0.5vw,
 				0.5rem
-			); /* fluid from 0.25rem at 30rem to 0.5rem at 96rem */
+			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem */
 		}
 	`)
 })
@@ -191,7 +206,7 @@ it(`supports custom separator and prefix`, async () => {
 		content: {
 			files: [
 				{
-					raw: html`<div class="~@_tw-~p-1/2"></div>`
+					raw: html`<div class="~sm/lg_tw-~p-1/2"></div>`
 				}
 			],
 			extract: fluidExtractor({ separator: '_', prefix: 'tw-' })
@@ -199,19 +214,19 @@ it(`supports custom separator and prefix`, async () => {
 		separator: '_',
 		prefix: 'tw-',
 		theme: {
-			containers: {
+			screens: {
 				sm: '30rem',
 				lg: '80rem'
 			}
 		}
 	})
 	expect(result.css).toMatchFormattedCss(css`
-		.\~\@_tw-\~p-1\/2 {
+		.\~sm\/lg_tw-\~p-1\/2 {
 			padding: clamp(
 				0.25rem,
-				0.1rem + 0.5cqw,
+				0.1rem + 0.5vw,
 				0.5rem
-			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem (container) */
+			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem */
 		}
 	`)
 })

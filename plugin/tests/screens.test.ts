@@ -207,9 +207,14 @@ it(`fails if ~ variant is used with same start/end screens`, async () => {
 	const result = await run({
 		content: [
 			{
-				raw: html`<div class="~md/md:~p-1/2"></div>`
+				raw: html`<div class="~md/[30rem]:~p-1/2"></div>`
 			}
-		]
+		],
+		theme: {
+			screens: {
+				md: '30rem'
+			}
+		}
 	})
 	expect(result.css).toMatchFormattedCss(css``)
 })

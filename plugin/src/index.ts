@@ -212,7 +212,7 @@ function getContext(theme: PluginAPI['theme']) {
 		const rawBps = theme(bpsKey)
 		if (container && !rawBps) return [] as const
 		if (typeof rawBps !== 'object')
-			throw new Error(`Invalid value for \`theme.${bpsKey}\`: ${rawBps}`)
+			throw new Error(`Unsupported value for \`theme.${bpsKey}\`: ${rawBps}`)
 
 		// Get all "simple" breakpoints (i.e. just a length, not an object)
 		const bps = mapObject(rawBps, (k, v) => {
