@@ -4,7 +4,7 @@ import { error } from './errors'
 import { clamp, precision, toPrecision } from './math'
 import { Context } from './context'
 
-// Convert a RawValue to a length, which also checks if it's a theme() value
+// Convert a RawValue to a length, which also resolves theme() values
 const length = (val: RawValue | Length, { theme }: Context) => {
 	if (val instanceof Length) return val
 	if (typeof val === 'string') {

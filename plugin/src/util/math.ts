@@ -8,7 +8,7 @@ export const toPrecision = (num: number, precision: number) =>
 // Count decimal places in number
 export const precision = (num: number) => {
 	if (Math.floor(num.valueOf()) === num.valueOf()) return 0
-	return num.toString().split('.')[1].length || 0
+	return num.toString().split('.')?.[1]?.length || 0
 }
 
 export const clamp = (min: number, n: number, max: number) => Math.min(Math.max(n, min), max)

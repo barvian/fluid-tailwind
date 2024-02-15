@@ -6,7 +6,7 @@ import defaultTheme from 'tailwindcss/defaultTheme'
 import mapObject, { mapObjectSkip } from 'map-obj'
 import { includeKeys } from 'filter-obj'
 export { default as fluidExtractor } from './extractor'
-import log from 'tailwindcss-priv/lib/util/log'
+import * as log from './util/log'
 import getContext, { type Context } from './util/context'
 import { Length, type RawValue } from './util/css'
 import * as fluid from './util/fluid'
@@ -28,7 +28,7 @@ type FilterFn = (
 
 const handle = (e: unknown, source: string) => {
 	if (e instanceof FluidError) {
-		log.warn(e.code, [`${source}: ${e.message}`])
+		log.warn(e.code, `${source}: ${e.message}`)
 	} else throw e
 }
 
@@ -204,7 +204,7 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 				if (from.fontWeight == to.fontWeight) {
 					rules['font-weight'] = from.fontWeight ? from.fontWeight + '' : null
 				} else {
-					log.warn('mismatched-font-weights', [`~text: Mismatched font weights`])
+					log.warn('mismatched-font-weights', `~text: Mismatched font weights`)
 				}
 
 				return rules
@@ -222,9 +222,10 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 	// ---
 
 	if (screens?.DEFAULT) {
-		log.warn('inaccessible-default-screen', [
+		log.warn(
+			'inaccessible-default-screen',
 			`Your DEFAULT screen breakpoint must be renamed to be used in fluid variants`
-		])
+		)
 	}
 
 	Object.entries(screens).forEach(([s1Key, s1]) => {
@@ -292,9 +293,10 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 	if (!containers) return // ensure official container query plugin exists
 
 	if (containers?.DEFAULT) {
-		log.warn('inaccessible-default-container', [
+		log.warn(
+			'inaccessible-default-container',
 			`Your DEFAULT container breakpoint must be renamed to be used in fluid variants`
-		])
+		)
 	}
 
 	Object.entries(containers).forEach(([c1Key, c1]) => {
@@ -344,7 +346,7 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 				fluid.rewrite(container, context, [value, modifier], true)
 				return '&'
 			} catch (e) {
-				handle(e, `~@${value}${modifier ? '/' + modifier : ''}`)
+				handle(e, `~@`) // can't output ${value} without a reverse lookup from theme :/
 				return []
 			}
 		},

@@ -11,7 +11,7 @@
 	"type": "module",
 	"scripts": {
 		"test": "bun test",
-		"build": "bun build ./src/* --outdir ./dist --target node --external '*'",
+		"build": "bun build ./src/util/* --outdir ./dist/util --target node --external '*' && bun build --entrypoints ./src/index.ts ./src/extractor.ts --outdir ./dist --target node --external '*'",
 		"dev": "bun run build --watch",
 		"postbuild": "tsc -p tsconfig.build.json --emitDeclarationOnly",
 		"prepublishOnly": "bun run build"
@@ -36,6 +36,7 @@
 	"dependencies": {
 		"filter-obj": "^5.1.0",
 		"map-obj": "^5.0.2",
+		"picocolors": "^1.0.0",
 		"tailwindcss-priv": "npm:tailwindcss@3.4.1"
 	}
 }
