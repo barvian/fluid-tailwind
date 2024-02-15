@@ -393,6 +393,7 @@ export const defaultThemeFontSizeInRems = mapObject(
 			isNaN(parseFloat(_lineHeight))
 		)
 			return [name, tuple([_size, _lineHeight])]
+			
 		return [
 			name,
 			tuple([_size, new Length(parseFloat(_lineHeight) * size.number, size.unit).cssText])
