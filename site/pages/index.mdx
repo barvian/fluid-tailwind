@@ -24,10 +24,10 @@ import Resizer from '/components/Resizer.svelte'
   <Steps.Item>
     **Install the package**
 
-    Install `@barvian/tailwindcss-fluid` via npm.
+    Install `fluid-tailwind` via npm.
     <Fragment slot="code">
     ```sh
-    npm install -D @barvian/tailwindcss-fluid
+    npm install -D fluid-tailwind
     ```
     </Fragment>
   </Steps.Item>
@@ -37,7 +37,7 @@ import Resizer from '/components/Resizer.svelte'
     The custom extractor lets you use the new `~` prefix in your Tailwind classes.
     <Fragment slot="code">
       ```ts title="tailwind.config.ts" ins={1, 6}
-      import { fluidExtractor } from '@barvian/tailwindcss-fluid'
+      import { fluidExtractor } from 'fluid-tailwind'
 
       export default {
         content: {
@@ -55,7 +55,7 @@ import Resizer from '/components/Resizer.svelte'
     Add fluid versions of every enabled [core plugin](https://tailwindcss.com/docs/configuration#core-plugins).
     <Fragment slot="code">
       ```ts title="tailwind.config.ts" ins=/, fluidCorePlugins/ ins={6}
-      import { fluidExtractor, fluidCorePlugins } from '@barvian/tailwindcss-fluid'
+      import { fluidExtractor, fluidCorePlugins } from 'fluid-tailwind'
 
       export default {
         // ...
@@ -73,7 +73,7 @@ import Resizer from '/components/Resizer.svelte'
     <Tip.Info>This may be unnecessary in [future versions of Tailwind](https://github.com/tailwindlabs/tailwindcss/discussions/8378#discussioncomment-2779675)</Tip.Info>
     <Fragment slot="code">
       ```ts title="tailwind.config.ts" ins={6,7} ins=/, defaultThemeScreensInRems, defaultThemeFontSizeInRems/
-      import { fluidExtractor, fluidCorePlugins, defaultThemeScreensInRems, defaultThemeFontSizeInRems } from '@barvian/tailwindcss-fluid'
+      import { fluidExtractor, fluidCorePlugins, defaultThemeScreensInRems, defaultThemeFontSizeInRems } from 'fluid-tailwind'
 
       export default {
         // ...
@@ -173,7 +173,7 @@ Either value can be omitted, in which case the plugin will use your smallest and
 screen, respectively.
 
 ```ts title="tailwind.config.ts" mark={6}
-import { ..., type FluidConfig } from '@barvian/tailwindcss-fluid'
+import { ..., type FluidConfig } from 'fluid-tailwind'
 
 export default {
   theme: {
@@ -256,7 +256,7 @@ Either value can be omitted, in which case the plugin will use your smallest and
 largest container, respectively.
 
 ```ts title="tailwind.config.ts" mark={6}
-import { ..., type FluidConfig } from '@barvian/tailwindcss-fluid'
+import { ..., type FluidConfig } from 'fluid-tailwind'
 
 export default {
   theme: {
@@ -273,7 +273,7 @@ When adding custom plugins to your `tailwind.config.js`, you can run them throug
 the `fluidize` function to automatically add fluid versions of all their utilities and components:
 
 ```ts title="tailwind.config.ts" ins=/, (fluidize)/ ins="fluidize(" ins=")"
-import { ..., fluidize } from '@barvian/tailwindcss-fluid'
+import { ..., fluidize } from 'fluid-tailwind'
 import myFavoritePlugin from '...'
 
 export default {
@@ -310,7 +310,7 @@ If you're using a custom [`separator`](https://tailwindcss.com/docs/configuratio
 you'll need to pass them in to the custom extractor as well:
 
 ```ts title="tailwind.config.ts" ins={7,8}
-import { fluidExtractor } from '@barvian/tailwindcss-fluid'
+import { fluidExtractor } from 'fluid-tailwind'
 
 export default {
   content: {

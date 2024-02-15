@@ -1,10 +1,10 @@
 {
-	"name": "@barvian/tailwindcss-fluid",
+	"name": "fluid-tailwind",
 	"version": "0.1.0",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"license": "MIT",
-	"repository": "https://github.com/barvian/tailwindcss-fluid",
+	"repository": "https://github.com/barvian/fluid-tailwind",
 	"publishConfig": {
 		"access": "public"
 	},

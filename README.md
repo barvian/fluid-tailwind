@@ -1,4 +1,4 @@
-# @barvian/tailwindcss-fluid
+# fluid-tailwind
 
 A plugin for Tailwind CSS that provides fluid versions of core utilities.
 
