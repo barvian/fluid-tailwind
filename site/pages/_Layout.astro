@@ -41,18 +41,20 @@ const path = relative(root, file)
 		>
 		</div>
 		<nav class="~mb-20/28 container flex items-center justify-start">
-			<a href="//fluid.style">
-				<img src="/logo.svg" alt="Fluid.Style logo" class="h-6" />
-			</a>
-			<svg class="mx-2 h-6" role="separator" viewBox="0 0 32 32"
-				><path
-					d="M22 5L9 28"
-					vector-effect="non-scaling-stroke"
-					class="stroke-slate-200 dark:stroke-slate-700"
-					stroke-linecap="round"
-					stroke-linejoin="round"></path></svg
-			>
-			<span class="text-slate-700 dark:text-slate-200">Fluid Tailwind</span>
+			<div class="flex items-center gap-4">	
+				<!-- <a href="//fluid.style"> -->
+					<img src="/logo.svg" alt="Fluid.Style logo" class="h-6" />
+				<!-- </a> -->
+				<!-- <svg class="mx-2 h-6" role="separator" viewBox="0 0 32 32"
+					><path
+						d="M22 5L9 28"
+						vector-effect="non-scaling-stroke"
+						class="stroke-slate-200 dark:stroke-slate-700"
+						stroke-linecap="round"
+						stroke-linejoin="round"></path></svg
+				> -->
+				<span class="text-slate-700 dark:text-slate-200">Fluid Tailwind</span>
+			</div>
 			<a
 				href={pkg.repository}
 				class="ml-auto block text-slate-400 hover:text-slate-500 dark:hover:text-slate-300"
