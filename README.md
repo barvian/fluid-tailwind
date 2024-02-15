@@ -1,14 +1,6 @@
-<p>
-  <a href="https://fluid.tw" target="_blank">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/tailwindlabs/tailwindcss-typography/HEAD/.github/logo-dark.svg">
-      <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/tailwindlabs/tailwindcss-typography/HEAD/.github/logo-light.svg">
-      <img alt="Tailwind CSS Typography" src="https://raw.githubusercontent.com/tailwindlabs/tailwindcss-typography/HEAD/.github/logo-light.svg" width="450" height="70" style="max-width: 100%;">
-    </picture>
-  </a>
-</p>
+# @barvian/tailwindcss-fluid
 
-A plugin for Tailwind CSS that provides fluid versions of supported utilities.
+A plugin for Tailwind CSS that provides fluid versions of core utilities.
 
 ---
 
