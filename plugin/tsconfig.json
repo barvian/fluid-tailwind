@@ -10,7 +10,8 @@
 		"strict": true,
 		"esModuleInterop": true,
 		"moduleResolution": "node",
-		"outDir": "dist"
+		"outDir": "dist",
+		"noUncheckedIndexedAccess": true
 	},
 	"include": ["src/**/*.ts", "jest/**/*.ts", "tests/**/*.ts"]
 }

@@ -221,36 +221,34 @@ it(`fails if ~ variant is used with same start/end screens`, async () => {
 })
 
 it(`fails if no screens`, async () => {
-	expect(async () => {
-		await run({
-			content: [
-				{
-					raw: html`<div class="~p-1/2"></div>`
-				}
-			],
-			theme: {
-				screens: {}
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~p-1/2"></div>`
 			}
-		})
-	}).toThrow()
+		],
+		theme: {
+			screens: {}
+		}
+	})
+	expect(result.css).toMatchFormattedCss(``)
 })
 
 it(`fails if screens with different units`, async () => {
-	expect(async () => {
-		await run({
-			content: [
-				{
-					raw: html`<div class="~p-1/2"></div>`
-				}
-			],
-			theme: {
-				screens: {
-					sm: '30rem',
-					lg: '960px'
-				}
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~p-1/2"></div>`
 			}
-		})
-	}).toThrow()
+		],
+		theme: {
+			screens: {
+				sm: '30rem',
+				lg: '960px'
+			}
+		}
+	})
+	expect(result.css).toMatchFormattedCss(``)
 })
 
 it(`supports missing start defaultScreen`, async () => {

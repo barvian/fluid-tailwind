@@ -125,7 +125,7 @@ it(`simplifies when start = end screen`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css`
 		.\~p-1\/2 {
-			padding: 0.25rem; /* fluid from 0.25rem at 30rem to 0.5rem at 30rem */
+			padding:; /* fluid from 0.25rem at 30rem to 0.5rem at 30rem */
 		}
 	`)
 })

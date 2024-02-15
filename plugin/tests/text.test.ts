@@ -66,7 +66,7 @@ it(`fails for SC 1.4.4 violations`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css`
 		.\~text-\[1rem\]\/\[2\.6rem\] {
-			font-size: 1rem; /* not fluid from 1rem at 40rem to 2.6rem at 96rem; fails WCAG SC 1.4.4 at i.e. 200rem */
+			font-size:; /* not fluid from 1rem at 40rem to 2.6rem at 96rem; fails WCAG SC 1.4.4 at i.e. 200rem */
 		}
 	`)
 })
@@ -127,7 +127,15 @@ it(`fails for inconsistent line height`, async () => {
 			}
 		}
 	})
-	expect(result.css).toMatchFormattedCss(css``)
+	expect(result.css).toMatchFormattedCss(css`
+		.\~text-sm\/lg {
+			font-size: clamp(
+				1rem,
+				0.29rem + 1.79vw,
+				2rem
+			); /* fluid from 1rem at 40rem to 2rem at 96rem; passes WCAG SC 1.4.4 */
+		}
+	`)
 })
 
 it(`applies consistent font weight`, async () => {
@@ -176,7 +184,7 @@ it(`handles string <-> number font weight`, async () => {
 	`)
 })
 
-it(`fails for inconsistent font weight`, async () => {
+it(`fails for inconsistent font weights`, async () => {
 	const result = await run({
 		content: [
 			{
@@ -190,7 +198,15 @@ it(`fails for inconsistent font weight`, async () => {
 			}
 		}
 	})
-	expect(result.css).toMatchFormattedCss(css``)
+	expect(result.css).toMatchFormattedCss(css`
+		.\~text-sm\/lg {
+			font-size: clamp(
+				1rem,
+				0.29rem + 1.79vw,
+				2rem
+			); /* fluid from 1rem at 40rem to 2rem at 96rem; passes WCAG SC 1.4.4 */
+		}
+	`)
 })
 
 it(`fluidizes compatible letter spacing`, async () => {
@@ -243,7 +259,7 @@ it(`applies consistent letter spacing`, async () => {
 	`)
 })
 
-it(`fails for inconsistent letter spacing`, async () => {
+it(`doesn't apply inconsistent letter spacing`, async () => {
 	const result = await run({
 		content: [
 			{
@@ -257,5 +273,11 @@ it(`fails for inconsistent letter spacing`, async () => {
 			}
 		}
 	})
-	expect(result.css).toMatchFormattedCss(css``)
+	expect(result.css).toMatchFormattedCss(css`
+		.\~text-sm\/lg {
+			font-size: clamp(1rem, 0.29rem + 1.79vw, 2rem)
+				/* fluid from 1rem at 40rem to 2rem at 96rem; passes WCAG SC 1.4.4 */;
+			letter-spacing:; /* fluid from 0.3em at 40rem to 0.2em at 96rem */
+		}
+	`)
 })

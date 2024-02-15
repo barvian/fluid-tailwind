@@ -1,26 +1,18 @@
 import plugin from 'tailwindcss/plugin'
 type Plugin = ReturnType<typeof plugin>
 import { corePlugins } from 'tailwindcss-priv/lib/corePlugins'
-import { CSSRuleObject, PluginAPI, PluginCreator } from 'tailwindcss/types/config'
-import {
-	noop,
-	log,
-	LogLevel,
-	CSSLength,
-	type RawValue,
-	generateExpr,
-	addVariant,
-	matchVariant,
-	addVariantWithModifier,
-	parseExpr,
-	unique,
-	tuple
-} from './util'
+import { CSSRuleObject, KeyValuePair, PluginAPI, ThemeConfig } from 'tailwindcss/types/config'
 import defaultTheme from 'tailwindcss/defaultTheme'
-import { Container } from 'postcss'
 import mapObject, { mapObjectSkip } from 'map-obj'
 import { includeKeys } from 'filter-obj'
 export { default as fluidExtractor } from './extractor'
+import log from 'tailwindcss-priv/lib/util/log'
+import getContext, { type Context } from './util/context'
+import { Length, type RawValue } from './util/css'
+import * as fluid from './util/fluid'
+import { addVariant, addVariantWithModifier, matchVariant } from './util/tailwind'
+import { tuple } from './util/set'
+import { FluidError } from './util/errors'
 
 type Breakpoints = [string] | [undefined, string] | [string, string]
 export type FluidConfig = Partial<{
@@ -28,50 +20,17 @@ export type FluidConfig = Partial<{
 	defaultContainers: Breakpoints
 }>
 
-function parseValue(_val: any, { unit, theme }: Context, level?: LogLevel) {
-	if (!_val) return null
-	if (typeof _val === 'string') {
-		// Test if it's a theme() function
-		const [, lookup] = _val.match(/^\s*theme\((.*?)\)\s*$/) ?? []
-		if (lookup) _val = theme(lookup)
-	}
-	const val = CSSLength.parse(_val)
-	if (!val) {
-		if (level) log[level]('non-lengths', ['Fluid utilities can only work with length values'])
-		if (level === LogLevel.RISK) throw new Error()
-		return null
-	}
-	if (val.unit !== unit) {
-		if (level) log[level]('mismatching-units', [`Fluid units must all match`])
-		if (level === LogLevel.RISK) throw new Error()
-		return null
-	}
-	return val
-}
-
-function parseValues(_from: any, _to: any, context: Context, level?: LogLevel) {
-	if (!_from || !_to) {
-		if (level) log[level]('missing-values', ['Fluid utilities require two values'])
-		if (level === LogLevel.RISK) throw new Error()
-		return null
-	}
-	const from = parseValue(_from, context, level)
-	const to = parseValue(_to, context, level)
-	if (!from || !to) return null
-
-	if (from.number === to.number) {
-		if (level) log[level]('no-change', ['Fluid utilities require two distinct values'])
-		if (level === LogLevel.RISK) throw new Error()
-		return null
-	}
-	return [from, to] as const
-}
-
 type MatchUtilOrComp = PluginAPI['matchUtilities'] | PluginAPI['matchComponents']
 type FilterFn = (
 	utilityOrComponentNames: string[],
 	options: Parameters<MatchUtilOrComp>[1]
 ) => boolean | null | undefined
+
+const handle = (e: unknown, source: string) => {
+	if (e instanceof FluidError) {
+		log.warn(e.code, [`${source}: ${e.message}`])
+	} else throw e
+}
 
 /**
  * Return a modified PluginAPI that intercepts calls to matchUtilities and matchComponents
@@ -94,38 +53,40 @@ function getFluidAPI(
 
 			// Add fluid version
 			// Start by filtering the values to only valid lengths
-			const values = includeKeys(options?.values ?? {}, (_, v) => Boolean(parseValue(v, context)))
+			const values = includeKeys(options?.values ?? {}, (_, v) =>
+				Boolean(Length.parse(v))
+			) as KeyValuePair<string, RawValue>
 
-			// TW doesn't use the DEFAULT convention for modifiers so we'll extract it:
+			// Tailwind doesn't use the DEFAULT convention for modifiers so we'll extract it:
 			const { DEFAULT, ...modifiers } = values
 
 			Object.entries(utilities).forEach(([util, origFn]) => {
 				orig(
 					{
-						[`~${util}`](_from, { modifier: _to }) {
+						[`~${util}`](start, { modifier: end }) {
 							// See note about default modifiers above
-							if (_to === null && DEFAULT) _to = DEFAULT
+							if (end === null && DEFAULT) end = DEFAULT
 
-							const parsed = parseValues(_from, _to, context, LogLevel.WARN)
-							if (!parsed) return null
-							const [from, to] = parsed
-
-							return origFn(
-								generateExpr(from, context.defaultFromScreen, to, context.defaultToScreen),
-								{ modifier: null } // don't pass along the modifier
-							)
+							try {
+								const clamp = fluid.generate(start, end, context)
+								return origFn(clamp, { modifier: null }) // don't pass along the modifier
+							} catch (e) {
+								handle(e, `~${util}`)
+								return null
+							}
 						}
 					},
 					{
 						...options,
 						values,
-						supportsNegativeValues: false, // b/c TW only negates the value, not the modifier
+						supportsNegativeValues: false, // b/c Tailwind only negates the value, not the modifier
 						modifiers
 					}
 				)
 			})
 		}
 
+	const noop = () => {}
 	return {
 		...api,
 		...(addOriginal
@@ -143,151 +104,6 @@ function getFluidAPI(
 	}
 }
 
-class NoChangeBPError extends Error {}
-class BreakpointNotFoundError extends Error {}
-function rewriteExprs(
-	container: Container,
-	context: Context,
-	[_fromBP, _toBP]: [CSSLength | RawValue, CSSLength | RawValue],
-	atContainer?: string | true
-) {
-	try {
-		const fromBP =
-			typeof _fromBP === 'string'
-				? // It's arbitrary, so parse it
-					parseValue(_fromBP, context, LogLevel.RISK)
-				: _fromBP
-
-		const toBP = (() => {
-			if (typeof _toBP !== 'string') return _toBP
-			// Check if it's [arbitrary] (i.e. from a modifier)
-			if (/^\[(.*?)\]$/.test(_toBP)) {
-				return parseValue(_toBP.match(/^\[(.*?)\]$/)?.[1], context, LogLevel.RISK)
-			} else {
-				const bp = context[atContainer ? 'containers' : 'screens']?.[_toBP]
-				if (!bp) throw new BreakpointNotFoundError() // fail if we couldn't find in theme
-				return bp
-			}
-		})()
-
-		const defaultFromBP = atContainer ? context.defaultFromContainer! : context.defaultFromScreen
-		const defaultToBP = atContainer ? context.defaultToContainer! : context.defaultToScreen
-
-		// Walk through each `property: value` and rewrite any fluid expressions
-		let foundExpr = false
-		container.walkDecls((decl) => {
-			const parsed = parseExpr(decl.value)
-			if (!parsed) return
-			foundExpr = true
-			const resolvedFromBP = fromBP ?? defaultFromBP
-			const resolvedToBP = toBP ?? defaultToBP
-			if (resolvedFromBP.number === resolvedToBP.number) {
-				throw new NoChangeBPError()
-			}
-
-			decl.value = generateExpr(parsed.from, resolvedFromBP, parsed.to, resolvedToBP, {
-				atContainer,
-				checkSC144: parsed.checkSC144
-			})
-		})
-		// Prevent rules like ~md/lg:relative
-		if (!foundExpr) {
-			log.warn('no-utility', ['Fluid variants can only be used with fluid utilities'])
-			return [] as string[]
-		}
-	} catch (e) {
-		if (e instanceof NoChangeBPError) {
-			log.warn('no-change', ['Fluid utilities require two distinct values'])
-		}
-		return [] as string[]
-	}
-	return '&'
-}
-
-function getContext(theme: PluginAPI['theme']) {
-	const fluid: FluidConfig = theme('fluid') ?? {}
-
-	function getBreakpoints(container = false) {
-		const bpsKey = container ? 'containers' : 'screens'
-		const rawBps = theme(bpsKey)
-		if (container && !rawBps) return [] as const
-		if (typeof rawBps !== 'object')
-			throw new Error(`Unsupported value for \`theme.${bpsKey}\`: ${rawBps}`)
-
-		// Get all "simple" breakpoints (i.e. just a length, not an object)
-		const bps = mapObject(rawBps, (k, v) => {
-			const len = CSSLength.parse(v)
-			if (!len) return mapObjectSkip
-			return [k as string, len]
-		})
-		const defaultsKey = container ? 'defaultContainers' : 'defaultScreens'
-
-		let sortedBreakpoints: CSSLength[]
-		function resolveDefaultBreakpoint(bpType: 'from' | 'to', rawBp: string | undefined) {
-			if (typeof rawBp === 'string') {
-				const parsed = CSSLength.parse(rawBp)
-				if (!parsed)
-					throw new Error(
-						`Invalid value for \`theme.fluid.${defaultsKey}[${bpType === 'from' ? 0 : 1}]\``
-					)
-				return parsed
-			} else if (rawBp != null) {
-				throw new Error(
-					`Invalid value for \`theme.fluid.${defaultsKey}[${bpType === 'from' ? 0 : 1}]\``
-				)
-			}
-
-			sortedBreakpoints ??= (() => {
-				const bpsVals = Object.values(bps)
-				if (!bpsVals.length) {
-					throw new Error(
-						`Cannot resolve \`theme.fluid.${defaultsKey}[${bpType === 'from' ? 0 : 1}]\` because there's no simple values in \`theme.${bpsKey}\``
-					)
-				}
-				// Error if they have different units (can't sort that way)
-				if (unique(bpsVals.map((l) => l.unit!)) > 1) {
-					throw new Error(
-						`Cannot resolve \`theme.fluid.${defaultsKey}[${bpType === 'from' ? 0 : 1}]\` because \`theme.${bpsKey}\` contains values of different units`
-					)
-				}
-
-				return bpsVals.sort((a, b) => a.number - b.number)
-			})()
-			return sortedBreakpoints[bpType === 'from' ? 0 : sortedBreakpoints.length - 1]
-		}
-
-		const [defaultFrom, defaultTo] = fluid[defaultsKey] ?? []
-		return [
-			bps,
-			resolveDefaultBreakpoint('from', defaultFrom),
-			resolveDefaultBreakpoint('to', defaultTo)
-		] as const
-	}
-
-	const [screens, defaultFromScreen, defaultToScreen] = getBreakpoints()
-	const [containers, defaultFromContainer, defaultToContainer] = getBreakpoints(true)
-
-	// We need to validate only the screens immediately, so we can get a unit to
-	// use when setting up values for fluid utilities (which Intellisense uses)
-	if (
-		unique([defaultFromScreen!.unit, defaultToScreen!.unit]) !== 1 ||
-		defaultFromScreen!.unit == null
-	) {
-		throw new Error(`All default fluid breakpoints must have the same units`)
-	}
-	return {
-		theme,
-		screens: screens!,
-		defaultFromScreen: defaultFromScreen!,
-		defaultToScreen: defaultToScreen!,
-		containers,
-		defaultFromContainer,
-		defaultToContainer,
-		unit: defaultFromScreen!.unit
-	}
-}
-type Context = ReturnType<typeof getContext>
-
 export const fluidCorePlugins = plugin((api: PluginAPI) => {
 	const { theme, corePlugins: corePluginEnabled, matchUtilities } = api
 	const context = getContext(theme)
@@ -299,92 +115,96 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 		// Filter out fontSize plugin
 		filter: (utils, options) => !utils.includes('text') || !options?.type?.includes('length')
 	})
-	Object.entries(corePlugins).forEach(([name, _p]) => {
+	Object.entries(corePlugins).forEach(([name, corePlugin]) => {
 		if (!corePluginEnabled(name)) return
-		const p = _p as PluginCreator
-		p(fluidAPI)
+		corePlugin(fluidAPI)
 	})
 
 	// Add new fluid text utility to handle potentially complex theme values
 	// ---
 
+	type Values<Type> = Type extends KeyValuePair<any, infer Item> ? Item : never
+	type FontSize = Values<ThemeConfig['fontSize']>
+
 	// The only thing we can really filter out is if the font size itself
-	// is in a different unit than the breakpoints
-	const fontSizeValues = mapObject(theme('fontSize') ?? {}, (k, v) => {
-		const [fontSize] = Array.isArray(v) ? v : [v]
-		return parseValue(fontSize, context) ? [k as string, v] : mapObjectSkip
-	})
+	// isn't a parseable length
+	const fontSizeValues = mapObject(
+		(theme('fontSize') ?? {}) as KeyValuePair<string, FontSize>,
+		(k, v) => {
+			const [fontSize] = Array.isArray(v) ? v : [v]
+			return Length.parse(fontSize) ? [k, v] : mapObjectSkip
+		}
+	)
+
+	type NormalizedFontSize = {
+		fontSize?: string
+		lineHeight?: string
+		fontWeight?: string | number
+		letterSpacing?: string
+	}
+	const normalize = (fontSize: FontSize | null): NormalizedFontSize => {
+		if (typeof fontSize === 'string') return { fontSize }
+		else if (Array.isArray(fontSize))
+			return typeof fontSize[1] === 'string'
+				? {
+						fontSize: fontSize[0],
+						lineHeight: fontSize[1]
+					}
+				: {
+						fontSize: fontSize[0],
+						...fontSize[1]
+					}
+		return {}
+	}
 
 	// See note about default modifiers in `getFluidAPI`
 	const { DEFAULT, ...fontSizeModifiers } = fontSizeValues
 	matchUtilities(
 		{
-			'~text'(from, { modifier: to }) {
-				if (to === null && DEFAULT) to = DEFAULT
+			'~text'(_from, { modifier: _to }) {
+				if (_to === null && DEFAULT) _to = DEFAULT
 
-				// Normalize inputs
-				if (!Array.isArray(from)) from = [from]
-				else if (/^(string|number)$/.test(typeof from[1])) from[1] = { lineHeight: from[1] }
-				if (!Array.isArray(to)) to = [to]
-				else if (/^(string|number)$/.test(typeof to[1])) to[1] = { lineHeight: to[1] }
+				const from = normalize(_from)
+				const to = normalize(_to)
 
 				const rules: CSSRuleObject = {}
 
 				// Font size
-				const parsedFontSizes = parseValues(from[0], to[0], context, LogLevel.WARN)
-				if (!parsedFontSizes) return null
-				rules['font-size'] = generateExpr(
-					parsedFontSizes[0],
-					context.defaultFromScreen,
-					parsedFontSizes[1],
-					context.defaultToScreen,
-					{ checkSC144: true }
-				)
+				try {
+					rules['font-size'] = fluid.generate(from.fontSize, to.fontSize, context, {
+						checkSC144: true
+					})
+				} catch (e) {
+					handle(e, '~text: Font size')
+				}
 
 				// Line height. Make sure to use double equals to catch nulls and strings <-> numbers
-				if (from[1]?.lineHeight == to[1]?.lineHeight) {
-					rules['line-height'] = from[1]?.lineHeight
+				if (from.lineHeight == to.lineHeight) {
+					rules['line-height'] = from.lineHeight ?? null
 				} else {
-					const parsedLineHeights = parseValues(
-						from[1]?.lineHeight,
-						to[1]?.lineHeight,
-						context,
-						LogLevel.WARN
-					)
-					if (!parsedLineHeights) return null
-					rules['line-height'] = generateExpr(
-						parsedLineHeights[0],
-						context.defaultFromScreen,
-						parsedLineHeights[1],
-						context.defaultToScreen
-					)
+					try {
+						rules['line-height'] = fluid.generate(from.lineHeight, to.lineHeight, context)
+					} catch (e) {
+						handle(e, '~text: Line height')
+					}
 				}
 
 				// Letter spacing. Make sure to use double equals to catch nulls and strings <-> numbers
-				if (from[1]?.letterSpacing == to[1]?.letterSpacing) {
-					rules['letter-spacing'] = from[1]?.letterSpacing
+				if (from.letterSpacing == to.letterSpacing) {
+					rules['letter-spacing'] = from.letterSpacing ?? null
 				} else {
-					const parsedLetterSpacing = parseValues(
-						from[1]?.letterSpacing,
-						to[1]?.letterSpacing,
-						context,
-						LogLevel.WARN
-					)
-					if (!parsedLetterSpacing) return null
-					rules['letter-spacing'] = generateExpr(
-						parsedLetterSpacing[0],
-						context.defaultFromScreen,
-						parsedLetterSpacing[1],
-						context.defaultToScreen
-					)
+					try {
+						rules['letter-spacing'] = fluid.generate(from.letterSpacing, to.letterSpacing, context)
+					} catch (e) {
+						handle(e, '~text: Letter spacing')
+					}
 				}
 
 				// Font weight. Make sure to use double equals to catch nulls and strings <-> numbers
-				// Also, conveniently: NaN !== NaN
-				if (from[1]?.fontWeight == to[1]?.fontWeight) {
-					rules['font-weight'] = from[1]?.fontWeight
+				if (from.fontWeight == to.fontWeight) {
+					rules['font-weight'] = from.fontWeight ? from.fontWeight + '' : null
 				} else {
-					return null
+					log.warn('mismatched-font-weights', [`~text: Mismatched font weights`])
 				}
 
 				return rules
@@ -402,7 +222,7 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 	// ---
 
 	if (screens?.DEFAULT) {
-		log.warn('inaccessible-breakpoint', [
+		log.warn('inaccessible-default-screen', [
 			`Your DEFAULT screen breakpoint must be renamed to be used in fluid variants`
 		])
 	}
@@ -411,36 +231,68 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 		// Add `~screen/screen` variants
 		Object.entries(screens).forEach(([s2Key, s2]) => {
 			if (s2Key === s1Key) return
-			addVariant(api, `~${s1Key}/${s2Key}`, ({ container }) =>
-				rewriteExprs(container, context, [s1, s2])
-			)
+			addVariant(api, `~${s1Key}/${s2Key}`, ({ container }) => {
+				try {
+					fluid.rewrite(container, context, [s1, s2])
+					return '&'
+				} catch (e) {
+					handle(e, `~${s1Key}/${s2Key}`)
+					return []
+				}
+			})
 		})
 
 		// Add `~screen/[arbitrary]?` variants
-		addVariantWithModifier(api, `~${s1Key}`, ({ container, modifier }) =>
-			rewriteExprs(container, context, [s1, modifier])
-		)
+		addVariantWithModifier(api, `~${s1Key}`, ({ container, modifier }) => {
+			try {
+				fluid.rewrite(container, context, [s1, modifier])
+				return '&'
+			} catch (e) {
+				handle(e, `~${s1Key}${modifier ? '/' + modifier : ''}`)
+				return []
+			}
+		})
 
 		// Add `~/screen` variants
-		addVariant(api, `~/${s1Key}`, ({ container }) => rewriteExprs(container, context, [, s1]))
+		addVariant(api, `~/${s1Key}`, ({ container }) => {
+			try {
+				fluid.rewrite(container, context, [, s1])
+				return '&'
+			} catch (e) {
+				handle(e, `~/${s1Key}`)
+				return []
+			}
+		})
 	})
 
-	// Add `~/[arbitrary]` variant
-	addVariantWithModifier(api, '~', ({ modifier, container }) =>
-		rewriteExprs(container, context, [, modifier])
-	)
+	// Add `~/[arbitrary]?` variant
+	addVariantWithModifier(api, '~', ({ modifier, container }) => {
+		try {
+			fluid.rewrite(container, context, [, modifier])
+			return '&'
+		} catch (e) {
+			handle(e, `~${modifier ? '/' + modifier : ''}`)
+			return []
+		}
+	})
 
-	// Add `~min-[arbitrary]/screen|[arbitrary]` variant
-	matchVariant(api, '~min', (value, { modifier, container }) =>
-		rewriteExprs(container, context, [value, modifier])
-	)
+	// Add `~min-[arbitrary]/(screen|[arbitrary])?` variant
+	matchVariant(api, '~min', (value, { modifier, container }) => {
+		try {
+			fluid.rewrite(container, context, [value, modifier])
+			return '&'
+		} catch (e) {
+			handle(e, `~min-[${value}]${modifier ? '/' + modifier : ''}`)
+			return []
+		}
+	})
 
 	// Container variants
 	// ---
 	if (!containers) return // ensure official container query plugin exists
 
 	if (containers?.DEFAULT) {
-		log.warn('inaccessible-breakpoint', [
+		log.warn('inaccessible-default-container', [
 			`Your DEFAULT container breakpoint must be renamed to be used in fluid variants`
 		])
 	}
@@ -449,27 +301,53 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 		// Add `~@container/container` variants
 		Object.entries(containers).forEach(([c2Key, c2]) => {
 			if (c2Key === c1Key) return
-			addVariant(api, `~@${c1Key}/${c2Key}`, ({ container }) =>
-				rewriteExprs(container, context, [c1, c2], true)
-			)
+			addVariant(api, `~@${c1Key}/${c2Key}`, ({ container }) => {
+				try {
+					fluid.rewrite(container, context, [c1, c2], true)
+					return '&'
+				} catch (e) {
+					handle(e, `~@${c1Key}/${c2Key}`)
+					return []
+				}
+			})
 		})
 
 		// Add `~@container/[arbitrary]?` variants
-		addVariantWithModifier(api, `~@${c1Key}`, ({ container, modifier }) =>
-			rewriteExprs(container, context, [c1, modifier], true)
-		)
+		addVariantWithModifier(api, `~@${c1Key}`, ({ container, modifier }) => {
+			try {
+				fluid.rewrite(container, context, [c1, modifier], true)
+				return '&'
+			} catch (e) {
+				handle(e, `~@${c1Key}${modifier ? '/' + modifier : ''}`)
+				return []
+			}
+		})
 
 		// Add `~@/container` variants
-		addVariant(api, `~@/${c1Key}`, ({ container }) =>
-			rewriteExprs(container, context, [, c1], true)
-		)
+		addVariant(api, `~@/${c1Key}`, ({ container }) => {
+			try {
+				fluid.rewrite(container, context, [, c1], true)
+				return '&'
+			} catch (e) {
+				handle(e, `~@/${c1Key}`)
+				return []
+			}
+		})
 	})
 
 	// Add ~@[arbitrary]|container/[arbitrary]|container variant
 	matchVariant(
 		api,
 		'~@',
-		(value, { modifier, container }) => rewriteExprs(container, context, [value, modifier], true),
+		(value, { modifier, container }) => {
+			try {
+				fluid.rewrite(container, context, [value, modifier], true)
+				return '&'
+			} catch (e) {
+				handle(e, `~@${value}${modifier ? '/' + modifier : ''}`)
+				return []
+			}
+		},
 		{
 			values: {
 				...containers,
@@ -493,7 +371,7 @@ export const fluidize = ({ handler, config }: Plugin): Plugin => ({
  */
 export const defaultThemeScreensInRems = mapObject(defaultTheme.screens ?? {}, (name, v) => {
 	if (typeof v !== 'string') return [name, v]
-	const len = CSSLength.parse(v)
+	const len = Length.parse(v)
 	if (!len || len.unit !== 'px') return [name, v]
 	return [name, `${len.number / 16}rem`]
 })
@@ -505,8 +383,8 @@ export const defaultThemeScreensInRems = mapObject(defaultTheme.screens ?? {}, (
 export const defaultThemeFontSizeInRems = mapObject(
 	defaultTheme.fontSize ?? {},
 	(name, [_size, { lineHeight: _lineHeight }]) => {
-		const size = CSSLength.parse(_size)
-		const lineHeightLength = CSSLength.parse(_lineHeight)
+		const size = Length.parse(_size)
+		const lineHeightLength = Length.parse(_lineHeight)
 		if (
 			!size ||
 			(lineHeightLength && lineHeightLength.number !== 0) ||
@@ -515,7 +393,7 @@ export const defaultThemeFontSizeInRems = mapObject(
 			return [name, tuple([_size, _lineHeight])]
 		return [
 			name,
-			tuple([_size, new CSSLength(parseFloat(_lineHeight) * size.number, size.unit).cssText])
+			tuple([_size, new Length(parseFloat(_lineHeight) * size.number, size.unit).cssText])
 		]
 	}
 )

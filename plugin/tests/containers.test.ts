@@ -311,34 +311,32 @@ it(`fails if ~@ variant is used with same start/end containers`, async () => {
 })
 
 it(`fails if no containers`, async () => {
-	expect(async () => {
-		await run({
-			content: [
-				{
-					raw: html`<div class="~@:~p-1/2"></div>`
-				}
-			],
-			theme: {
-				containers: {}
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~@:~p-1/2"></div>`
 			}
-		})
-	}).toThrow()
+		],
+		theme: {
+			containers: {}
+		}
+	})
+	expect(result.css).toMatchFormattedCss(``)
 })
 
 it(`fails if containers with different units`, async () => {
-	expect(async () => {
-		await run({
-			content: [
-				{
-					raw: html`<div class="~@:~p-1/2"></div>`
-				}
-			],
-			theme: {
-				containers: {
-					sm: '30rem',
-					lg: '960px'
-				}
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~@:~p-1/2"></div>`
 			}
-		})
-	}).toThrow()
+		],
+		theme: {
+			containers: {
+				sm: '30rem',
+				lg: '960px'
+			}
+		}
+	})
+	expect(result.css).toMatchFormattedCss(``)
 })
