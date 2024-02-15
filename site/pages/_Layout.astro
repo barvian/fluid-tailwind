@@ -10,6 +10,8 @@ import Example from './_example/input.astro'
 import Split from './_Split.svelte'
 import Browser from './_Browser.svelte'
 import pkg from '../../plugin/package.json'
+import logo from '/assets/logo.svg'
+import { Image } from 'astro:assets'
 
 type Props = MDXLayoutProps<{
 	title: string
@@ -30,7 +32,7 @@ const path = relative(root, file)
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/logo.svg" />
+		<link rel="icon" type="image/svg+xml" href={logo.src} />
 		<meta name="generator" content={Astro.generator} />
 		<title>Fluid Tailwind</title>
 		<meta name="description" content={frontmatter.description} />
@@ -41,18 +43,22 @@ const path = relative(root, file)
 		>
 		</div>
 		<nav class="~mb-20/28 container flex items-center justify-start">
-			<div class="flex items-center gap-4">	
-				<!-- <a href="//fluid.style"> -->
-					<img src="/logo.svg" alt="Fluid.Style logo" class="h-6" />
-				<!-- </a> -->
-				<!-- <svg class="mx-2 h-6" role="separator" viewBox="0 0 32 32"
-					><path
-						d="M22 5L9 28"
-						vector-effect="non-scaling-stroke"
-						class="stroke-slate-200 dark:stroke-slate-700"
-						stroke-linecap="round"
-						stroke-linejoin="round"></path></svg
-				> -->
+			<div class="flex items-center gap-4">
+				{/* <a href="//fluid.style"> */}
+				<Image src={logo} alt="Fluid.Style logo" height="24" />
+				{/* </a> */}
+				{
+					/*
+					<svg class="mx-2 h-6" role="separator" viewBox="0 0 32 32"
+						><path
+							d="M22 5L9 28"
+							vector-effect="non-scaling-stroke"
+							class="stroke-slate-200 dark:stroke-slate-700"
+							stroke-linecap="round"
+							stroke-linejoin="round"></path></svg
+					>
+				*/
+				}
 				<span class="text-slate-700 dark:text-slate-200">Fluid Tailwind</span>
 			</div>
 			<a
