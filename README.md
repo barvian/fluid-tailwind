@@ -1,6 +1,6 @@
 # fluid-tailwind
 
-A plugin for Tailwind CSS that provides fluid versions of core utilities.
+A fluid plugin for Tailwind that works with every built-in utility.
 
 ---
 
