@@ -5,6 +5,7 @@ import mdx from '@astrojs/mdx'
 import expressiveCode, { ExpressiveCodeTheme } from 'astro-expressive-code'
 import { readFileSync } from 'node:fs'
 import sectionize from 'remark-sectionize'
+import vercel from '@astrojs/vercel/static'
 
 /** @type {import('astro-expressive-code').AstroExpressiveCodeOptions} */
 const codeOptions = {
@@ -58,7 +59,6 @@ const codeOptions = {
 
 export default defineConfig({
 	srcDir: '.',
-	outDir: '.astro/dist',
 	markdown: {
 		remarkPlugins: [sectionize]
 	},
@@ -69,5 +69,11 @@ export default defineConfig({
 		svelte(),
 		expressiveCode(codeOptions),
 		mdx()
-	]
+	],
+	output: 'static',
+	adapter: vercel({
+		webAnalytics: {
+			enabled: true
+		}
+	})
 })
