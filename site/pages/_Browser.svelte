@@ -127,7 +127,7 @@
 			</div>
 			<!-- Viewport -->
 			<div
-				class="relative flex-1 overflow-y-auto rounded-b-xl border-t border-slate-200 bg-white pb-8 dark:border-slate-900/50 dark:bg-slate-800"
+				class="relative flex-1 overflow-hidden rounded-b-xl border-t border-slate-200 bg-white pb-8 dark:border-slate-900/50 dark:bg-slate-800"
 			>
 				<slot />
 			</div>
