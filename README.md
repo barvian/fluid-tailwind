@@ -1,3 +1,5 @@
+![Preview](site/assets/preview.png)
+
 # fluid-tailwind
 
 A fluid plugin for Tailwind that works with every built-in utility.
