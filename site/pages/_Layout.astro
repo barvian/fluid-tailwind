@@ -11,7 +11,11 @@ import Split from './_Split.svelte'
 import Browser from './_Browser.svelte'
 import pkg from '../../plugin/package.json'
 import logo from '/assets/logo.svg'
-import { Image } from 'astro:assets'
+import code from '/assets/code.png'
+import { Image, getImage } from 'astro:assets'
+
+const codeOptimized = await getImage({ src: code, format: 'webp' })
+const image = new URL(codeOptimized.src, Astro.url)
 
 type Props = MDXLayoutProps<{
 	title: string
@@ -33,6 +37,8 @@ const path = relative(root, file)
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href={logo.src} />
+		<meta name="og:image" content={image} />
+		<meta name="twitter:image" content={image} />
 		<meta name="generator" content={Astro.generator} />
 		<title>Fluid Tailwind</title>
 		<meta name="description" content={frontmatter.description} />
