@@ -11,14 +11,15 @@ import Split from './_Split.svelte'
 import Browser from './_Browser.svelte'
 import pkg from '../../plugin/package.json'
 import logo from '/assets/logo.svg'
-import code from '/assets/code.png'
+import preview from '/assets/preview.png'
 import { Image, getImage } from 'astro:assets'
 
-const codeOptimized = await getImage({ src: code, format: 'webp' })
-const image = new URL(codeOptimized.src, Astro.url)
+const previewOptimized = await getImage({ src: preview, format: 'png' })
+const image = new URL(previewOptimized.src, import.meta.env.PROD ? 'https://fluid.tw' : Astro.url)
 
 type Props = MDXLayoutProps<{
 	title: string
+	headline: string
 	lead: string
 	description: string
 }>
@@ -37,11 +38,18 @@ const path = relative(root, file)
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href={logo.src} />
-		<meta name="og:image" content={image} />
-		<meta name="twitter:image" content={image} />
+		<meta name="twitter:creator" content="@mbarvian" />
+		<meta property="og:type" content="article" />
+		<meta property="og:image" content={image} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta property="twitter:image" content={image} />
 		<meta name="generator" content={Astro.generator} />
-		<title>Fluid Tailwind</title>
+		<title>{frontmatter.title}</title>
+		<meta property="og:title" content={frontmatter.title} />
+		<meta name="twitter:title" content={frontmatter.title} />
 		<meta name="description" content={frontmatter.description} />
+		<meta property="og:description" content={frontmatter.description} />
+		<meta name="twitter:description" content={frontmatter.description} />
 	</head>
 	<header class="~pt-5/8 ~pb-20/28 relative">
 		<div
@@ -83,7 +91,7 @@ const path = relative(root, file)
 			<h1
 				class="~text-4xl/6xl max-w-3xl text-balance text-center font-extrabold tracking-tight text-slate-900 dark:text-white"
 			>
-				{frontmatter.title}
+				{frontmatter.headline}
 			</h1>
 			<p class="mt-6 max-w-3xl text-balance text-center text-lg text-slate-600 dark:text-slate-400">
 				{frontmatter.lead}
