@@ -14,7 +14,7 @@
 		"build": "bun build ./src/util/* --outdir ./dist/util --target node --external '*' && bun build --entrypoints ./src/index.ts ./src/extractor.ts --outdir ./dist --target node --external '*'",
 		"dev": "bun run build --watch",
 		"postbuild": "tsc -p tsconfig.build.json --emitDeclarationOnly",
-		"prepublishOnly": "bun run build"
+		"prepublishOnly": "bun run build && bun run test"
 	},
 	"files": [
 		"dist"
