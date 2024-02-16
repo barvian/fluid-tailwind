@@ -90,6 +90,31 @@ it(`allows variants to fix SC 1.4.4 violations`, async () => {
 	`)
 })
 
+it(`handles simple font sizes`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~text-sm/lg"></div>`
+			}
+		],
+		theme: {
+			fontSize: {
+				sm: '1rem',
+				lg: '2rem'
+			}
+		}
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~text-sm\/lg {
+			font-size: clamp(
+				1rem,
+				0.29rem + 1.79vw,
+				2rem
+			); /* fluid from 1rem at 40rem to 2rem at 96rem; passes WCAG SC 1.4.4 */
+		}
+	`)
+})
+
 it(`applies consistent line height`, async () => {
 	const result = await run({
 		content: [
