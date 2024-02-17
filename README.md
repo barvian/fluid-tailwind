@@ -1,6 +1,6 @@
 ![Preview](site/assets/preview.png)
 
-A fluid plugin for Tailwind that works with every built-in utility.
+A Tailwind plugin to easily generate fluid `clamp()` values with every built-in utility.
 
 ---
 
