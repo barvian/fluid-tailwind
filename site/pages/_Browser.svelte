@@ -19,13 +19,13 @@
 		didAnimate = false
 
 	onMount(() => {
-		setTimeout(() => (showCursor = true), 500)
-		setTimeout(() => (animating = true), 1000) // wait to show the pressed cursor state
+		setTimeout(() => (showCursor = true), 250)
+		setTimeout(() => (animating = true), 750) // wait to show the pressed cursor state
 		setTimeout(async () => {
 			await margin.set(0)
 			animating = showCursor = false
 			didAnimate = true
-		}, 1000 /* initial delay */ + 250 /* another delay, accounting for cursor press transition */)
+		}, 750 /* initial delay */ + 250 /* another delay, accounting for cursor press transition */)
 	})
 </script>
 

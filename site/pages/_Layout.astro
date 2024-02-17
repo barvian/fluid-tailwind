@@ -59,7 +59,7 @@ const path = relative(root, file)
 		<nav class="~mb-20/28 container flex items-center justify-start">
 			<div class="flex items-center gap-4">
 				{/* <a href="//fluid.style"> */}
-				<Image src={logo} alt="Fluid.Style logo" height="24" />
+				<Image src={logo} alt="Fluid.Style logo" height="24" loading="eager" />
 				{/* </a> */}
 				{
 					/*
@@ -108,7 +108,10 @@ const path = relative(root, file)
 					<Input />
 					<Output />
 				</Split>
-				<Browser class="absolute -top-10 left-0 right-1/3 z-10 h-full max-sm:hidden" client:visible>
+				<Browser
+					class="absolute -top-10 left-0 right-1/3 z-10 h-full max-sm:hidden"
+					client:intersecting={{ threshold: 0.5 }}
+				>
 					<Example />
 				</Browser>
 			</div>

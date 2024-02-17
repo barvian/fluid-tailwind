@@ -11,13 +11,13 @@
 		"astro": "astro"
 	},
 	"dependencies": {
-		"@astrojs/mdx": "^1.0.0",
-		"@astrojs/svelte": "^4.0.0",
+		"@astrojs/mdx": "^2.1.1",
+		"@astrojs/svelte": "^5.0.0",
 		"@astrojs/tailwind": "^5.0.0",
 		"@tailwindcss/container-queries": "^0.1.1",
 		"@tailwindcss/typography": "^0.5.9",
 		"fluid-tailwind": "workspace:*",
-		"astro": "^3.0.7",
+		"astro": "^4.4.0",
 		"astro-expressive-code": "^0.22.2",
 		"filter-obj": "^5.1.0",
 		"mini-svg-data-uri": "^1.4.4",
