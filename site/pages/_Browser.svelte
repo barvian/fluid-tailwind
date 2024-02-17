@@ -12,20 +12,25 @@
 
 	let resizable: HTMLDivElement
 
-	let margin = tweened(30 /* biggest value in rems */, { duration: 800, easing: cubicOut }),
+	let margin = tweened(0, { duration: 700, easing: cubicOut }),
 		resizing = writable(false)
 	let showCursor = false,
 		animating = false,
 		didAnimate = false
 
 	onMount(() => {
-		setTimeout(() => (showCursor = true), 250)
-		setTimeout(() => (animating = true), 750) // wait to show the pressed cursor state
+		setTimeout(() => (showCursor = true), 0)
+		setTimeout(() => (animating = true), 500) // wait to show the pressed cursor state
 		setTimeout(async () => {
-			await margin.set(0)
+			await margin.set(26) // biggest value, in rems
 			animating = showCursor = false
 			didAnimate = true
-		}, 750 /* initial delay */ + 250 /* another delay, accounting for cursor press transition */)
+			// Convert to pixels
+			margin.set(parseFloat(getComputedStyle(resizable).marginRight), {
+				duration: 0,
+				delay: 0
+			})
+		}, 500 /* initial delay */ + 250 /* another delay, accounting for cursor press transition */)
 	})
 </script>
 
