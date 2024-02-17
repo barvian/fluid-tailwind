@@ -8,16 +8,14 @@ import {
 	defaultThemeFontSizeInRems,
 	defaultThemeScreensInRems
 } from '../src'
+import { expect, spyOn } from 'bun:test'
+import * as log from '../src/util/log'
 
 export let css = String.raw
 export let html = String.raw
 export let javascript = String.raw
 
-export function run(
-	config: Config,
-	input = `@tailwind utilities;@tailwind components;`,
-	plugin = tailwind
-) {
+export async function run(config: Config, input = `@tailwind utilities;@tailwind components;`) {
 	if (Array.isArray(config.content)) {
 		config.content = {
 			files: config.content,
@@ -42,7 +40,11 @@ export function run(
 		config.plugins.push(containerQueries)
 	}
 
-	return postcss(plugin(config)).process(input, {
+	const warn = spyOn(log, 'warn').mockImplementation(() => {})
+
+	const result = await postcss(tailwind(config)).process(input, {
 		from: `${path.resolve(__filename)}?test=${crypto.randomUUID()}`
 	})
+
+	return { result, warn }
 }

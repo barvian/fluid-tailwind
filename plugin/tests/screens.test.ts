@@ -4,7 +4,7 @@ import { html, css, run } from './run'
 import { type FluidConfig } from '../src'
 
 it(`allows ~screen/screen variant`, async () => {
-	const result = await run({
+	const { result } = await run({
 		content: [
 			{
 				raw: html`<div class="~md/lg:~p-1/2"></div>`
@@ -29,7 +29,7 @@ it(`allows ~screen/screen variant`, async () => {
 })
 
 it(`allows ~screen variant`, async () => {
-	const result = await run({
+	const { result } = await run({
 		content: [
 			{
 				raw: html`<div class="~md:~p-1/2"></div>`
@@ -54,7 +54,7 @@ it(`allows ~screen variant`, async () => {
 })
 
 it(`allows ~screen/[arbitrary] variant`, async () => {
-	const result = await run({
+	const { result } = await run({
 		content: [
 			{
 				raw: html`<div class="~md/[80rem]:~p-1/2"></div>`
@@ -78,7 +78,7 @@ it(`allows ~screen/[arbitrary] variant`, async () => {
 })
 
 it(`allows ~/screen variant`, async () => {
-	const result = await run({
+	const { result } = await run({
 		content: [
 			{
 				raw: html`<div class="~/lg:~p-1/2"></div>`
@@ -103,7 +103,7 @@ it(`allows ~/screen variant`, async () => {
 })
 
 it(`allows ~/[arbitrary] variant`, async () => {
-	const result = await run({
+	const { result } = await run({
 		content: [
 			{
 				raw: html`<div class="~/[80rem]:~p-1/2"></div>`
@@ -127,7 +127,7 @@ it(`allows ~/[arbitrary] variant`, async () => {
 })
 
 it(`allows ~min-[arbitrary] variant`, async () => {
-	const result = await run({
+	const { result } = await run({
 		content: [
 			{
 				raw: html`<div class="~min-[30rem]:~p-1/2"></div>`
@@ -151,7 +151,7 @@ it(`allows ~min-[arbitrary] variant`, async () => {
 })
 
 it(`allows ~min-[arbitrary]/screen variant`, async () => {
-	const result = await run({
+	const { result } = await run({
 		content: [
 			{
 				raw: html`<div class="~min-[30rem]/lg:~p-1/2"></div>`
@@ -175,7 +175,7 @@ it(`allows ~min-[arbitrary]/screen variant`, async () => {
 })
 
 it(`allows ~min-[arbitrary]/[arbitrary] variant`, async () => {
-	const result = await run({
+	const { result } = await run({
 		content: [
 			{
 				raw: html`<div class="~min-[30rem]/[80rem]:~p-1/2"></div>`
@@ -194,7 +194,7 @@ it(`allows ~min-[arbitrary]/[arbitrary] variant`, async () => {
 })
 
 it(`fails if ~ variant is used on non-fluid utility`, async () => {
-	const result = await run({
+	const { result, warn } = await run({
 		content: [
 			{
 				raw: html`<div class="~:relative"></div>`
@@ -202,10 +202,14 @@ it(`fails if ~ variant is used on non-fluid utility`, async () => {
 		]
 	})
 	expect(result.css).toMatchFormattedCss(css``)
+	expect(warn).toHaveBeenCalledWith(
+		'no-utility',
+		'~: Fluid variants can only be used with fluid utilities'
+	)
 })
 
 it(`fails if ~ variant is used with same start/end screens`, async () => {
-	const result = await run({
+	const { result, warn } = await run({
 		content: [
 			{
 				raw: html`<div class="~md/[30rem]:~p-1/2"></div>`
@@ -218,10 +222,14 @@ it(`fails if ~ variant is used with same start/end screens`, async () => {
 		}
 	})
 	expect(result.css).toMatchFormattedCss(css``)
+	expect(warn).toHaveBeenCalledWith(
+		'no-change-bp',
+		'~md/[30rem]: Start and end breakpoints are both 30rem'
+	)
 })
 
 it(`fails if no screens`, async () => {
-	const result = await run({
+	const { result, warn } = await run({
 		content: [
 			{
 				raw: html`<div class="~p-1/2"></div>`
@@ -232,10 +240,14 @@ it(`fails if no screens`, async () => {
 		}
 	})
 	expect(result.css).toMatchFormattedCss(``)
+	expect(warn).toHaveBeenCalledWith(
+		'missing-default-start-bp',
+		'~p: Missing default start breakpoint'
+	)
 })
 
 it(`fails if screens with different units`, async () => {
-	const result = await run({
+	const { result, warn } = await run({
 		content: [
 			{
 				raw: html`<div class="~p-1/2"></div>`
@@ -249,10 +261,14 @@ it(`fails if screens with different units`, async () => {
 		}
 	})
 	expect(result.css).toMatchFormattedCss(``)
+	expect(warn).toHaveBeenCalledWith(
+		'sort-mismatched-bp-units',
+		'~p: Cannot sort simple breakpoints in `theme.screens` because they use different units'
+	)
 })
 
 it(`supports missing start defaultScreen`, async () => {
-	const result = await run({
+	const { result } = await run({
 		content: [
 			{
 				raw: html`<div class="~p-1/2"></div>`
@@ -279,7 +295,7 @@ it(`supports missing start defaultScreen`, async () => {
 })
 
 it(`supports missing end defaultScreen`, async () => {
-	const result = await run({
+	const { result } = await run({
 		content: [
 			{
 				raw: html`<div class="~p-1/2"></div>`

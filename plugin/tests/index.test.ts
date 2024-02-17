@@ -15,7 +15,7 @@ import tailwindDefaultTheme from 'tailwindcss/defaultTheme'
 import dlv from 'dlv'
 
 it(`should be possible to use defaultTheme...InRems values`, async () => {
-	const result = await run({
+	const { result } = await run({
 		content: [
 			{
 				raw: html`<h1 class="~text-2xl/5xl"></h1>`
@@ -40,7 +40,7 @@ it(`should be possible to use defaultTheme...InRems values`, async () => {
 })
 
 it(`respects disabled core plugins`, async () => {
-	const result = await run({
+	const { result } = await run({
 		content: [
 			{
 				raw: html`<div class="~p-1/2"></div>`
@@ -54,7 +54,7 @@ it(`respects disabled core plugins`, async () => {
 })
 
 it(`requires a change in values`, async () => {
-	const result = await run({
+	const { result, warn } = await run({
 		content: [
 			{
 				raw: html`<div class="~p-1/1"></div>`
@@ -62,10 +62,11 @@ it(`requires a change in values`, async () => {
 		]
 	})
 	expect(result.css).toMatchFormattedCss(css``)
+	expect(warn).toHaveBeenCalledWith('no-change', '~p: Start and end values are both 0.25rem')
 })
 
 it(`respects DEFAULT from value`, async () => {
-	const result = await run({
+	const { result } = await run({
 		content: [
 			{
 				raw: html`<div class="~p/8"></div>`
@@ -86,7 +87,7 @@ it(`respects DEFAULT from value`, async () => {
 })
 
 it(`respects DEFAULT to value`, async () => {
-	const result = await run({
+	const { result } = await run({
 		content: [
 			{
 				raw: html`<div class="~p-8"></div>`
@@ -108,7 +109,7 @@ it(`respects DEFAULT to value`, async () => {
 
 it(`simplifies when start = end screen`, async () => {
 	// Technically we can't throw here because they could change it with a variant
-	const result = await run({
+	const { result } = await run({
 		content: [
 			{
 				raw: html`<div class="~p-1/2"></div>`
@@ -131,7 +132,7 @@ it(`simplifies when start = end screen`, async () => {
 })
 
 it(`requires values with same units`, async () => {
-	const result = await run({
+	const { result, warn } = await run({
 		content: [
 			{
 				raw: html`<div class="~p-[1px]/[2rem]"></div>`
@@ -139,10 +140,14 @@ it(`requires values with same units`, async () => {
 		]
 	})
 	expect(result.css).toMatchFormattedCss(css``)
+	expect(warn).toHaveBeenCalledWith(
+		'mismatched-units',
+		"~p: Start `1px` and end `2rem` units don't match"
+	)
 })
 
 it(`requires length literals`, async () => {
-	const result = await run({
+	const { result, warn } = await run({
 		content: [
 			{
 				raw: html`<div class="~p-[1rem]/[calc(2rem)]"></div>`
@@ -150,10 +155,11 @@ it(`requires length literals`, async () => {
 		]
 	})
 	expect(result.css).toMatchFormattedCss(css``)
+	expect(warn).toHaveBeenCalledWith('non-length-end', '~p: End value `calc(2rem)` is not a length')
 })
 
 it(`supports negative length literals`, async () => {
-	const result = await run({
+	const { result } = await run({
 		content: [
 			{
 				raw: html`<div class="~mt-[1rem]/[-2rem]"></div>`
@@ -178,7 +184,7 @@ it(`supports negative length literals`, async () => {
 })
 
 it(`respects defaultScreens config`, async () => {
-	const result = await run({
+	const { result } = await run({
 		content: [
 			{
 				raw: html`<div class="~p-1/2"></div>`
@@ -202,7 +208,7 @@ it(`respects defaultScreens config`, async () => {
 })
 
 it(`supports custom separator and prefix`, async () => {
-	const result = await run({
+	const { result } = await run({
 		content: {
 			files: [
 				{
@@ -233,7 +239,7 @@ it(`supports custom separator and prefix`, async () => {
 
 type MatchUtilOrComp = Extract<keyof PluginAPI, 'matchUtilities' | 'matchComponents'>
 const testFluidize = (key: MatchUtilOrComp) => async () => {
-	const result = await run({
+	const { result } = await run({
 		content: [
 			{
 				raw: html`<div class="test-p-1 ~test-p-1/2"></div>`

@@ -10,7 +10,7 @@ const codes = {
 	'non-length-start-bp': (bp: string) => `Start breakpoint \`${bp}\` is not a length`,
 	'non-length-end-bp': (bp: string) => `End breakpoint \`${bp}\` is not a length`,
 	'sort-mismatched-bp-units': (key) =>
-		`Cannot sort simple breakpoints in \`theme.${key}\` because they use different units'`,
+		`Cannot sort simple breakpoints in \`theme.${key}\` because they use different units`,
 	'mismatched-bp-units': (start: Length, end: Length) =>
 		`Start breakpoint \`${start.cssText}\` and end breakpoint \`${end.cssText}\` units don't match`,
 	'mismatched-bp-val-units': () => `Breakpoint and value units don't match`,
