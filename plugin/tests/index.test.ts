@@ -39,6 +39,21 @@ it(`should be possible to use defaultTheme...InRems values`, async () => {
 	`)
 })
 
+it(`works with @apply`, async () => {
+	const { result } = await run({ content: [] }, `h1 { @apply ~text-lg/3xl }`)
+	expect(result.css).toMatchFormattedCss(css`
+		h1 {
+			font-size: clamp(1.125rem, 0.589rem + 1.339vw, 1.875rem)
+				/* fluid from 1.125rem at 40rem to 1.875rem at 96rem; passes WCAG SC 1.4.4 */;
+			line-height: clamp(
+				1.75rem,
+				1.39rem + 0.89vw,
+				2.25rem
+			); /* fluid from 1.75rem at 40rem to 2.25rem at 96rem */
+		}
+	`)
+})
+
 it(`respects disabled core plugins`, async () => {
 	const { result } = await run({
 		content: [
