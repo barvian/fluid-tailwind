@@ -23,7 +23,7 @@
 	],
 	"scripts": {
 		"test": "bun test",
-		"build": "tsup src --format esm,cjs --no-splitting --clean",
+		"build": "tsup src/index.ts --format esm,cjs --no-splitting --clean",
 		"postbuild": "tsc -p tsconfig.build.json --emitDeclarationOnly",
 		"dev": "bun run build --watch",
 		"prepublishOnly": "bun run build && bun run test"
