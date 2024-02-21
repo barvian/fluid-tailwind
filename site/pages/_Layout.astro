@@ -11,7 +11,7 @@ import Split from './_Split.svelte'
 import Browser from './_Browser.svelte'
 import pkg from '../../plugin/package.json'
 import logo from '/assets/logo.svg'
-import preview from '/assets/preview.png'
+import preview from '/public/preview.png'
 import { Image, getImage } from 'astro:assets'
 
 const previewOptimized = await getImage({ src: preview, format: 'png' })
