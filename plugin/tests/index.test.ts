@@ -80,6 +80,25 @@ it(`requires a change in values`, async () => {
 	expect(warn).toHaveBeenCalledWith('no-change', '~p: Start and end values are both 0.25rem')
 })
 
+it(`handles zeroed values`, async () => {
+	const { result } = await run({
+		content: [
+			{
+				raw: html`<div class="~p-0/1"></div>`
+			}
+		]
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~p-0\/1 {
+			padding: clamp(
+				0rem,
+				-0.18rem + 0.45vw,
+				0.25rem
+			); /* fluid from 0rem at 40rem to 0.25rem at 96rem */
+		}
+	`)
+})
+
 it(`respects DEFAULT from value`, async () => {
 	const { result } = await run({
 		content: [

@@ -61,26 +61,29 @@ export const generate = (
 	const startBP = resolveBP(_startBP, 'start', context, atContainer)
 	const endBP = resolveBP(_endBP, 'end', context, atContainer)
 
-	if (!start.unit || start.unit !== end.unit) error('mismatched-units', start, end)
+	if (start.number === 0) start.unit = end.unit
+	else if (end.number === 0) end.unit = start.unit
+	else if (!start.unit || start.unit !== end.unit) error('mismatched-units', start, end)
 	const unit = start.unit
 
 	if (start.number === end.number) error('no-change', start)
 
 	let comment = `/* fluid from ${start.cssText} at ${startBP.cssText} to ${end.cssText} at ${endBP.cssText}${atContainer ? ' (container)' : ''} */`
 
-	// Return comment if the startBP.unit != endBP.unit. We can't throw because they could change the breakpoints later with a variant
-	if (!startBP.unit || startBP.unit !== endBP.unit) {
+	if (startBP.number === 0) {
+		startBP.unit = endBP.unit
+	} else if (endBP.number === 0) {
+		endBP.unit = startBP.unit
+	} else if (!startBP.unit || startBP.unit !== endBP.unit) {
 		if (checkBP) error('mismatched-bp-units', startBP, endBP)
 		return comment
 	}
 
-	// Return comment if the startBP = endBP. We can't throw because they could change the breakpoints later with a variant
 	if (startBP.number === endBP.number) {
 		if (checkBP) error('no-change-bp', startBP)
 		return comment
 	}
 
-	// Return comment if the start.unit != startBP.unit. We can't throw because they could change the breakpoints later with a variant
 	if (start.unit !== startBP.unit) {
 		if (checkBP) error('mismatched-bp-val-units')
 		return comment

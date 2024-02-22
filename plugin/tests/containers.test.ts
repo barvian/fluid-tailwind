@@ -353,3 +353,41 @@ it(`fails if containers with different units`, async () => {
 		'~@: Cannot sort simple breakpoints in `theme.containers` because they use different units'
 	)
 })
+
+it(`allows zeroed start container`, async () => {
+	const { result } = await run({
+		content: [
+			{
+				raw: html`<div class="~@[0px]/[80rem]:~p-1/2"></div>`
+			}
+		]
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~\@\[0px\]\/\[80rem\]\:\~p-1\/2 {
+			padding: clamp(
+				0.25rem,
+				0.25rem + 0.31cqw,
+				0.5rem
+			); /* fluid from 0.25rem at 0rem to 0.5rem at 80rem (container) */
+		}
+	`)
+})
+
+it(`allows zeroed end container`, async () => {
+	const { result } = await run({
+		content: [
+			{
+				raw: html`<div class="~@[80rem]/[0px]:~p-1/2"></div>`
+			}
+		]
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~\@\[80rem\]\/\[0px\]\:\~p-1\/2 {
+			padding: clamp(
+				0.25rem,
+				0.5rem + -0.31cqw,
+				0.5rem
+			); /* fluid from 0.25rem at 80rem to 0.5rem at 0rem (container) */
+		}
+	`)
+})

@@ -320,3 +320,41 @@ it(`supports missing end defaultScreen`, async () => {
 		}
 	`)
 })
+
+it(`allows zeroed start screen`, async () => {
+	const { result } = await run({
+		content: [
+			{
+				raw: html`<div class="~min-[0px]/[80rem]:~p-1/2"></div>`
+			}
+		]
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~min-\[0px\]\/\[80rem\]\:\~p-1\/2 {
+			padding: clamp(
+				0.25rem,
+				0.25rem + 0.31vw,
+				0.5rem
+			); /* fluid from 0.25rem at 0rem to 0.5rem at 80rem */
+		}
+	`)
+})
+
+it(`allows zeroed end screen`, async () => {
+	const { result } = await run({
+		content: [
+			{
+				raw: html`<div class="~min-[80rem]/[0px]:~p-1/2"></div>`
+			}
+		]
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~min-\[80rem\]\/\[0px\]\:\~p-1\/2 {
+			padding: clamp(
+				0.25rem,
+				0.5rem + -0.31vw,
+				0.5rem
+			); /* fluid from 0.25rem at 80rem to 0.5rem at 0rem */
+		}
+	`)
+})
