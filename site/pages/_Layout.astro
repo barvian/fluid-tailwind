@@ -76,7 +76,7 @@ const path = relative(root, file)
 				<span class="text-slate-700 dark:text-slate-200">Fluid for Tailwind CSS</span>
 			</div>
 			<a
-				href={pkg.repository}
+				href={pkg.repository.url.replace('git+','')}
 				class="ml-auto block text-slate-400 hover:text-slate-500 dark:hover:text-slate-300"
 				aria-label="View on GitHub"
 			>
