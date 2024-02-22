@@ -6,12 +6,13 @@
 	"scripts": {
 		"dev": "astro dev",
 		"start": "astro dev",
-		"build": "astro build",
+		"build": "astro check && astro build",
 		"postbuild": "sharp -i ./public/preview.png -o ./.vercel/output/static/preview.webp -f webp",
 		"preview": "astro preview",
 		"astro": "astro"
 	},
 	"dependencies": {
+		"@astrojs/check": "^0.4.1",
 		"@astrojs/mdx": "^2.1.1",
 		"@astrojs/svelte": "^5.0.0",
 		"@astrojs/tailwind": "^5.0.0",
