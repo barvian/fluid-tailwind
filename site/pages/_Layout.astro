@@ -17,6 +17,8 @@ import { Image, getImage } from 'astro:assets'
 const previewOptimized = await getImage({ src: preview, format: 'png' })
 const image = new URL(previewOptimized.src, import.meta.env.PROD ? 'https://fluid.tw' : Astro.url)
 
+const repo = pkg.repository.url.replace(/^git\+/, '').replace(/\.git$/, '')
+
 type Props = MDXLayoutProps<{
 	title: string
 	headline: string
@@ -76,7 +78,7 @@ const path = relative(root, file)
 				<span class="text-slate-700 dark:text-slate-200">Fluid for Tailwind CSS</span>
 			</div>
 			<a
-				href={pkg.repository.url.replace('git+','')}
+				href={repo}
 				class="ml-auto block text-slate-400 hover:text-slate-500 dark:hover:text-slate-300"
 				aria-label="View on GitHub"
 			>
@@ -136,7 +138,7 @@ const path = relative(root, file)
 			</div>
 			<a
 				class="hover:text-slate-900 dark:hover:text-slate-400"
-				href={`${pkg.repository}/edit/main/${path}`}>Edit this page on GitHub</a
+				href={`${repo}/edit/main/${path}`}>Edit this page on GitHub</a
 			>
 		</footer>
 	</div>
