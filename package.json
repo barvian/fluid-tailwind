@@ -1,10 +1,6 @@
 {
 	"private": true,
 	"type": "module",
-	"workspaces": [
-		"plugin",
-		"site"
-	],
 	"devDependencies": {
 		"prettier": "^3.2.5",
 		"prettier-plugin-astro": "^0.13.0",
