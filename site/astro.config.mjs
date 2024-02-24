@@ -1,4 +1,4 @@
-import { defineConfig } from 'astro/config'
+import { defineConfig, squooshImageService } from 'astro/config'
 import tailwind from '@astrojs/tailwind'
 import svelte from '@astrojs/svelte'
 import mdx from '@astrojs/mdx'
@@ -52,8 +52,8 @@ const codeOptions = {
 	},
 	useThemedScrollbars: false,
 	frames: {
-		extractFileNameFromCode: false,
-	},
+		extractFileNameFromCode: false
+	}
 }
 
 export default defineConfig({
@@ -70,6 +70,9 @@ export default defineConfig({
 		expressiveCode(codeOptions),
 		mdx()
 	],
+	image: {
+		service: squooshImageService()
+	},
 	output: 'static',
 	adapter: vercel({
 		webAnalytics: {

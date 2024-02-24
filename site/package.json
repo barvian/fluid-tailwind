@@ -6,8 +6,7 @@
 	"scripts": {
 		"dev": "astro dev",
 		"start": "astro dev",
-		"build": "astro check && astro build",
-		"postbuild": "sharp -i ./public/preview.png -o ./.vercel/output/static/preview.webp -f webp",
+		"build": "astro check && astro build && sharp -i ./public/preview.png -o ./.vercel/output/static/preview.webp -f webp",
 		"preview": "astro preview",
 		"astro": "astro"
 	},
