@@ -97,10 +97,10 @@ export default {
 						'ul > li, ol > li': {
 							'@apply my-0': {}
 						},
-						'.ec': {
+						'.expressive-code': {
 							'@apply z-10 mt-5 mb-8': {}
 						},
-						'.ec+[data-info]': {
+						'.expressive-code+[data-info]': {
 							'@apply -mt-3': {}
 						}
 					}
