@@ -29,6 +29,7 @@
 	},
 	"devDependencies": {
 		"@astrojs/vercel": "^7.3.1",
+		"@rollup/rollup-linux-x64-gnu": "^4.12.0",
 		"sharp": "^0.33.2",
 		"sharp-cli": "^4.2.0",
 		"typescript": ">=5.0.0",
