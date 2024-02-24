@@ -18,10 +18,10 @@
 		"@astrojs/tailwind": "^5.0.0",
 		"@tailwindcss/container-queries": "^0.1.1",
 		"@tailwindcss/typography": "^0.5.9",
-		"fluid-tailwind": "workspace:*",
 		"astro": "^4.4.0",
 		"astro-expressive-code": "^0.22.2",
 		"filter-obj": "^5.1.0",
+		"fluid-tailwind": "workspace:*",
 		"mini-svg-data-uri": "^1.4.4",
 		"remark-sectionize": "^2.0.0",
 		"svelte": "^4.2.0",
@@ -30,6 +30,9 @@
 	},
 	"devDependencies": {
 		"@astrojs/vercel": "^7.3.1",
-		"sharp-cli": "^4.2.0"
+		"sharp": "^0.33.2",
+		"sharp-cli": "^4.2.0",
+		"typescript": ">=5.0.0",
+		"vite": "^5.1.4"
 	}
 }
