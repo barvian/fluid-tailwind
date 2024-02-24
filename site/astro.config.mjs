@@ -1,4 +1,4 @@
-import { defineConfig, squooshImageService } from 'astro/config'
+import { defineConfig, passthroughImageService } from 'astro/config'
 import tailwind from '@astrojs/tailwind'
 import svelte from '@astrojs/svelte'
 import mdx from '@astrojs/mdx'
@@ -76,9 +76,9 @@ export default defineConfig({
 		mdx()
 	],
 	image: {
-		service: squooshImageService()
+		service: passthroughImageService()
 	},
-	output: 'hybrid',
+	output: 'server',
 	adapter: vercel({
 		isr: {
 			// Refresh every 5 minutes
