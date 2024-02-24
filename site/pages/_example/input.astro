@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets'
-import beachHouse from './beach-house.jpg'
-import beachHouseInterior from './beach-house-interior.jpg'
+import beachHouse from './beach-house.jpg?url'
+import beachHouseInterior from './beach-house-interior.jpg?url'
 ---
 
 <div class="~@/3xl:~py-6/10 ~@/3xl:~px-4/10 text-slate-500 dark:text-slate-400">
@@ -11,8 +11,8 @@ import beachHouseInterior from './beach-house-interior.jpg'
         <p class="text-sm leading-4 font-medium text-white @lg:text-slate-500 dark:@lg:text-slate-400">Entire house</p>
         </div>
         <div class="grid gap-4 col-start-1 col-end-3 row-start-1 @lg:mb-6 @lg:grid-cols-2">
-        <Image src={beachHouse} alt="" class="w-full h-60 object-cover rounded-lg @lg:h-52" loading="eager" />
-        <Image src={beachHouseInterior} alt="" class="hidden w-full h-52 object-cover rounded-lg @lg:block" loading="eager" />
+        <img src={beachHouse} alt="" class="w-full h-60 object-cover rounded-lg @lg:h-52" loading="eager" />
+        <img src={beachHouseInterior} alt="" class="hidden w-full h-52 object-cover rounded-lg @lg:block" loading="eager" />
         </div>
         <dl class="~@/3xl:~mt-4/2.5 text-xs font-medium flex items-center row-start-2 @lg:row-start-3">
         <dt class="sr-only">Reviews</dt>

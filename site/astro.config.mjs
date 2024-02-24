@@ -1,4 +1,4 @@
-import { defineConfig, passthroughImageService } from 'astro/config'
+import { defineConfig } from 'astro/config'
 import tailwind from '@astrojs/tailwind'
 import svelte from '@astrojs/svelte'
 import mdx from '@astrojs/mdx'
@@ -75,9 +75,6 @@ export default defineConfig({
 		expressiveCode(codeOptions),
 		mdx()
 	],
-	image: {
-		service: passthroughImageService()
-	},
 	output: 'server',
 	adapter: vercel({
 		isr: {

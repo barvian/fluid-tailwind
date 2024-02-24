@@ -9,15 +9,12 @@ import Output from './_example/output.mdx'
 import Example from './_example/input.astro'
 import Split from './_Split.svelte'
 import Browser from './_Browser.svelte'
-import logo from '/assets/logo.svg'
-import preview from '/public/preview.png'
-import { Image, getImage } from 'astro:assets'
+import logo from '/assets/logo.svg?url'
 
 const repo = 'barvian/fluid-tailwind'
 const data = await fetch(`https://api.github.com/repos/${repo}`).then((r) => r.json())
 
-const previewOptimized = await getImage({ src: preview, format: 'png' })
-const image = new URL(previewOptimized.src, import.meta.env.PROD ? 'https://fluid.tw' : Astro.url)
+const url = process.env.VERCEL_URL ? 'https://'+process.env.VERCEL_URL : ''
 
 type Props = MDXLayoutProps<{
 	title: string
@@ -38,12 +35,12 @@ const path = relative(dirname(fileURLToPath(import.meta.url)), file)
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href={logo.src} />
+		<link rel="icon" type="image/svg+xml" href={logo} />
 		<meta name="twitter:creator" content="@mbarvian" />
 		<meta property="og:type" content="article" />
-		<meta property="og:image" content={image} />
+		<meta property="og:image" content={`${url}/preview.png`} />
 		<meta name="twitter:card" content="summary_large_image" />
-		<meta property="twitter:image" content={image} />
+		<meta property="twitter:image" content={`${url}/preview.png`} />
 		<meta name="generator" content={Astro.generator} />
 		<title>{frontmatter.title}</title>
 		<meta property="og:title" content={frontmatter.title} />
@@ -60,7 +57,7 @@ const path = relative(dirname(fileURLToPath(import.meta.url)), file)
 		<nav class="~mb-20/28 container flex items-center justify-start">
 			<div class="flex items-center gap-4">
 				{/* <a href="//fluid.style"> */}
-				<Image src={logo} alt="Fluid for Tailwind logo" height="24" loading="eager" />
+				<img src={logo} alt="Fluid for Tailwind logo" class="size-6" loading="eager" />
 				{/* </a> */}
 				{
 					/*
