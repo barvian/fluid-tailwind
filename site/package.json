@@ -19,7 +19,7 @@
 		"@tailwindcss/container-queries": "^0.1.1",
 		"@tailwindcss/typography": "^0.5.9",
 		"astro": "^4.4.0",
-		"astro-expressive-code": "^0.22.2",
+		"astro-expressive-code": "^0.33.4",
 		"filter-obj": "^5.1.0",
 		"fluid-tailwind": "workspace:*",
 		"mini-svg-data-uri": "^1.4.4",

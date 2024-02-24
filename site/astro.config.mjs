@@ -17,34 +17,28 @@ const codeOptions = {
 		codeFontFamily: 'Fira Code VF',
 		codeFontSize: '0.875rem',
 		codePaddingBlock: '1.25rem',
-		borderRadius: '0.75rem'
-	},
-	useThemedScrollbars: false,
-	frames: {
-		extractFileNameFromCode: false,
-		styleOverrides: {
+		borderRadius: '0.75rem',
+		frames: {
 			terminalBackground: '#1e293b',
 			terminalTitlebarDotsForeground: '#475569',
-			terminalTitlebarBorderBottom: '#64748b4d',
+			terminalTitlebarBorderBottomColor: '#64748b4d',
 			terminalTitlebarBackground: '#1e293b',
 			inlineButtonBorder: '#494f66',
 			inlineButtonForeground: '#94a3b8',
 			tooltipSuccessBackground: '#0ea5e9',
 			tooltipSuccessForeground: '#fff',
-			inlineButtonHoverOrFocusBackground: '#33415580',
+			inlineButtonBackgroundHoverOrFocusOpacity: '.8',
 			editorBackground: '#1e293b',
 			editorActiveTabForeground: '#7dd3fc',
 			editorActiveTabBackground: '#1e293b',
-			editorActiveTabBorder: '#64748b4d',
-			editorTabBarBorderBottom: '#64748b4d',
-			editorActiveTabBorderBottom: '#7dd3fc',
+			editorActiveTabBorderColor: '#64748b4d',
+			editorTabBarBorderBottomColor: '#64748b4d',
+			editorActiveTabIndicatorBottomColor: '#7dd3fc',
 			editorTabBarBackground: '#33415580',
 			editorTabBorderRadius: '0',
 			frameBoxShadowCssValue: '0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a'
-		}
-	},
-	textMarkers: {
-		styleOverrides: {
+		},
+		textMarkers: {
 			// lineMarkerAccentWidth: '0.25rem',
 			markBackground: '#7dd3fc26',
 			markBorderColor: '#38bdf8',
@@ -55,7 +49,11 @@ const codeOptions = {
 			delBorderColor: '#fb7185',
 			delDiffIndicatorColor: '#fb7185'
 		}
-	}
+	},
+	useThemedScrollbars: false,
+	frames: {
+		extractFileNameFromCode: false,
+	},
 }
 
 export default defineConfig({
