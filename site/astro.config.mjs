@@ -78,11 +78,11 @@ export default defineConfig({
 	image: {
 		service: squooshImageService()
 	},
-	output: 'server',
+	output: 'hybrid',
 	adapter: vercel({
 		isr: {
 			// Refresh every 5 minutes
-			expiration: 60*5
+			expiration: 60
 		},
 		webAnalytics: {
 			enabled: true
