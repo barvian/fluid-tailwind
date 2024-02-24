@@ -2,8 +2,6 @@
 import '/assets/main.css'
 import type { MDXLayoutProps } from 'astro'
 import TOC from '/components/TOC.svelte'
-import { dirname, relative } from 'node:path'
-import { fileURLToPath } from 'node:url'
 import Input from './_example/input.mdx'
 import Output from './_example/output.mdx'
 import Example from './_example/input.astro'
@@ -24,7 +22,12 @@ type Props = MDXLayoutProps<{
 }>
 
 const { headings, file, frontmatter } = Astro.props
-const path = relative(dirname(fileURLToPath(import.meta.url)), file)
+
+// Tricky to get working with ISR:
+// const path = relative(searchForWorkspaceRoot(file), file)
+// const path = relative(dirname(fileURLToPath(import.meta.url)), file)
+const parts = file.split('/site/pages/')
+const path = parts[parts.length-1]
 ---
 
 <!doctype html>

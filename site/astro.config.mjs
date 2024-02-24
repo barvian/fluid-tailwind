@@ -79,7 +79,7 @@ export default defineConfig({
 	adapter: vercel({
 		isr: {
 			// Refresh every 5 minutes
-			expiration: 60
+			expiration: 60*5
 		},
 		webAnalytics: {
 			enabled: true
