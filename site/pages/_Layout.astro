@@ -2,8 +2,8 @@
 import '/assets/main.css'
 import type { MDXLayoutProps } from 'astro'
 import TOC from '/components/TOC.svelte'
-import { searchForWorkspaceRoot } from 'vite'
-import { relative } from 'node:path'
+import { dirname, relative } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import Input from './_example/input.mdx'
 import Output from './_example/output.mdx'
 import Example from './_example/input.astro'
@@ -27,8 +27,7 @@ type Props = MDXLayoutProps<{
 }>
 
 const { headings, file, frontmatter } = Astro.props
-const root = searchForWorkspaceRoot(file)
-const path = relative(root, file)
+const path = relative(dirname(fileURLToPath(import.meta.url)), file)
 ---
 
 <!doctype html>
@@ -150,7 +149,7 @@ const path = relative(root, file)
 			</div>
 			<a
 				class="hover:text-slate-900 dark:hover:text-slate-400"
-				href={`https://github.com/${repo}/edit/main/${path}`}
+				href={`https://github.com/${repo}/edit/main/site/pages/${path}`}
 				>Edit this page on GitHub</a
 			>
 		</footer>
