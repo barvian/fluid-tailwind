@@ -26,85 +26,13 @@
 		@apply ~px-5/10 mx-auto w-full max-w-7xl;
 	}
 
-	.ec {
-		@apply relative z-10;
+	/* Fix border radii */
+	.expressive-code .frame {
+		overflow: clip !important;
 	}
 
-	.ec .frame.has-title:not(.is-terminal) .title {
-		line-height: 1.625rem !important;
+	.expressive-code .frame.has-title:not(.is-terminal) .title {
 		border-left: none !important;
 		border-top: none !important;
-		border-right-width: 1px !important;
-		padding-block: 0.4rem !important;
 	}
-
-	.ec .ec-line ins::before,
-	.ec .ec-line del::before,
-	.ec .ec-line mark::before {
-		border: none !important;
-	}
-
-	.ec .ec-line:has(ins, del, mark) {
-		margin-block: 0.15rem !important;
-	}
-
-	/* Fix border radii */
-	.ec .frame {
-		overflow: hidden !important;
-	}
-
-	.ec .frame .header,
-	.ec pre {
-		border-radius: 0 !important;
-	}
-
-	/* Fix background and borders */
-	.ec .frame {
-		background: var(--code-background) !important;
-	}
-
-	.ec pre {
-		background: none !important;
-		border: none !important;
-		border-left: 1px solid transparent !important; /* to pad between diff markers and edge */
-	}
-
-	.ec .frame .header {
-		border: none !important;
-	}
-
-	.ec .frame .header::after {
-		border-bottom-width: 1px !important;
-	}
-
-	.ec .frame.is-terminal .header {
-		padding-block: 0.4rem !important;
-	}
-
-	.ec .copy button {
-		border-width: 1px !important;
-	}
-
-	/* Fix copy button position */
-	.ec .frame.has-title.is-terminal {
-		--button-spacing: 2.5rem !important;
-	}
-
-	.ec .frame:not(.is-terminal).has-title {
-		--button-spacing: 3rem !important;
-	}
-
-	/* Fix vertical scrolling */
-	/* .ec .frame {
-        display: flex !important;
-        flex-flow: column !important;
-        align-items: stretch !important;
-        max-height: 100% !important;
-    }
-
-    .ec .frame pre {
-        display: block !important;
-        flex: 1 !important;
-        overflow: auto !important;
-    } */
 }
