@@ -5,7 +5,7 @@ import mdx from '@astrojs/mdx'
 import expressiveCode, { ExpressiveCodeTheme } from 'astro-expressive-code'
 import { readFileSync } from 'node:fs'
 import sectionize from 'remark-sectionize'
-import vercel from '@astrojs/vercel/serverless'
+import vercel from '@astrojs/vercel/static'
 import intersectingDirective from './directives/intersecting/register'
 
 /** @type {import('astro-expressive-code').AstroExpressiveCodeOptions} */
@@ -78,12 +78,8 @@ export default defineConfig({
 	image: {
 		service: squooshImageService()
 	},
-	output: 'server',
+	output: 'static',
 	adapter: vercel({
-		isr: {
-			// Refresh every 5 minutes
-			expiration: 60*5
-		},
 		webAnalytics: {
 			enabled: true
 		}
