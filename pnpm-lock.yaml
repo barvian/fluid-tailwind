@@ -114,10 +114,9 @@ importers:
       unist-util-flatmap:
         specifier: ^1.0.0
         version: 1.0.0
-    optionalDependencies:
-      '@rollup/rollup-linux-x64-gnu':
-        specifier: ^4.12.0
-        version: 4.12.0
+      vite:
+        specifier: ^5.1.4
+        version: 5.1.4
     devDependencies:
       '@astrojs/vercel':
         specifier: ^7.3.1
@@ -131,9 +130,6 @@ importers:
       typescript:
         specifier: '>=5.0.0'
         version: 5.3.3
-      vite:
-        specifier: ^5.1.4
-        version: 5.1.4
 
 packages:
 
