@@ -358,3 +358,26 @@ it(`allows zeroed end screen`, async () => {
 		}
 	`)
 })
+
+it(`works with complex utilities like space-y`, async () => {
+	const { result } = await run({
+		content: [
+			{
+				raw: html`<div class="~min-[10rem]/[20rem]:~space-y-4/8"></div>`
+			}
+		]
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~min-\[10rem\]\/\[20rem\]\:\~space-y-4\/8 > :not([hidden]) ~ :not([hidden]) {
+			--tw-space-y-reverse: 0;
+			margin-top: calc(
+				clamp(1rem, 0rem + 10vw, 2rem) /* fluid from 1rem at 10rem to 2rem at 20rem */ *
+					calc(1 - var(--tw-space-y-reverse))
+			);
+			margin-bottom: calc(
+				clamp(1rem, 0rem + 10vw, 2rem) /* fluid from 1rem at 10rem to 2rem at 20rem */ *
+					var(--tw-space-y-reverse)
+			);
+		}
+	`)
+})

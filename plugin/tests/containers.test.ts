@@ -391,3 +391,26 @@ it(`allows zeroed end container`, async () => {
 		}
 	`)
 })
+
+it(`works with complex utilities like space-y`, async () => {
+	const { result } = await run({
+		content: [
+			{
+				raw: html`<div class="~@[10rem]/[20rem]:~space-y-4/8"></div>`
+			}
+		]
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~\@\[10rem\]\/\[20rem\]\:\~space-y-4\/8 > :not([hidden]) ~ :not([hidden]) {
+			--tw-space-y-reverse: 0;
+			margin-top: calc(
+				clamp(1rem, 0rem + 10cqw, 2rem) /* fluid from 1rem at 10rem to 2rem at 20rem (container) */ *
+					calc(1 - var(--tw-space-y-reverse))
+			);
+			margin-bottom: calc(
+				clamp(1rem, 0rem + 10cqw, 2rem) /* fluid from 1rem at 10rem to 2rem at 20rem (container) */ *
+					var(--tw-space-y-reverse)
+			);
+		}
+	`)
+})

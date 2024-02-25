@@ -18,7 +18,9 @@ import Stargazers from '/components/Stargazers.svelte'
 const repo = pkg.repository.url.replace(/^git\+/, '').replace(/\.git$/, '')
 
 const previewOptimized = await getImage({ src: preview, format: 'png' })
-const image = import.meta.env.URL ? new URL(previewOptimized.src, import.meta.env.URL) : previewOptimized.src
+const image = import.meta.env.URL
+	? new URL(previewOptimized.src, import.meta.env.URL)
+	: previewOptimized.src
 
 type Props = MDXLayoutProps<{
 	title: string
@@ -143,9 +145,7 @@ const path = relative(root, file)
 			<div class="mb-6 sm:mb-0 sm:flex">
 				<p>Copyright ©{new Date().getFullYear()}. Not affiliated with Tailwind Labs Inc.</p>
 			</div>
-			<a
-				class="hover:text-slate-900 dark:hover:text-slate-400"
-				href={`${repo}/edit/main/${path}`}
+			<a class="hover:text-slate-900 dark:hover:text-slate-400" href={`${repo}/edit/main/${path}`}
 				>Edit this page on GitHub</a
 			>
 		</footer>

@@ -123,23 +123,6 @@ export const generate = (
 	return `clamp(${min},${toPrecision(intercept, p)}${unit} + ${toPrecision(slope * 100, p)}${atContainer ? 'cqw' : 'vw'},${max})${comment}`
 }
 
-export const parse = (expr: string) => {
-	const [match, rawStart, rawStartBP, rawEnd, rawEndBP, container, containerName] =
-		expr.match(
-			/\/\* (?:not )?fluid from (.*?) at (.*?) to (.*?) at (.*?)(?: \((container)(?:: )?(.*?)\))?(?:;.*?)? \*\/$/
-		) ?? []
-	if (!match) return
-
-	return {
-		start: Length.parse(rawStart)!,
-		startBP: Length.parse(rawStartBP)!,
-		end: Length.parse(rawEnd)!,
-		endBP: Length.parse(rawEndBP)!,
-		container: (containerName as string | undefined) ?? Boolean(container),
-		checkSC144: match.includes('WCAG SC 1.4.4')
-	}
-}
-
 export const rewrite = (
 	container: Container,
 	context: Context,
@@ -162,17 +145,19 @@ export const rewrite = (
 	// Walk through each `property: value` and rewrite any fluid expressions
 	let foundExpr = false
 	container.walkDecls((decl) => {
-		const parsed = parse(decl.value)
-		if (!parsed) return
-		foundExpr = true
-
-		decl.value = generate(parsed.start, parsed.end, context, {
-			startBP,
-			endBP,
-			atContainer,
-			checkSC144: parsed.checkSC144,
-			checkBP: true
-		})
+		decl.value = decl.value.replaceAll(
+			/(?:clamp\(.*?\))?\/\* (?:not )?fluid from (.*?) at (.*?) to (.*?) at (.*?)(?: \((container)(?:: )?(.*?)\))?(?:;.*?)? \*\//g,
+			(match, rawStart, _, rawEnd, __, ___, ____) => {
+				foundExpr = true
+				return generate(rawStart, rawEnd, context, {
+					startBP,
+					endBP,
+					atContainer,
+					checkSC144: match.includes('WCAG SC 1.4.4'),
+					checkBP: true
+				})
+			}
+		)
 	})
 	// Prevent rules like ~md/lg:relative
 	if (!foundExpr) error('no-utility')
