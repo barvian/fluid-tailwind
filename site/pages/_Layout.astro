@@ -18,7 +18,7 @@ import Stargazers from '/components/Stargazers.svelte'
 const repo = pkg.repository.url.replace(/^git\+/, '').replace(/\.git$/, '')
 
 const previewOptimized = await getImage({ src: preview, format: 'png' })
-const image = process.env.VERCEL_URL ? new URL(previewOptimized.src, 'https://'+process.env.VERCEL_URL) : previewOptimized.src
+const image = import.meta.env.URL ? new URL(previewOptimized.src, import.meta.env.URL) : previewOptimized.src
 
 type Props = MDXLayoutProps<{
 	title: string
