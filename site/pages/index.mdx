@@ -161,7 +161,7 @@ You can't use the dash prefix `-` to negate fluid utilities like you
 can with i.e. `-mt-3`, because Tailwind would only negate the start value.
 
 <Tip.Bad>Trying to use `-` to negate a fluid utility</Tip.Bad>
-```html
+```html del=/(\-)\~/
 <div class="-~mt-3/5">
 ```
 
