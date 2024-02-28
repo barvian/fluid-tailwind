@@ -26,6 +26,10 @@
 		@apply ~px-5/10 mx-auto w-full max-w-7xl;
 	}
 
+	.expressive-code {
+		@apply outline-none;
+	}
+
 	/* Fix border radii */
 	.expressive-code .frame {
 		overflow: clip !important;

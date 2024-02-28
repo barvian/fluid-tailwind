@@ -15,11 +15,12 @@ const codeOptions = {
 		uiFontSize: '0.75rem',
 		uiFontFamily: 'Inter var',
 		codeFontFamily: 'Fira Code VF',
-		codeFontSize: '0.875rem',
+		codeFontSize: '1rem',
 		codePaddingBlock: '1.25rem',
 		uiPaddingBlock: '0.5rem',
 		borderRadius: '0.75rem',
 		borderWidth: '1px',
+		borderColor: 'rgba(255,255,255,0.08)',
 		frames: {
 			terminalBackground: '#1e293b',
 			terminalTitlebarDotsForeground: '#475569',
@@ -57,6 +58,7 @@ const codeOptions = {
 	},
 	useThemedScrollbars: false,
 	frames: {
+		showCopyToClipboardButton: false,
 		extractFileNameFromCode: false
 	}
 }
@@ -77,6 +79,9 @@ export default defineConfig({
 	],
 	image: {
 		service: squooshImageService()
+	},
+	devToolbar: {
+		enabled: false
 	},
 	output: 'static',
 	adapter: vercel({

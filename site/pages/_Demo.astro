@@ -1,0 +1,19 @@
+---
+import '/assets/main.css'
+---
+
+<!doctype html>
+<html
+	lang="en"
+	class="min-h-screen scroll-pt-10 overflow-x-hidden bg-white antialiased dark:bg-slate-900"
+>
+	<body class="flex aspect-[1.67] w-[1086px] flex-col !p-[34px]">
+		<slot />
+		<script defer>
+			document.querySelectorAll('.expressive-code').forEach((ec) => {
+				ec.setAttribute('contenteditable', 'plaintext-only')
+				ec.setAttribute('spellcheck', 'false')
+			})
+		</script>
+	</body>
+</html>

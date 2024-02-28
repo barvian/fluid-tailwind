@@ -11,20 +11,21 @@
 	export let tooNarrowClass = 'lg:hidden'
 </script>
 
-<Tip.Info class={tooNarrowClass}>Your browser isn't wide enough to see the full effect</Tip.Info>
-<div class="not-prose @container ~min-w-[16rem]/[24rem] relative -mb-8 max-w-full">
+<div
+	class="not-prose @container ~min-w-[16rem]/[24rem] relative -mb-8 max-w-full flex-1 select-none overflow-y-clip"
+>
 	<div
 		bind:this={well}
-		class="@container bg-grid-slate-100 dark:bg-grid-slate-700/25 relative box-content flex max-w-full flex-col items-center justify-center overflow-hidden rounded-t-xl border border-slate-900/5 bg-slate-50 p-6 pb-10 dark:bg-slate-800/25 {height}"
-		style:margin-right="clamp(0px, {$margin}px, 50cqw)"
+		class="@container bg-grid-slate-100 dark:bg-grid-slate-700/25 relative flex max-w-full flex-col items-center justify-center rounded-t-xl border border-white/[.05] bg-[25%_50%,top_left] bg-slate-50 bg-[auto_470px,auto] bg-fixed p-6 pb-16 dark:bg-slate-800/25 {height}"
+		style:margin-inline="clamp(0px, {$margin}px, 320px)"
 	>
 		<slot />
 	</div>
 	<button
 		tabindex="-1"
-		class="group absolute left-full top-1/2 -mt-6 cursor-ew-resize touch-pan-y p-2"
+		class="group absolute left-full top-0 -ml-2 h-full w-4 cursor-ew-resize touch-pan-y outline-none"
 		aria-label="Resize"
-		style:transform="translateX(clamp(-50cqw, {-$margin}px, 0px))"
+		style:transform="translateX(clamp(-320px, {-$margin}px, 0px))"
 		use:resize={{
 			direction: 'right',
 			value: margin,
@@ -32,10 +33,5 @@
 			onStop: () => ($margin = parseFloat(getComputedStyle(well).marginRight))
 		}}
 	>
-		<div
-			class="h-8 w-1.5 rounded-full bg-slate-500/60 group-hover:bg-slate-500/80 {$resizing
-				? 'bg-slate-500/80'
-				: ''}"
-		/>
 	</button>
 </div>
