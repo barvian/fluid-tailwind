@@ -24,9 +24,11 @@ import Resizer from '/components/Resizer.svelte'
 
 <Steps.Root>
   <Steps.Item>
-    **Install the package**
+    <>
+      ### Install the package
 
-    Install `fluid-tailwind` via npm.
+      Install `fluid-tailwind` via npm.
+    </>
     <Fragment slot="code">
     ```sh
     npm install -D fluid-tailwind
@@ -34,9 +36,11 @@ import Resizer from '/components/Resizer.svelte'
     </Fragment>
   </Steps.Item>
   <Steps.Item>
-    **Add the [extractor](https://tailwindcss.com/docs/content-configuration#customizing-extraction-logic)**
+    <>
+      ### Add the [extractor](https://tailwindcss.com/docs/content-configuration#customizing-extraction-logic)
 
-    The custom extractor lets you use the new `~` prefix in your Tailwind classes.
+      The custom extractor lets you use the new `~` prefix in your Tailwind classes.
+    </>
     <Fragment slot="code">
       ```ts title="tailwind.config.ts" ins={1, 6}
       import { fluidExtractor } from 'fluid-tailwind'
@@ -52,9 +56,11 @@ import Resizer from '/components/Resizer.svelte'
     </Fragment>
   </Steps.Item>
   <Steps.Item>
-    **Add the fluid core plugins**
+    <>
+      ### Add the fluid core plugins
 
-    Add fluid versions of every enabled [core plugin](https://tailwindcss.com/docs/configuration#core-plugins).
+      Add fluid versions of every enabled [core plugin](https://tailwindcss.com/docs/configuration#core-plugins).
+    </>
     <Fragment slot="code">
       ```ts title="tailwind.config.ts" ins=/, fluidCorePlugins/ ins={6}
       import { fluidExtractor, fluidCorePlugins } from 'fluid-tailwind'
@@ -69,10 +75,12 @@ import Resizer from '/components/Resizer.svelte'
     </Fragment>
   </Steps.Item>
   <Steps.Item>
-    **(Optional) Use `rem` screens and font sizes**
+    <>
+      ### (Optional) Use `rem` screens and font sizes
 
-    If you're using Tailwind's default `fontSize` and `screens`, you can convert them to `rem` to [ensure greater compatibility](#all-lengths-must-have-the-same-unit) with core plugins.
-    <Tip.Info>This may be unnecessary in [future versions of Tailwind](https://github.com/tailwindlabs/tailwindcss/discussions/8378#discussioncomment-2779675)</Tip.Info>
+      If you're using Tailwind's default `fontSize` and `screens`, you can convert them to `rem` to [ensure greater compatibility](#all-lengths-must-have-the-same-unit) with core plugins.
+      <Tip.Info>This may be unnecessary in [future versions of Tailwind](https://github.com/tailwindlabs/tailwindcss/discussions/8378#discussioncomment-2779675)</Tip.Info>
+    </>
     <Fragment slot="code">
       ```ts title="tailwind.config.ts" ins={6,7} ins=/, defaultThemeScreensInRems, defaultThemeFontSizeInRems/
       import { fluidExtractor, fluidCorePlugins, defaultThemeScreensInRems, defaultThemeFontSizeInRems } from 'fluid-tailwind'

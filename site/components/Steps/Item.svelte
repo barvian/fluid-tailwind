@@ -6,11 +6,11 @@
 	style:counter-increment="step"
 >
 	<div
-		class="prose prose-sm prose-slate dark:prose-invert col-span-2 mb-6 mt-0 lg:mb-0 [&_p:has(strong:only-child)+p]:mt-0 [&_p:has(strong:only-child)]:mb-2"
+		class="prose prose-sm prose-slate dark:prose-invert prose-h3:text-sm/[inherit] prose-h3:mb-2 prose-h3:font-semibold col-span-2 mb-6 mt-0 lg:mb-0"
 	>
 		<slot />
 	</div>
-	<div class="col-span-3 -ml-10 lg:ml-0 [&>:first-child]:mt-0 [&>:last-child]:mb-0">
+	<div class="col-span-3 -ml-10 lg:ml-0 z-10 relative [&>:first-child]:mt-0 [&>:last-child]:mb-0">
 		<slot name="code" />
 	</div>
 </li>
