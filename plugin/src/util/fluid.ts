@@ -1,6 +1,6 @@
 import { Container } from 'postcss'
 import { Length, RawValue } from './css'
-import { error } from './errors'
+import { codes, error } from './errors'
 import { clamp, precision, toPrecision } from './math'
 import { Context } from './context'
 
@@ -68,25 +68,29 @@ export const generate = (
 
 	if (start.number === end.number) error('no-change', start)
 
-	let comment = `/* fluid from ${start.cssText} at ${startBP.cssText} to ${end.cssText} at ${endBP.cssText}${atContainer ? ' (container)' : ''} */`
+	const comment = <C extends keyof typeof codes>(
+		code?: C,
+		...args: typeof code extends undefined ? never : Parameters<(typeof codes)[C]>
+	) =>
+		`/* ${code ? 'not ' : ''}fluid from ${start.cssText} at ${startBP.cssText} to ${end.cssText} at ${endBP.cssText}${atContainer ? ' (container)' : ''}${
+			// @ts-expect-error
+			code ? ': ' + codes[code](...args) : ''
+		} */`
 
 	if (startBP.number === 0) {
 		startBP.unit = endBP.unit
 	} else if (endBP.number === 0) {
 		endBP.unit = startBP.unit
 	} else if (!startBP.unit || startBP.unit !== endBP.unit) {
-		if (checkBP) error('mismatched-bp-units', startBP, endBP)
-		return comment
+		return (checkBP ? error : comment)('mismatched-bp-units', startBP, endBP)
 	}
 
 	if (startBP.number === endBP.number) {
-		if (checkBP) error('no-change-bp', startBP)
-		return comment
+		return (checkBP ? error : comment)('no-change-bp', startBP)
 	}
 
 	if (start.unit !== startBP.unit) {
-		if (checkBP) error('mismatched-bp-val-units')
-		return comment
+		return (checkBP ? error : comment)('mismatched-bp-val-units')
 	}
 
 	const p = Math.max(
@@ -103,7 +107,6 @@ export const generate = (
 	const intercept = start.number - startBP.number * slope
 
 	// SC 1.4.4 check
-	let failingBP: Length | null = null
 	if (checkSC144) {
 		const zoom1 = (vw: number) => clamp(start.number, intercept + slope * vw, end.number) // 2*zoom1(vw) is the AA requirement
 		const zoom5 = (vw: number) =>
@@ -111,16 +114,11 @@ export const generate = (
 
 		// Check the clamped points on the lines 2*z1(vw) and zoom5(vw) and fail if zoom5 < 2*zoom1
 		if (5 * start.number < 2 * zoom1(5 * startBP.number))
-			failingBP = new Length(startBP.number * 5, startBP.unit) // fails at 5*startBP
-		else if (zoom5(endBP.number) < 2 * end.number) failingBP = endBP
+			return comment('fails-sc-144', new Length(startBP.number * 5, startBP.unit)) // fails at 5*startBP
+		else if (zoom5(endBP.number) < 2 * end.number) return comment('fails-sc-144', endBP)
 	}
 
-	comment = `/* ${failingBP ? 'not ' : ''}fluid from ${start.cssText} at ${startBP.cssText} to ${end.cssText} at ${endBP.cssText}${atContainer ? ' (container)' : ''}${checkSC144 ? '; ' + (failingBP ? 'fails WCAG SC 1.4.4 at i.e. ' + failingBP.cssText : 'passes WCAG SC 1.4.4') : ''} */`
-
-	// Return the start value if it fails SC 1.4.4, so that it could be potentially corrected with a fluid variant
-	if (failingBP) return comment
-
-	return `clamp(${min},${toPrecision(intercept, p)}${unit} + ${toPrecision(slope * 100, p)}${atContainer ? 'cqw' : 'vw'},${max})${comment}`
+	return `clamp(${min},${toPrecision(intercept, p)}${unit} + ${toPrecision(slope * 100, p)}${atContainer ? 'cqw' : 'vw'},${max})${comment()}`
 }
 
 export const rewrite = (

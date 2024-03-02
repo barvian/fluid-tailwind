@@ -3,7 +3,7 @@ import colors from 'picocolors'
 function log(type: string, code: string, message: string) {
 	if (typeof process !== 'undefined' && process.env.JEST_WORKER_ID) return
 
-	console.warn(colors.bold(type), '-', colors.bold(code) + ':', message)
+	console.warn(colors.bold(type), '-'/*, colors.bold(code) + ':'*/, message)
 }
 
 export const info = (code: string, message: string) => log(colors.cyan('info'), code, message)

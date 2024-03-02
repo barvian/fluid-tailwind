@@ -10,7 +10,7 @@
 	>
 		<slot />
 	</div>
-	<div class="col-span-3 -ml-10 lg:ml-0 z-10 relative [&>:first-child]:mt-0 [&>:last-child]:mb-0">
+	<div class="relative z-10 col-span-3 -ml-10 lg:ml-0 [&>:first-child]:mt-0 [&>:last-child]:mb-0">
 		<slot name="code" />
 	</div>
 </li>
