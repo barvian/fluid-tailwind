@@ -215,8 +215,8 @@ it(`fails if ~@ variant is used on non-fluid utility`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css``)
 	expect(warn).toHaveBeenCalledWith(
-		'no-utility',
-		'~@: Fluid variants can only be used with fluid utilities'
+		'~@',
+		'Fluid variants can only be used with fluid utilities'
 	)
 })
 
@@ -312,7 +312,7 @@ it(`fails if ~@ variant is used with same start/end containers`, async () => {
 		}
 	})
 	expect(result.css).toMatchFormattedCss(css``)
-	expect(warn).toHaveBeenCalledWith('no-change-bp', '~@: Start and end breakpoints are both 30rem')
+	expect(warn).toHaveBeenCalledWith('~@', 'Start and end breakpoints are both 30rem')
 })
 
 it(`fails if no containers`, async () => {
@@ -328,8 +328,8 @@ it(`fails if no containers`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(``)
 	expect(warn).toHaveBeenCalledWith(
-		'missing-default-start-bp',
-		'~@: Missing default start breakpoint'
+		'~@',
+		'Missing default start breakpoint'
 	)
 })
 
@@ -349,8 +349,8 @@ it(`fails if containers with different units`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(``)
 	expect(warn).toHaveBeenCalledWith(
-		'sort-mismatched-bp-units',
-		'~@: Cannot sort simple breakpoints in `theme.containers` because they use different units'
+		'~@',
+		'Cannot sort simple breakpoints in `theme.containers` because they use different units'
 	)
 })
 

@@ -77,7 +77,7 @@ it(`requires a change in values`, async () => {
 		]
 	})
 	expect(result.css).toMatchFormattedCss(css``)
-	expect(warn).toHaveBeenCalledWith('no-change', '~p: Start and end values are both 0.25rem')
+	expect(warn).toHaveBeenCalledWith('~p', 'Start and end values are both 0.25rem')
 })
 
 it(`handles zeroed values`, async () => {
@@ -175,8 +175,8 @@ it(`requires values with same units`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css``)
 	expect(warn).toHaveBeenCalledWith(
-		'mismatched-units',
-		"~p: Start `1px` and end `2rem` units don't match"
+		'~p',
+		"Start `1px` and end `2rem` units don't match"
 	)
 })
 
@@ -189,7 +189,7 @@ it(`requires length literals`, async () => {
 		]
 	})
 	expect(result.css).toMatchFormattedCss(css``)
-	expect(warn).toHaveBeenCalledWith('non-length-end', '~p: End value `calc(2rem)` is not a length')
+	expect(warn).toHaveBeenCalledWith('~p', 'End value `calc(2rem)` is not a length')
 })
 
 it(`supports negative length literals`, async () => {

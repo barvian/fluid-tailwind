@@ -28,7 +28,7 @@ type FilterFn = (
 
 const handle = (e: unknown, source: string) => {
 	if (e instanceof FluidError) {
-		log.warn(e.code, `${source}: ${e.message}`)
+		log.warn(source, e.message)
 	} else throw e
 }
 
@@ -204,7 +204,7 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 				if (from.fontWeight == to.fontWeight) {
 					rules['font-weight'] = from.fontWeight ? from.fontWeight + '' : null
 				} else {
-					log.warn('mismatched-font-weights', `~text: Mismatched font weights`)
+					log.warn('~text', `Mismatched font weights`)
 				}
 
 				return rules

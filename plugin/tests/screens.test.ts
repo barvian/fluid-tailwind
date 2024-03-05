@@ -203,8 +203,8 @@ it(`fails if ~ variant is used on non-fluid utility`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css``)
 	expect(warn).toHaveBeenCalledWith(
-		'no-utility',
-		'~: Fluid variants can only be used with fluid utilities'
+		'~',
+		'Fluid variants can only be used with fluid utilities'
 	)
 })
 
@@ -223,8 +223,8 @@ it(`fails if ~ variant is used with same start/end screens`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css``)
 	expect(warn).toHaveBeenCalledWith(
-		'no-change-bp',
-		'~md/[30rem]: Start and end breakpoints are both 30rem'
+		'~md/[30rem]',
+		'Start and end breakpoints are both 30rem'
 	)
 })
 
@@ -241,8 +241,8 @@ it(`fails if no screens`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(``)
 	expect(warn).toHaveBeenCalledWith(
-		'missing-default-start-bp',
-		'~p: Missing default start breakpoint'
+		'~p',
+		'Missing default start breakpoint'
 	)
 })
 
@@ -262,8 +262,8 @@ it(`fails if screens with different units`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(``)
 	expect(warn).toHaveBeenCalledWith(
-		'sort-mismatched-bp-units',
-		'~p: Cannot sort simple breakpoints in `theme.screens` because they use different units'
+		'~p',
+		'Cannot sort simple breakpoints in `theme.screens` because they use different units'
 	)
 })
 

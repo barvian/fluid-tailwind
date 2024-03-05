@@ -161,8 +161,8 @@ it(`fails for inconsistent line height`, async () => {
 		}
 	`)
 	expect(warn).toHaveBeenCalledWith(
-		'non-length-start',
-		'~text: Line height: Start value `1.5` is not a length'
+		'~text: Line height',
+		'Start value `1.5` is not a length'
 	)
 })
 
@@ -233,7 +233,7 @@ it(`fails for inconsistent font weights`, async () => {
 			); /* fluid from 1rem at 40rem to 2rem at 96rem */
 		}
 	`)
-	expect(warn).toHaveBeenCalledWith('mismatched-font-weights', '~text: Mismatched font weights')
+	expect(warn).toHaveBeenCalledWith('~text', 'Mismatched font weights')
 })
 
 it(`fluidizes compatible letter spacing`, async () => {
