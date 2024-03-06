@@ -40,11 +40,7 @@ export async function run(config: Config, input = `@tailwind utilities;@tailwind
 		config.plugins.push(containerQueries)
 	}
 
-	const warn = spyOn(log, 'warn').mockImplementation(() => {})
-
-	const result = await postcss(tailwind(config)).process(input, {
+	return await postcss(tailwind(config)).process(input, {
 		from: `${path.resolve(__filename)}?test=${crypto.randomUUID()}`
 	})
-
-	return { result, warn }
 }

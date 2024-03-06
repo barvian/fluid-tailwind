@@ -1,10 +1,13 @@
-import { expect, it } from 'bun:test'
+import { expect, it, spyOn } from 'bun:test'
 import './matchers'
 import { html, css, run } from './run'
 import { type FluidConfig } from '../src'
+import colors from 'picocolors'
+
+const warn = spyOn(console, 'warn')
 
 it(`allows ~screen/screen variant`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~md/lg:~p-1/2"></div>`
@@ -29,7 +32,7 @@ it(`allows ~screen/screen variant`, async () => {
 })
 
 it(`allows ~screen variant`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~md:~p-1/2"></div>`
@@ -54,7 +57,7 @@ it(`allows ~screen variant`, async () => {
 })
 
 it(`allows ~screen/[arbitrary] variant`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~md/[80rem]:~p-1/2"></div>`
@@ -78,7 +81,7 @@ it(`allows ~screen/[arbitrary] variant`, async () => {
 })
 
 it(`allows ~/screen variant`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~/lg:~p-1/2"></div>`
@@ -103,7 +106,7 @@ it(`allows ~/screen variant`, async () => {
 })
 
 it(`allows ~/[arbitrary] variant`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~/[80rem]:~p-1/2"></div>`
@@ -127,7 +130,7 @@ it(`allows ~/[arbitrary] variant`, async () => {
 })
 
 it(`allows ~min-[arbitrary] variant`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~min-[30rem]:~p-1/2"></div>`
@@ -151,7 +154,7 @@ it(`allows ~min-[arbitrary] variant`, async () => {
 })
 
 it(`allows ~min-[arbitrary]/screen variant`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~min-[30rem]/lg:~p-1/2"></div>`
@@ -175,7 +178,7 @@ it(`allows ~min-[arbitrary]/screen variant`, async () => {
 })
 
 it(`allows ~min-[arbitrary]/[arbitrary] variant`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~min-[30rem]/[80rem]:~p-1/2"></div>`
@@ -194,7 +197,7 @@ it(`allows ~min-[arbitrary]/[arbitrary] variant`, async () => {
 })
 
 it(`fails if ~ variant is used on non-fluid utility`, async () => {
-	const { result, warn } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~:relative"></div>`
@@ -203,13 +206,15 @@ it(`fails if ~ variant is used on non-fluid utility`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css``)
 	expect(warn).toHaveBeenCalledWith(
-		'~',
+		colors.bold(colors.yellow('warn')),
+		'-',
+		colors.bold('~') + ':',
 		'Fluid variants can only be used with fluid utilities'
 	)
 })
 
 it(`fails if ~ variant is used with same start/end screens`, async () => {
-	const { result, warn } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~md/[30rem]:~p-1/2"></div>`
@@ -223,13 +228,15 @@ it(`fails if ~ variant is used with same start/end screens`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css``)
 	expect(warn).toHaveBeenCalledWith(
-		'~md/[30rem]',
+		colors.bold(colors.yellow('warn')),
+		'-',
+		colors.bold('~md/[30rem]') + ':',
 		'Start and end breakpoints are both 30rem'
 	)
 })
 
 it(`fails if no screens`, async () => {
-	const { result, warn } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~p-1/2"></div>`
@@ -241,13 +248,15 @@ it(`fails if no screens`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(``)
 	expect(warn).toHaveBeenCalledWith(
-		'~p',
+		colors.bold(colors.yellow('warn')),
+		'-',
+		colors.bold('~p') + ':',
 		'Missing default start breakpoint'
 	)
 })
 
 it(`fails if screens with different units`, async () => {
-	const { result, warn } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~p-1/2"></div>`
@@ -262,13 +271,15 @@ it(`fails if screens with different units`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(``)
 	expect(warn).toHaveBeenCalledWith(
-		'~p',
+		colors.bold(colors.yellow('warn')),
+		'-',
+		colors.bold('~p') + ':',
 		'Cannot sort simple breakpoints in `theme.screens` because they use different units'
 	)
 })
 
 it(`supports missing start defaultScreen`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~p-1/2"></div>`
@@ -295,7 +306,7 @@ it(`supports missing start defaultScreen`, async () => {
 })
 
 it(`supports missing end defaultScreen`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~p-1/2"></div>`
@@ -322,7 +333,7 @@ it(`supports missing end defaultScreen`, async () => {
 })
 
 it(`allows zeroed start screen`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~min-[0px]/[80rem]:~p-1/2"></div>`
@@ -341,7 +352,7 @@ it(`allows zeroed start screen`, async () => {
 })
 
 it(`allows zeroed end screen`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~min-[80rem]/[0px]:~p-1/2"></div>`
@@ -360,7 +371,7 @@ it(`allows zeroed end screen`, async () => {
 })
 
 it(`works with complex utilities like space-y`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~min-[10rem]/[20rem]:~space-y-4/8"></div>`

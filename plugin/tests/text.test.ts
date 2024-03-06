@@ -1,9 +1,12 @@
-import { expect, it } from 'bun:test'
+import { expect, it, spyOn } from 'bun:test'
 import './matchers'
 import { html, css, run } from './run'
+import colors from 'picocolors'
+
+const warn = spyOn(console, 'warn')
 
 it(`respects ~text from DEFAULT`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~text/3xl"></div>`
@@ -30,7 +33,7 @@ it(`respects ~text from DEFAULT`, async () => {
 })
 
 it(`respects ~text to DEFAULT`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~text-3xl"></div>`
@@ -57,7 +60,7 @@ it(`respects ~text to DEFAULT`, async () => {
 })
 
 it(`fails for SC 1.4.4 violations`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~text-[1rem]/[2.6rem]"></div>`
@@ -72,7 +75,7 @@ it(`fails for SC 1.4.4 violations`, async () => {
 })
 
 it(`allows variants to fix SC 1.4.4 violations`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~min-[0.5rem]/[120rem]:~text-[1rem]/[2.6rem]"></div>`
@@ -91,7 +94,7 @@ it(`allows variants to fix SC 1.4.4 violations`, async () => {
 })
 
 it(`handles simple font sizes`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~text-sm/lg"></div>`
@@ -116,7 +119,7 @@ it(`handles simple font sizes`, async () => {
 })
 
 it(`applies consistent line height`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~text-sm/lg"></div>`
@@ -138,7 +141,7 @@ it(`applies consistent line height`, async () => {
 })
 
 it(`fails for inconsistent line height`, async () => {
-	const { result, warn } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~text-sm/lg"></div>`
@@ -161,13 +164,15 @@ it(`fails for inconsistent line height`, async () => {
 		}
 	`)
 	expect(warn).toHaveBeenCalledWith(
-		'~text: Line height',
+		colors.bold(colors.yellow('warn')),
+		'-',
+		colors.bold('~text: Line height') + ':',
 		'Start value `1.5` is not a length'
 	)
 })
 
 it(`applies consistent font weight`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~text-sm/lg"></div>`
@@ -189,7 +194,7 @@ it(`applies consistent font weight`, async () => {
 })
 
 it(`handles string <-> number font weight`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~text-sm/lg"></div>`
@@ -211,7 +216,7 @@ it(`handles string <-> number font weight`, async () => {
 })
 
 it(`fails for inconsistent font weights`, async () => {
-	const { result, warn } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~text-sm/lg"></div>`
@@ -233,11 +238,16 @@ it(`fails for inconsistent font weights`, async () => {
 			); /* fluid from 1rem at 40rem to 2rem at 96rem */
 		}
 	`)
-	expect(warn).toHaveBeenCalledWith('~text', 'Mismatched font weights')
+	expect(warn).toHaveBeenCalledWith(
+		colors.bold(colors.yellow('warn')),
+		'-',
+		colors.bold('~text') + ':',
+		'Mismatched font weights'
+	)
 })
 
 it(`fluidizes compatible letter spacing`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~text-sm/lg"></div>`
@@ -263,7 +273,7 @@ it(`fluidizes compatible letter spacing`, async () => {
 })
 
 it(`applies consistent letter spacing`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~text-sm/lg"></div>`
@@ -285,7 +295,7 @@ it(`applies consistent letter spacing`, async () => {
 })
 
 it(`doesn't apply inconsistent letter spacing`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~text-sm/lg"></div>`

@@ -1,10 +1,13 @@
-import { expect, it } from 'bun:test'
+import { expect, it, spyOn } from 'bun:test'
+import colors from 'picocolors'
 import './matchers'
 import { html, css, run } from './run'
 import { type FluidConfig } from '../src'
 
+const warn = spyOn(console, 'warn')
+
 it(`allows ~@container/container variant`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~@md/lg:~p-1/2"></div>`
@@ -29,7 +32,7 @@ it(`allows ~@container/container variant`, async () => {
 })
 
 it(`allows ~@container variant`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~@md:~p-1/2"></div>`
@@ -54,7 +57,7 @@ it(`allows ~@container variant`, async () => {
 })
 
 it(`allows ~@container/[arbitrary] variant`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~@md/[80rem]:~p-1/2"></div>`
@@ -90,7 +93,7 @@ it(`allows ~@container/[arbitrary] variant`, async () => {
 })
 
 it(`allows ~@/container variant`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~@/lg:~p-1/2"></div>`
@@ -115,7 +118,7 @@ it(`allows ~@/container variant`, async () => {
 })
 
 it(`allows ~@/[arbitrary] variant`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~@/[80rem]:~p-1/2"></div>`
@@ -139,7 +142,7 @@ it(`allows ~@/[arbitrary] variant`, async () => {
 })
 
 it(`allows ~@[arbitrary] variant`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~@[30rem]:~p-1/2"></div>`
@@ -163,7 +166,7 @@ it(`allows ~@[arbitrary] variant`, async () => {
 })
 
 it(`allows ~@[arbitrary]/container variant`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~@[30rem]/lg:~p-1/2"></div>`
@@ -187,7 +190,7 @@ it(`allows ~@[arbitrary]/container variant`, async () => {
 })
 
 it(`allows ~@[arbitrary]/[arbitrary] variant`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~@[30rem]/[80rem]:~p-1/2"></div>`
@@ -206,7 +209,7 @@ it(`allows ~@[arbitrary]/[arbitrary] variant`, async () => {
 })
 
 it(`fails if ~@ variant is used on non-fluid utility`, async () => {
-	const { result, warn } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~@:relative"></div>`
@@ -215,13 +218,15 @@ it(`fails if ~@ variant is used on non-fluid utility`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css``)
 	expect(warn).toHaveBeenCalledWith(
-		'~@',
+		colors.bold(colors.yellow('warn')),
+		'-',
+		colors.bold('~@') + ':',
 		'Fluid variants can only be used with fluid utilities'
 	)
 })
 
 it(`respects defaultContainers config`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~@:~p-1/2"></div>`
@@ -245,7 +250,7 @@ it(`respects defaultContainers config`, async () => {
 })
 
 it(`supports missing start defaultContainer`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~@:~p-1/2"></div>`
@@ -272,7 +277,7 @@ it(`supports missing start defaultContainer`, async () => {
 })
 
 it(`supports missing end defaultContainer`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~@:~p-1/2"></div>`
@@ -299,7 +304,7 @@ it(`supports missing end defaultContainer`, async () => {
 })
 
 it(`fails if ~@ variant is used with same start/end containers`, async () => {
-	const { result, warn } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~@[30rem]/md:~p-1/2"></div>`
@@ -312,11 +317,16 @@ it(`fails if ~@ variant is used with same start/end containers`, async () => {
 		}
 	})
 	expect(result.css).toMatchFormattedCss(css``)
-	expect(warn).toHaveBeenCalledWith('~@', 'Start and end breakpoints are both 30rem')
+	expect(warn).toHaveBeenCalledWith(
+		colors.bold(colors.yellow('warn')),
+		'-',
+		colors.bold('~@') + ':',
+		'Start and end breakpoints are both 30rem'
+	)
 })
 
 it(`fails if no containers`, async () => {
-	const { result, warn } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~@:~p-1/2"></div>`
@@ -328,13 +338,15 @@ it(`fails if no containers`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(``)
 	expect(warn).toHaveBeenCalledWith(
-		'~@',
+		colors.bold(colors.yellow('warn')),
+		'-',
+		colors.bold('~@') + ':',
 		'Missing default start breakpoint'
 	)
 })
 
 it(`fails if containers with different units`, async () => {
-	const { result, warn } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~@:~p-1/2"></div>`
@@ -349,13 +361,15 @@ it(`fails if containers with different units`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(``)
 	expect(warn).toHaveBeenCalledWith(
-		'~@',
+		colors.bold(colors.yellow('warn')),
+		'-',
+		colors.bold('~@') + ':',
 		'Cannot sort simple breakpoints in `theme.containers` because they use different units'
 	)
 })
 
 it(`allows zeroed start container`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~@[0px]/[80rem]:~p-1/2"></div>`
@@ -374,7 +388,7 @@ it(`allows zeroed start container`, async () => {
 })
 
 it(`allows zeroed end container`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~@[80rem]/[0px]:~p-1/2"></div>`
@@ -393,7 +407,7 @@ it(`allows zeroed end container`, async () => {
 })
 
 it(`works with complex utilities like space-y`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~@[10rem]/[20rem]:~space-y-4/8"></div>`

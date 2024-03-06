@@ -1,4 +1,5 @@
-import { expect, it } from 'bun:test'
+import { expect, it, spyOn } from 'bun:test'
+import colors from 'picocolors'
 import './matchers'
 import { html, css, run } from './run'
 import {
@@ -14,8 +15,10 @@ import tailwindDefaultConfig from 'tailwindcss/defaultConfig'
 import tailwindDefaultTheme from 'tailwindcss/defaultTheme'
 import dlv from 'dlv'
 
+const warn = spyOn(console, 'warn')
+
 it(`should be possible to use defaultTheme...InRems values`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<h1 class="~text-2xl/5xl"></h1>`
@@ -40,7 +43,7 @@ it(`should be possible to use defaultTheme...InRems values`, async () => {
 })
 
 it(`works with @apply`, async () => {
-	const { result } = await run({ content: [] }, `h1 { @apply ~text-lg/3xl }`)
+	const result = await run({ content: [] }, `h1 { @apply ~text-lg/3xl }`)
 	expect(result.css).toMatchFormattedCss(css`
 		h1 {
 			font-size: clamp(1.125rem, 0.589rem + 1.339vw, 1.875rem)
@@ -55,7 +58,7 @@ it(`works with @apply`, async () => {
 })
 
 it(`respects disabled core plugins`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~p-1/2"></div>`
@@ -69,7 +72,7 @@ it(`respects disabled core plugins`, async () => {
 })
 
 it(`requires a change in values`, async () => {
-	const { result, warn } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~p-1/1"></div>`
@@ -77,11 +80,16 @@ it(`requires a change in values`, async () => {
 		]
 	})
 	expect(result.css).toMatchFormattedCss(css``)
-	expect(warn).toHaveBeenCalledWith('~p', 'Start and end values are both 0.25rem')
+	expect(warn).toHaveBeenCalledWith(
+		colors.bold(colors.yellow('warn')),
+		'-',
+		colors.bold('~p') + ':',
+		'Start and end values are both 0.25rem'
+	)
 })
 
 it(`handles zeroed values`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~p-0/1"></div>`
@@ -100,7 +108,7 @@ it(`handles zeroed values`, async () => {
 })
 
 it(`respects DEFAULT from value`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~p/8"></div>`
@@ -121,7 +129,7 @@ it(`respects DEFAULT from value`, async () => {
 })
 
 it(`respects DEFAULT to value`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~p-8"></div>`
@@ -143,7 +151,7 @@ it(`respects DEFAULT to value`, async () => {
 
 it(`errors when start = end screen`, async () => {
 	// Technically we can't throw here because they could change it with a variant
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~p-1/2"></div>`
@@ -166,7 +174,7 @@ it(`errors when start = end screen`, async () => {
 })
 
 it(`requires values with same units`, async () => {
-	const { result, warn } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~p-[1px]/[2rem]"></div>`
@@ -175,13 +183,15 @@ it(`requires values with same units`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css``)
 	expect(warn).toHaveBeenCalledWith(
-		'~p',
+		colors.bold(colors.yellow('warn')),
+		'-',
+		colors.bold('~p') + ':',
 		"Start `1px` and end `2rem` units don't match"
 	)
 })
 
 it(`requires length literals`, async () => {
-	const { result, warn } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~p-[1rem]/[calc(2rem)]"></div>`
@@ -189,11 +199,16 @@ it(`requires length literals`, async () => {
 		]
 	})
 	expect(result.css).toMatchFormattedCss(css``)
-	expect(warn).toHaveBeenCalledWith('~p', 'End value `calc(2rem)` is not a length')
+	expect(warn).toHaveBeenCalledWith(
+		colors.bold(colors.yellow('warn')),
+		'-',
+		colors.bold('~p') + ':',
+		'End value `calc(2rem)` is not a length'
+	)
 })
 
 it(`supports negative length literals`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~mt-[1rem]/[-2rem]"></div>`
@@ -218,7 +233,7 @@ it(`supports negative length literals`, async () => {
 })
 
 it(`respects defaultScreens config`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="~p-1/2"></div>`
@@ -242,7 +257,7 @@ it(`respects defaultScreens config`, async () => {
 })
 
 it(`supports custom separator and prefix`, async () => {
-	const { result } = await run({
+	const result = await run({
 		content: {
 			files: [
 				{
@@ -273,7 +288,7 @@ it(`supports custom separator and prefix`, async () => {
 
 type MatchUtilOrComp = Extract<keyof PluginAPI, 'matchUtilities' | 'matchComponents'>
 const testFluidize = (key: MatchUtilOrComp) => async () => {
-	const { result } = await run({
+	const result = await run({
 		content: [
 			{
 				raw: html`<div class="test-p-1 ~test-p-1/2"></div>`
