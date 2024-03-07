@@ -1,6 +1,6 @@
 // Types for undocumented Tailwind APIs
 
-declare module 'tailwindcss-priv/lib/corePlugins' {
-	import { type PluginCreator } from 'tailwindcss-priv/types/config'
+declare module 'tailwindcss/lib/corePlugins' {
+	import { type PluginCreator } from 'tailwindcss/types/config'
 	export const corePlugins: Record<string, PluginCreator>
 }

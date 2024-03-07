@@ -1,6 +1,6 @@
 import plugin from 'tailwindcss/plugin'
 type Plugin = ReturnType<typeof plugin>
-import { corePlugins } from 'tailwindcss-priv/lib/corePlugins'
+import { corePlugins } from 'tailwindcss/lib/corePlugins'
 import { CSSRuleObject, KeyValuePair, PluginAPI, ThemeConfig } from 'tailwindcss/types/config'
 import defaultTheme from 'tailwindcss/defaultTheme'
 import mapObject, { mapObjectSkip } from 'map-obj'

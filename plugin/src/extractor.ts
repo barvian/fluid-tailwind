@@ -1,13 +1,13 @@
 import { type ExtractorFn } from "tailwindcss/types/config"
 // @ts-expect-error untyped source file
-import * as regex from 'tailwindcss-priv/src/lib/regex'
+import * as regex from 'tailwindcss/src/lib/regex'
 
 type ExtractorOptions = {
     separator?: string
     prefix?: string
 }
 
-// This is the default extractor from 'tailwindcss-priv/src/lib/defaultExtractor'
+// This is the default extractor from 'tailwindcss/src/lib/defaultExtractor'
 // with two extra chars to support the ~ prefix
 export default (options: ExtractorOptions = {}): ExtractorFn => {
     let patterns = Array.from(buildRegExps(options))
