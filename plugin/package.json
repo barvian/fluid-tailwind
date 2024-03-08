@@ -24,8 +24,8 @@
 	"scripts": {
 		"test": "bun test",
 		"build": "tsup src/index.ts --format esm,cjs --no-splitting --clean && tsc -p tsconfig.build.json --emitDeclarationOnly",
-		"dev": "bun run build --watch",
-		"prepublishOnly": "bun run build && bun run test"
+		"dev": "pnpm run build --watch",
+		"prepublishOnly": "pnpm run build && pnpm run test"
 	},
 	"files": [
 		"dist",
