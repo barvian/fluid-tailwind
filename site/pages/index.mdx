@@ -42,7 +42,7 @@ import Resizer from '/components/Resizer.svelte'
       The custom extractor lets you use the new `~` prefix in your Tailwind classes.
     </>
     <Fragment slot="code">
-      ```ts title="tailwind.config.ts" ins={1, 6}
+      ```ts title="tailwind.config.ts" ins={1, 6} ins=/\: (\{)/ ins="files: " ins=/\](,)/ ins=/(\}),/
       import { fluidExtractor } from 'fluid-tailwind'
 
       export default {
