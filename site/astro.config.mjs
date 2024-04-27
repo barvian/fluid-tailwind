@@ -15,7 +15,7 @@ const codeOptions = {
 		uiFontSize: '0.75rem',
 		uiFontFamily: 'Inter var',
 		codeFontFamily: 'Fira Code VF',
-		codeFontSize: '1rem',
+		codeFontSize: '1.25rem',
 		codePaddingBlock: '1.25rem',
 		uiPaddingBlock: '0.5rem',
 		borderRadius: '0.75rem',

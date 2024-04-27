@@ -21,12 +21,12 @@ import Resizer from '/components/Resizer.svelte'
 </clipPath>
 </defs>
 </svg>
-    <h1 class="font-bold text-4xl @[54rem]:text-7xl text-white text-center text-balance">Smoother responsive styles in fewer classes.</h1>
+    <h1 class="font-bold text-4xl @[54rem]:text-7xl text-white text-center text-balance">Smoother responsive styles in less code.</h1>
   </div>
 </Resizer>
-```html
-<header class="px-4 space-y-6 lg:space-y-10">
-    <img class="mx-auto h-6 lg:h-10" src="logo.svg" alt="Fluid for Tailwind CSS" />
-    <h1 class="text-center text-4xl lg:text-7xl ...">Smoother responsive styles in fewer classes.</button>
+```html ins="~space-y-6/10" del=" space-y-6 lg:space-y-10" ins="~h-6/10" del=" h-6 lg:h-10" ins="~text-4xl/7xl" del=" text-4xl lg:text-7xl"
+<header class="px-4 ~space-y-6/10 space-y-6 lg:space-y-10">
+    <img class="mx-auto ~h-6/10 h-6 lg:h-10" src="logo.svg" alt="Fluid for Tailwind CSS" />
+    <h1 class="text-center ~text-4xl/7xl text-4xl lg:text-7xl">Smoother responsive styles in less code.</button>
 </header>
 ```
