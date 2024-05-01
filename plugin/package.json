@@ -29,8 +29,7 @@
 		"test": "bun test",
 		"build": "tsup src/index.ts --format cjs,esm --no-splitting --clean && tsc -p tsconfig.build.json --emitDeclarationOnly",
 		"dev": "pnpm run build --watch",
-		"prepublishOnly": "pnpm run build && pnpm run test",
-		"postpublish": "git add . && git commit -a && git tag v$npm_package_version && git push --tags && git push"
+		"prepublishOnly": "pnpm run build && pnpm run test"
 	},
 	"files": [
 		"dist",
