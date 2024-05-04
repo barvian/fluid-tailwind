@@ -1,9 +1,6 @@
 {
 	"name": "fluid-tailwind",
 	"version": "0.1.7",
-	"publishConfig": {
-		"access": "public"
-	},
 	"author": "Maxwell Barvian",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
@@ -27,7 +24,7 @@
 	],
 	"scripts": {
 		"test": "bun test",
-		"build": "tsup src/index.ts --format cjs,esm --no-splitting --clean && tsc -p tsconfig.build.json --emitDeclarationOnly",
+		"build": "tsup src/index.ts --format esm,cjs --no-splitting --clean && tsc -p tsconfig.build.json --emitDeclarationOnly",
 		"dev": "pnpm run build --watch",
 		"prepublishOnly": "pnpm run build && pnpm run test"
 	},
