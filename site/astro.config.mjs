@@ -57,6 +57,7 @@ const codeOptions = {
 	},
 	useThemedScrollbars: false,
 	frames: {
+		showCopyToClipboardButton: false,
 		extractFileNameFromCode: false
 	}
 }
