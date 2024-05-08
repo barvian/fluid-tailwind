@@ -126,18 +126,17 @@ const fluid = plugin.withOptions((options: PluginOptions = {}) => (api: PluginAP
 	// Add fluid versions of external plugins
 	const fluidPluginAPI = getFluidAPI(api, context)
 	const plugins = config('plugins') as (Function | Plugin)[]
-	plugins.forEach((_plugin, i) => {
-		if (typeof _plugin === 'function') {
+	plugins.forEach((plug, i) => {
+		if (typeof plug === 'function') {
 			// It's a plugin.withOptions, but wasn't passed options so try executing it
 			// with no arguments:
 			try {
-				const plugin = _plugin() as Plugin
-				plugin.handler(fluidPluginAPI)
+				(plug() as Plugin).handler(fluidPluginAPI)
 			} catch (e) {
 				log.warn('fluid-tailwind', `Could not add fluid version of \`plugins[${i}]\``)
 			}
 		} else {
-			_plugin.handler(fluidPluginAPI)
+			plug.handler(fluidPluginAPI)
 		}
 	})
 
