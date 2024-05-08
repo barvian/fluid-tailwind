@@ -152,7 +152,7 @@
 				draggable="false"
 				class="group absolute left-full top-0 flex h-full cursor-ew-resize touch-pan-y items-center justify-center px-2"
 				aria-label="Resize"
-				in:fade={{ duration: 200, delay: 200 }}
+				in:fade={{ duration: 200, delay: 250 }}
 				use:resize={{
 					direction: 'right',
 					value: margin,
