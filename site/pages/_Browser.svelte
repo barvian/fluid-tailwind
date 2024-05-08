@@ -141,7 +141,7 @@
 			<!-- Fake pointer for intro animation -->
 			<div
 				transition:fade={{ duration: 200 }}
-				class="absolute -right-3.5 top-[56.5%] -mt-3.5 h-7 w-7 rounded-[100%] border-2 border-white/50 bg-black/50 transition"
+				class="absolute -right-3.5 top-1/2 -mt-3.5 h-7 w-7 rounded-[100%] border-2 border-white/50 bg-black/50 transition"
 				class:opacity-50={!animating}
 				class:scale-[85%]={animating}
 			/>
@@ -150,8 +150,9 @@
 			<button
 				tabindex="-1"
 				draggable="false"
-				class="absolute -right-2 top-0 h-full w-4 cursor-ew-resize touch-pan-y opacity-0"
+				class="group absolute left-full top-0 flex h-full cursor-ew-resize touch-pan-y items-center justify-center px-2"
 				aria-label="Resize"
+				in:fade={{ duration: 200, delay: 200 }}
 				use:resize={{
 					direction: 'right',
 					value: margin,
@@ -162,7 +163,9 @@
 							delay: 0
 						})
 				}}
-			/>
+			>
+				<div class="h-8 w-1.5 rounded-full bg-slate-500/60 group-hover:bg-slate-500/80" />
+			</button>
 		{/if}
 	</div>
 </div>
