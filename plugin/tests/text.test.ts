@@ -2,6 +2,7 @@ import { expect, it, spyOn } from 'bun:test'
 import './matchers'
 import { html, css, run } from './run'
 import colors from 'picocolors'
+import fluidPlugin from '../src'
 
 const warn = spyOn(console, 'warn')
 
@@ -22,7 +23,7 @@ it(`respects ~text from DEFAULT`, async () => {
 	expect(result.css).toMatchFormattedCss(css`
 		.\~text\/3xl {
 			font-size: clamp(1.25rem, 0.804rem + 1.116vw, 1.875rem)
-				/* fluid from 1.25rem at 40rem to 1.875rem at 96rem */;
+				/* fluid type from 1.25rem at 40rem to 1.875rem at 96rem */;
 			line-height: clamp(
 				2rem,
 				1.82rem + 0.45vw,
@@ -49,7 +50,7 @@ it(`respects ~text to DEFAULT`, async () => {
 	expect(result.css).toMatchFormattedCss(css`
 		.\~text-3xl {
 			font-size: clamp(1.25rem, 2.321rem + -1.116vw, 1.875rem)
-				/* fluid from 1.875rem at 40rem to 1.25rem at 96rem */;
+				/* fluid type from 1.875rem at 40rem to 1.25rem at 96rem */;
 			line-height: clamp(
 				2rem,
 				2.43rem + -0.45vw,
@@ -69,7 +70,7 @@ it(`fails for SC 1.4.4 violations`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css`
 		.\~text-\[1rem\]\/\[2\.6rem\] {
-			font-size:; /* not fluid from 1rem at 40rem to 2.6rem at 96rem: Fails WCAG SC 1.4.4 at i.e. 200rem */
+			font-size:; /* not fluid type from 1rem at 40rem to 2.6rem at 96rem: Fails WCAG SC 1.4.4 at i.e. 200rem */
 		}
 	`)
 })
@@ -88,7 +89,31 @@ it(`allows variants to fix SC 1.4.4 violations`, async () => {
 				1rem,
 				0.99rem + 1.34vw,
 				2.6rem
-			); /* fluid from 1rem at 0.5rem to 2.6rem at 120rem */
+			); /* fluid type from 1rem at 0.5rem to 2.6rem at 120rem */
+		}
+	`)
+})
+
+it(`allows warnings for WCAG SC 1.4.4 violations`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~text-[0.5rem]/[3rem]"></div>`
+			}
+		],
+		plugins: [
+			fluidPlugin({
+				checkSC144: false
+			})
+		]
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~text-\[0\.5rem\]\/\[3rem\] {
+			font-size: clamp(
+				0.5rem,
+				-1.29rem + 4.46vw,
+				3rem
+			); /* fluid type from 0.5rem at 40rem to 3rem at 96rem */
 		}
 	`)
 })
@@ -113,7 +138,7 @@ it(`handles simple font sizes`, async () => {
 				1rem,
 				0.29rem + 1.79vw,
 				2rem
-			); /* fluid from 1rem at 40rem to 2rem at 96rem */
+			); /* fluid type from 1rem at 40rem to 2rem at 96rem */
 		}
 	`)
 })
@@ -134,7 +159,8 @@ it(`applies consistent line height`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css`
 		.\~text-sm\/lg {
-			font-size: clamp(1rem, 0.29rem + 1.79vw, 2rem) /* fluid from 1rem at 40rem to 2rem at 96rem */;
+			font-size: clamp(1rem, 0.29rem + 1.79vw, 2rem)
+				/* fluid type from 1rem at 40rem to 2rem at 96rem */;
 			line-height: 1.5;
 		}
 	`)
@@ -160,7 +186,7 @@ it(`fails for inconsistent line height`, async () => {
 				1rem,
 				0.29rem + 1.79vw,
 				2rem
-			); /* fluid from 1rem at 40rem to 2rem at 96rem */
+			); /* fluid type from 1rem at 40rem to 2rem at 96rem */
 		}
 	`)
 	expect(warn).toHaveBeenCalledWith(
@@ -187,7 +213,8 @@ it(`applies consistent font weight`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css`
 		.\~text-sm\/lg {
-			font-size: clamp(1rem, 0.29rem + 1.79vw, 2rem) /* fluid from 1rem at 40rem to 2rem at 96rem */;
+			font-size: clamp(1rem, 0.29rem + 1.79vw, 2rem)
+				/* fluid type from 1rem at 40rem to 2rem at 96rem */;
 			font-weight: 600;
 		}
 	`)
@@ -209,7 +236,8 @@ it(`handles string <-> number font weight`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css`
 		.\~text-sm\/lg {
-			font-size: clamp(1rem, 0.29rem + 1.79vw, 2rem) /* fluid from 1rem at 40rem to 2rem at 96rem */;
+			font-size: clamp(1rem, 0.29rem + 1.79vw, 2rem)
+				/* fluid type from 1rem at 40rem to 2rem at 96rem */;
 			font-weight: 600;
 		}
 	`)
@@ -235,7 +263,7 @@ it(`fails for inconsistent font weights`, async () => {
 				1rem,
 				0.29rem + 1.79vw,
 				2rem
-			); /* fluid from 1rem at 40rem to 2rem at 96rem */
+			); /* fluid type from 1rem at 40rem to 2rem at 96rem */
 		}
 	`)
 	expect(warn).toHaveBeenCalledWith(
@@ -262,7 +290,8 @@ it(`fluidizes compatible letter spacing`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css`
 		.\~text-sm\/lg {
-			font-size: clamp(1rem, 0.29rem + 1.79vw, 2rem) /* fluid from 1rem at 40rem to 2rem at 96rem */;
+			font-size: clamp(1rem, 0.29rem + 1.79vw, 2rem)
+				/* fluid type from 1rem at 40rem to 2rem at 96rem */;
 			letter-spacing: clamp(
 				0.1rem,
 				0.03rem + 0.18vw,
@@ -288,7 +317,8 @@ it(`applies consistent letter spacing`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css`
 		.\~text-sm\/lg {
-			font-size: clamp(1rem, 0.29rem + 1.79vw, 2rem) /* fluid from 1rem at 40rem to 2rem at 96rem */;
+			font-size: clamp(1rem, 0.29rem + 1.79vw, 2rem)
+				/* fluid type from 1rem at 40rem to 2rem at 96rem */;
 			letter-spacing: 0.2em;
 		}
 	`)
@@ -310,7 +340,8 @@ it(`doesn't apply inconsistent letter spacing`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css`
 		.\~text-sm\/lg {
-			font-size: clamp(1rem, 0.29rem + 1.79vw, 2rem) /* fluid from 1rem at 40rem to 2rem at 96rem */;
+			font-size: clamp(1rem, 0.29rem + 1.79vw, 2rem)
+				/* fluid type from 1rem at 40rem to 2rem at 96rem */;
 			letter-spacing:; /* not fluid from 0.3em at 40rem to 0.2em at 96rem: Breakpoint and value units don't match */
 		}
 	`)

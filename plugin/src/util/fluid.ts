@@ -40,14 +40,14 @@ export const generate = (
 		startBP: _startBP,
 		endBP: _endBP,
 		atContainer,
-		checkSC144 = false,
-		checkBP = false
+		type = false,
+		final = false
 	}: {
 		startBP?: RawValue | Length
 		endBP?: RawValue | Length
 		atContainer?: string | true
-		checkSC144?: boolean
-		checkBP?: boolean
+		type?: boolean
+		final?: boolean
 	} = {}
 ) => {
 	if (!_start) error('missing-start')
@@ -72,7 +72,7 @@ export const generate = (
 		code?: C,
 		...args: typeof code extends undefined ? never : Parameters<(typeof codes)[C]>
 	) =>
-		`/* ${code ? 'not ' : ''}fluid from ${start.cssText} at ${startBP.cssText} to ${end.cssText} at ${endBP.cssText}${atContainer ? ' (container)' : ''}${
+		`/* ${code ? 'not ' : ''}fluid${type ? ' type' : ''} from ${start.cssText} at ${startBP.cssText} to ${end.cssText} at ${endBP.cssText}${atContainer ? ' (container)' : ''}${
 			// @ts-expect-error
 			code ? ': ' + codes[code](...args) : ''
 		} */`
@@ -82,15 +82,15 @@ export const generate = (
 	} else if (endBP.number === 0) {
 		endBP.unit = startBP.unit
 	} else if (!startBP.unit || startBP.unit !== endBP.unit) {
-		return (checkBP ? error : comment)('mismatched-bp-units', startBP, endBP)
+		return (final ? error : comment)('mismatched-bp-units', startBP, endBP)
 	}
 
 	if (startBP.number === endBP.number) {
-		return (checkBP ? error : comment)('no-change-bp', startBP)
+		return (final ? error : comment)('no-change-bp', startBP)
 	}
 
 	if (start.unit !== startBP.unit) {
-		return (checkBP ? error : comment)('mismatched-bp-val-units')
+		return (final ? error : comment)('mismatched-bp-val-units')
 	}
 
 	const p = Math.max(
@@ -107,15 +107,16 @@ export const generate = (
 	const intercept = start.number - startBP.number * slope
 
 	// SC 1.4.4 check
-	if (checkSC144) {
+	if (type && context.checkSC144) {
 		const zoom1 = (vw: number) => clamp(start.number, intercept + slope * vw, end.number) // 2*zoom1(vw) is the AA requirement
 		const zoom5 = (vw: number) =>
 			clamp(5 * start.number, 5 * intercept + slope * vw, 5 * end.number) // browser doesn't scale vw units when zooming, so this isn't 5*zoom1(vw)
 
 		// Check the clamped points on the lines 2*z1(vw) and zoom5(vw) and fail if zoom5 < 2*zoom1
 		if (5 * start.number < 2 * zoom1(5 * startBP.number))
-			return comment('fails-sc-144', new Length(startBP.number * 5, startBP.unit)) // fails at 5*startBP
-		else if (zoom5(endBP.number) < 2 * end.number) return comment('fails-sc-144', endBP)
+			return (final ? error : comment)('fails-sc-144', new Length(startBP.number * 5, startBP.unit)) // fails at 5*startBP
+		else if (zoom5(endBP.number) < 2 * end.number)
+			return (final ? error : comment)('fails-sc-144', endBP)
 	}
 
 	return `clamp(${min},${toPrecision(intercept, p)}${unit} + ${toPrecision(slope * 100, p)}${atContainer ? 'cqw' : 'vw'},${max})${comment()}`
@@ -144,15 +145,15 @@ export const rewrite = (
 	let foundExpr = false
 	container.walkDecls((decl) => {
 		decl.value = decl.value.replaceAll(
-			/(?:clamp\(.*?\))?\/\* (?:not )?fluid from (.*?) at (.*?) to (.*?) at (.*?)(?: \((container)(?:: )?(.*?)\))?(?:;.*?)? \*\//g,
-			(match, rawStart, _, rawEnd, __, ___, ____) => {
+			/(?:clamp\(.*?\))?\/\* (?:not )?fluid( type)? from (.*?) at (.*?) to (.*?) at (.*?)(?: \((container)(?:: )?(.*?)\))?(?:;.*?)? \*\//g,
+			(match, type, rawStart, _, rawEnd, __, ___, ____) => {
 				foundExpr = true
 				return generate(rawStart, rawEnd, context, {
 					startBP,
 					endBP,
 					atContainer,
-					checkSC144: match.includes('WCAG SC 1.4.4'),
-					checkBP: true
+					type: Boolean(type),
+					final: true
 				})
 			}
 		)

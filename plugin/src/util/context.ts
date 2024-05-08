@@ -1,11 +1,11 @@
 import type { KeyValuePair, PluginAPI, ThemeConfig } from 'tailwindcss/types/config'
 import mapObject, { mapObjectSkip } from 'map-obj'
-import { type Severity, error } from './errors'
+import { error } from './errors'
 import { Length } from './css'
 import { unique } from './set'
 
 export type PluginOptions = {
-	sc144?: Severity
+	checkSC144?: boolean
 }
 
 type Breakpoints = [string] | [undefined, string] | [string, string]
@@ -14,7 +14,10 @@ export type ResolvedFluidThemeConfig = Partial<{
 	defaultContainers: Breakpoints
 }>
 
-export default function getContext(options: PluginOptions, theme: PluginAPI['theme']) {
+export default function getContext(
+	theme: PluginAPI['theme'],
+	{ checkSC144 = true }: PluginOptions = {}
+) {
 	const themeConfig: ResolvedFluidThemeConfig = theme('fluid') ?? {}
 
 	// Filter breakpoints by simple valid lengths
@@ -88,7 +91,8 @@ export default function getContext(options: PluginOptions, theme: PluginAPI['the
 					this.sortedContainers[this.sortedContainers.length - 1])
 			)
 		},
-		theme
+		theme,
+		checkSC144
 	}
 }
 export type Context = ReturnType<typeof getContext>

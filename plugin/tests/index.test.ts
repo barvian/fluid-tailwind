@@ -23,7 +23,7 @@ it(`should be possible to use defaultTheme...InRems values`, async () => {
 	expect(result.css).toMatchFormattedCss(css`
 		.\~text-2xl\/5xl {
 			font-size: clamp(1.5rem, 0.43rem + 2.68vw, 3rem)
-				/* fluid from 1.5rem at 40rem to 3rem at 96rem */;
+				/* fluid type from 1.5rem at 40rem to 3rem at 96rem */;
 			line-height: clamp(
 				2rem,
 				1.29rem + 1.79vw,
@@ -38,7 +38,7 @@ it(`works with @apply`, async () => {
 	expect(result.css).toMatchFormattedCss(css`
 		h1 {
 			font-size: clamp(1.125rem, 0.589rem + 1.339vw, 1.875rem)
-				/* fluid from 1.125rem at 40rem to 1.875rem at 96rem */;
+				/* fluid type from 1.125rem at 40rem to 1.875rem at 96rem */;
 			line-height: clamp(
 				1.75rem,
 				1.39rem + 0.89vw,

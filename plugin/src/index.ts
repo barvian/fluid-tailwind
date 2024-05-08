@@ -109,9 +109,8 @@ const fluidPlugin = plugin.withOptions((options: PluginOptions = {}) => (api: Pl
 	if (inFluidPlugin) return // prevent recursion when adding fluid versions of config.plugins
 	inFluidPlugin = true
 
-	const { sc144 = false } = options
 	const { theme, config, corePlugins: corePluginEnabled, matchUtilities } = api
-	const context = getContext(options, theme)
+	const context = getContext(theme, options)
 	const { screens, containers } = context
 
 	// Add fluid versions for enabled core plugins
@@ -194,7 +193,7 @@ const fluidPlugin = plugin.withOptions((options: PluginOptions = {}) => (api: Pl
 				// Font size
 				try {
 					rules['font-size'] = fluid.generate(from.fontSize, to.fontSize, context, {
-						checkSC144: true // sc144
+						type: true
 					})
 				} catch (e) {
 					handle(e, '~text: Font size')
