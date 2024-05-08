@@ -2,18 +2,9 @@ import { expect, it, spyOn } from 'bun:test'
 import colors from 'picocolors'
 import './matchers'
 import { html, css, run } from './run'
-import {
-	defaultThemeFontSizeInRems,
-	defaultThemeScreensInRems,
-	fluidExtractor,
-	fluidize
-} from '../src'
-import { type FluidConfig } from '../src'
+import fluid, { fontSize, screens, extract, type FluidThemeConfig } from '../src'
 import plugin from 'tailwindcss/plugin'
 import { type PluginAPI } from 'tailwindcss/types/config'
-import tailwindDefaultConfig from 'tailwindcss/defaultConfig'
-import tailwindDefaultTheme from 'tailwindcss/defaultTheme'
-import dlv from 'dlv'
 
 const warn = spyOn(console, 'warn')
 
@@ -25,8 +16,8 @@ it(`should be possible to use defaultTheme...InRems values`, async () => {
 			}
 		],
 		theme: {
-			fontSize: defaultThemeFontSizeInRems,
-			screens: defaultThemeScreensInRems
+			fontSize,
+			screens
 		}
 	})
 	expect(result.css).toMatchFormattedCss(css`
@@ -158,9 +149,9 @@ it(`errors when start = end screen`, async () => {
 			}
 		],
 		theme: {
-			fluid: {
-				defaultScreens: ['30rem']
-			} satisfies FluidConfig,
+			fluid: (({ theme }) => ({
+				defaultScreens: [theme('screens.md')]
+			})) satisfies FluidThemeConfig,
 			screens: {
 				md: '30rem'
 			}
@@ -242,7 +233,7 @@ it(`respects defaultScreens config`, async () => {
 		theme: {
 			fluid: {
 				defaultScreens: ['30rem', '80rem']
-			} satisfies FluidConfig
+			} satisfies FluidThemeConfig
 		}
 	})
 	expect(result.css).toMatchFormattedCss(css`
@@ -264,7 +255,7 @@ it(`supports custom separator and prefix`, async () => {
 					raw: html`<div class="~sm/lg_tw-~p-1/2"></div>`
 				}
 			],
-			extract: fluidExtractor({ separator: '_', prefix: 'tw-' })
+			extract: extract({ separator: '_', prefix: 'tw-' })
 		},
 		separator: '_',
 		prefix: 'tw-',
@@ -287,7 +278,7 @@ it(`supports custom separator and prefix`, async () => {
 })
 
 type MatchUtilOrComp = Extract<keyof PluginAPI, 'matchUtilities' | 'matchComponents'>
-const testFluidize = (key: MatchUtilOrComp) => async () => {
+const testFluidized = (key: MatchUtilOrComp) => async () => {
 	const result = await run({
 		content: [
 			{
@@ -295,20 +286,19 @@ const testFluidize = (key: MatchUtilOrComp) => async () => {
 			}
 		],
 		plugins: [
-			fluidize(
-				plugin((api) => {
-					api[key](
-						{
-							'test-p': (val) => ({
-								padding: val
-							})
-						},
-						{
-							values: api.theme('padding')
-						}
-					)
-				})
-			)
+			plugin((api) => {
+				api[key](
+					{
+						'test-p': (val) => ({
+							padding: val
+						})
+					},
+					{
+						values: api.theme('padding')
+					}
+				)
+			}),
+			fluid
 		],
 		theme: {
 			screens: {
@@ -330,53 +320,48 @@ const testFluidize = (key: MatchUtilOrComp) => async () => {
 		}
 	`)
 }
-it(`supports fluidized utilities`, testFluidize('matchUtilities'))
-it(`supports fluidized components`, testFluidize('matchComponents'))
+it(`adds fluidized utilities from plugins`, testFluidized('matchUtilities'))
+it(`adds fluidized components from plugins`, testFluidized('matchComponents'))
 
-it(`creates the right utility config`, () => {
-	const fluidized = fluidize(
-		plugin(({ matchUtilities }) => {
-			matchUtilities(
-				{
-					'test-p': (val) => ({
-						padding: val
-					})
-				},
-				{
-					values: {
-						red: 'red',
-						px: '5px',
-						rem: '1rem'
+it(`adds fluidized utilities from plugins.withOptions`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="test-p-1 ~test-p-1/2"></div>`
+			}
+		],
+		plugins: [
+			plugin.withOptions((_ = {}) => ({ matchUtilities, theme }) => {
+				matchUtilities(
+					{
+						'test-p': (val) => ({
+							padding: val
+						})
+					},
+					{
+						values: theme('padding')
 					}
-				}
-			)
-		})
-	)
-
-	const utilities: Record<string, Parameters<PluginAPI['matchUtilities']>[1]> = {}
-	fluidized.handler({
-		addUtilities: () => {},
-		addComponents: () => {},
-		matchComponents: () => {},
-		addBase: () => {},
-		addVariant: () => {},
-		matchVariant: () => {},
-		e: (val) => val,
-		theme: (key, defaultValue) =>
-			key
-				? dlv({ ...tailwindDefaultTheme, screens: defaultThemeScreensInRems }, key, defaultValue)
-				: defaultValue,
-		config: (option, defaultValue) =>
-			option ? dlv(tailwindDefaultConfig, option, defaultValue) : defaultValue,
-		corePlugins: () => true,
-		matchUtilities(utils, config) {
-			Object.keys(utils).forEach((k) => (utilities[k] = config))
+				)
+			}),
+			fluid
+		],
+		theme: {
+			screens: {
+				sm: '30rem',
+				lg: '80rem'
+			}
 		}
 	})
-
-	expect(utilities['~test-p']).toEqual({
-		values: { rem: '1rem', px: '5px' },
-		modifiers: { rem: '1rem', px: '5px' },
-		supportsNegativeValues: false
-	})
+	expect(result.css).toMatchFormattedCss(css`
+		.test-p-1 {
+			padding: 0.25rem;
+		}
+		.\~test-p-1\/2 {
+			padding: clamp(
+				0.25rem,
+				0.1rem + 0.5vw,
+				0.5rem
+			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem */
+		}
+	`)
 })

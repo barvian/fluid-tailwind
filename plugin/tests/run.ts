@@ -2,12 +2,7 @@ import path from 'path'
 import postcss from 'postcss'
 import tailwind, { Config } from 'tailwindcss'
 import containerQueries from '@tailwindcss/container-queries'
-import {
-	fluidCorePlugins,
-	fluidExtractor,
-	defaultThemeFontSizeInRems,
-	defaultThemeScreensInRems
-} from '../src'
+import fluid, { extract, fontSize, screens } from '../src'
 import { expect, spyOn } from 'bun:test'
 import * as log from '../src/util/log'
 
@@ -19,26 +14,19 @@ export async function run(config: Config, input = `@tailwind utilities;@tailwind
 	if (Array.isArray(config.content)) {
 		config.content = {
 			files: config.content,
-			extract: fluidExtractor()
+			extract
 		}
 	} else {
-		config.content.extract ??= fluidExtractor()
+		config.content.extract ??= extract
 	}
 
 	config.corePlugins ??= {}
 	if (!Array.isArray(config.corePlugins)) config.corePlugins.preflight ??= false
 
 	config.theme ??= {}
-	config.theme.fontSize ??= defaultThemeFontSizeInRems
-	config.theme.screens ??= defaultThemeScreensInRems
-
-	config.plugins ??= []
-	if (!config.plugins.includes(fluidCorePlugins)) {
-		config.plugins.push(fluidCorePlugins)
-	}
-	if (!config.plugins.includes(containerQueries)) {
-		config.plugins.push(containerQueries)
-	}
+	config.theme.fontSize ??= fontSize
+	config.theme.screens ??= screens
+	config.plugins ??= [fluid, containerQueries]
 
 	return await postcss(tailwind(config)).process(input, {
 		from: `${path.resolve(__filename)}?test=${crypto.randomUUID()}`

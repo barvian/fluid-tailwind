@@ -1,12 +1,21 @@
-import { KeyValuePair, PluginAPI, ThemeConfig } from 'tailwindcss/types/config'
+import type { KeyValuePair, PluginAPI, ThemeConfig } from 'tailwindcss/types/config'
 import mapObject, { mapObjectSkip } from 'map-obj'
-import { error } from './errors'
-import { FluidConfig } from '..'
+import { type Severity, error } from './errors'
 import { Length } from './css'
 import { unique } from './set'
 
-export default function getContext(theme: PluginAPI['theme']) {
-	const config: FluidConfig = theme('fluid') ?? {}
+export type PluginOptions = {
+	sc144?: Severity
+}
+
+type Breakpoints = [string] | [undefined, string] | [string, string]
+export type ResolvedFluidThemeConfig = Partial<{
+	defaultScreens: Breakpoints
+	defaultContainers: Breakpoints
+}>
+
+export default function getContext(options: PluginOptions, theme: PluginAPI['theme']) {
+	const themeConfig: ResolvedFluidThemeConfig = theme('fluid') ?? {}
 
 	// Filter breakpoints by simple valid lengths
 	const filterBreakpoints = (key: 'screens' | 'containers') => {
@@ -47,14 +56,14 @@ export default function getContext(theme: PluginAPI['theme']) {
 		get defaultStartScreen() {
 			return (
 				_defaultStartScreen ??
-				(_defaultStartScreen = config.defaultScreens?.[0] ?? this.sortedScreens[0])
+				(_defaultStartScreen = themeConfig.defaultScreens?.[0] ?? this.sortedScreens[0])
 			)
 		},
 		get defaultEndScreen() {
 			return (
 				_defaultEndScreen ??
 				(_defaultEndScreen =
-					config.defaultScreens?.[1] ?? this.sortedScreens[this.sortedScreens.length - 1])
+					themeConfig.defaultScreens?.[1] ?? this.sortedScreens[this.sortedScreens.length - 1])
 			)
 		},
 		get containers() {
@@ -68,14 +77,15 @@ export default function getContext(theme: PluginAPI['theme']) {
 		get defaultStartContainer() {
 			return (
 				_defaultStartContainer ??
-				(_defaultStartContainer = config.defaultContainers?.[0] ?? this.sortedContainers[0])
+				(_defaultStartContainer = themeConfig.defaultContainers?.[0] ?? this.sortedContainers[0])
 			)
 		},
 		get defaultEndContainer() {
 			return (
 				_defaultEndContainer ??
 				(_defaultEndContainer =
-					config.defaultContainers?.[1] ?? this.sortedContainers[this.sortedContainers.length - 1])
+					themeConfig.defaultContainers?.[1] ??
+					this.sortedContainers[this.sortedContainers.length - 1])
 			)
 		},
 		theme

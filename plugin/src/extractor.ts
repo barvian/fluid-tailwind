@@ -1,4 +1,4 @@
-import { type ExtractorFn } from "tailwindcss/types/config"
+import type { ExtractorFn } from "tailwindcss/types/config"
 // @ts-expect-error untyped source file
 import * as regex from 'tailwindcss-priv/src/lib/regex'
 
@@ -9,23 +9,29 @@ type ExtractorOptions = {
 
 // This is the default extractor from 'tailwindcss-priv/src/lib/defaultExtractor'
 // with two extra chars to support the ~ prefix
-export default (options: ExtractorOptions = {}): ExtractorFn => {
-    let patterns = Array.from(buildRegExps(options))
+function extract(content: string): ReturnType<ExtractorFn>
+function extract(options: ExtractorOptions): ExtractorFn
+function extract(contentOrOptions: string | ExtractorOptions): ReturnType<ExtractorFn> | ExtractorFn {
+  let patterns = Array.from(buildRegExps(typeof contentOrOptions === 'string' ? undefined : contentOrOptions))
 
-    return (content: string) => {
-      let results: string[] = []
-  
-      for (let pattern of patterns) {
-        for (let result of content.match(pattern) ?? []) {
-          results.push(clipAtBalancedParens(result))
-        }
+  const extractor = (content: string) => {
+    let results: string[] = []
+
+    for (let pattern of patterns) {
+      for (let result of content.match(pattern) ?? []) {
+        results.push(clipAtBalancedParens(result))
       }
-  
-      return results
     }
+
+    return results
+  }
+  if (typeof contentOrOptions === 'string') return extractor(contentOrOptions)
+  return extractor
 }
 
-function* buildRegExps({ separator = ':', prefix: _prefix = '' }: ExtractorOptions) {
+export default extract
+
+function* buildRegExps({ separator = ':', prefix: _prefix = '' }: ExtractorOptions = {}) {
   const prefix = _prefix !== ''
       ? regex.optional(regex.pattern([/-?/, regex.escape(_prefix)]))
       : ''

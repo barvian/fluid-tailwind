@@ -1,5 +1,7 @@
 import { Length } from './css'
 
+export type Severity = 'warn' | 'error'
+
 export const codes = {
 	'missing-start': () => 'Missing start value',
 	'missing-end': () => 'Missing end value',
