@@ -1,24 +1,29 @@
 import plugin from 'tailwindcss/plugin'
 type Plugin = ReturnType<typeof plugin>
 import { corePlugins } from 'tailwindcss-priv/lib/corePlugins'
-import { CSSRuleObject, KeyValuePair, PluginAPI, ThemeConfig } from 'tailwindcss/types/config'
+import type {
+	CSSRuleObject,
+	KeyValuePair,
+	PluginAPI,
+	ResolvableTo,
+	ThemeConfig
+} from 'tailwindcss/types/config'
 import defaultTheme from 'tailwindcss/defaultTheme'
 import mapObject, { mapObjectSkip } from 'map-obj'
 import { includeKeys } from 'filter-obj'
-export { default as fluidExtractor } from './extractor'
 import * as log from './util/log'
-import getContext, { type Context } from './util/context'
+import getContext, {
+	type Context,
+	type PluginOptions,
+	type ResolvedFluidThemeConfig
+} from './util/context'
 import { Length, type RawValue } from './util/css'
-import * as fluid from './util/fluid'
+import * as expr from './util/expr'
 import { addVariant, addVariantWithModifier, matchVariant } from './util/tailwind'
 import { tuple } from './util/set'
 import { FluidError } from './util/errors'
 
-type Breakpoints = [string] | [undefined, string] | [string, string]
-export type FluidConfig = Partial<{
-	defaultScreens: Breakpoints
-	defaultContainers: Breakpoints
-}>
+export type FluidThemeConfig = ResolvableTo<ResolvedFluidThemeConfig>
 
 type MatchUtilOrComp = PluginAPI['matchUtilities'] | PluginAPI['matchComponents']
 type FilterFn = (
@@ -39,13 +44,11 @@ const handle = (e: unknown, source: string) => {
 function getFluidAPI(
 	api: PluginAPI,
 	context: Context,
-	{ addOriginal = true, filter }: Partial<{ addOriginal: boolean; filter: FilterFn }> = {}
+	{ filter }: { filter?: FilterFn } = {}
 ): PluginAPI {
 	const addFluid =
 		(orig: MatchUtilOrComp): MatchUtilOrComp =>
 		(utilities, options) => {
-			// Add original
-			if (addOriginal) orig(utilities, options)
 			// Skip ones with types that don't include length or any
 			if (options?.type && !options.type.includes('length') && !options.type.includes('any')) return
 			// Skip filtered out ones
@@ -68,7 +71,7 @@ function getFluidAPI(
 							if (end === null && DEFAULT) end = DEFAULT
 
 							try {
-								const clamp = fluid.generate(start, end, context)
+								const clamp = expr.generate(start, end, context)
 								return origFn(clamp, { modifier: null }) // don't pass along the modifier
 							} catch (e) {
 								handle(e, `~${util}`)
@@ -89,35 +92,53 @@ function getFluidAPI(
 	const noop = () => {}
 	return {
 		...api,
-		...(addOriginal
-			? {}
-			: {
-					addUtilities: noop,
-					addComponents: noop,
-					addVariant: noop,
-					addBase: noop,
-					matchVariant: noop,
-					addDefaults: noop // private API used in corePlugins
-				}),
+		addUtilities: noop,
+		addComponents: noop,
+		addVariant: noop,
+		addBase: noop,
+		matchVariant: noop,
+		// @ts-expect-error undocumented API used in corePlugins
+		addDefaults: noop,
 		matchUtilities: addFluid(api.matchUtilities),
 		matchComponents: addFluid(api.matchComponents)
 	}
 }
 
-export const fluidCorePlugins = plugin((api: PluginAPI) => {
-	const { theme, corePlugins: corePluginEnabled, matchUtilities } = api
-	const context = getContext(theme)
+let inFluidPlugin = false
+const fluid = plugin.withOptions((options: PluginOptions = {}) => (api: PluginAPI) => {
+	if (inFluidPlugin) return // prevent recursion when adding fluid versions of config.plugins
+	inFluidPlugin = true
+
+	const { theme, config, corePlugins: corePluginEnabled, matchUtilities } = api
+	const context = getContext(theme, options)
 	const { screens, containers } = context
 
 	// Add fluid versions for enabled core plugins
-	const fluidAPI = getFluidAPI(api, context, {
-		addOriginal: false,
+	const fluidCoreAPI = getFluidAPI(api, context, {
 		// Filter out fontSize plugin
 		filter: (utils, options) => !utils.includes('text') || !options?.type?.includes('length')
 	})
 	Object.entries(corePlugins).forEach(([name, corePlugin]) => {
 		if (!corePluginEnabled(name)) return
-		corePlugin(fluidAPI)
+		corePlugin(fluidCoreAPI)
+	})
+
+	// Add fluid versions of external plugins
+	const fluidPluginAPI = getFluidAPI(api, context)
+	const plugins = config('plugins') as (Function | Plugin)[]
+	plugins.forEach((_plugin, i) => {
+		if (typeof _plugin === 'function') {
+			// It's a plugin.withOptions, but wasn't passed options so try executing it
+			// with no arguments:
+			try {
+				const plugin = _plugin() as Plugin
+				plugin.handler(fluidPluginAPI)
+			} catch (e) {
+				log.warn('fluid-tailwind', `Could not add fluid version of \`plugins[${i}]\``)
+			}
+		} else {
+			_plugin.handler(fluidPluginAPI)
+		}
 	})
 
 	// Add new fluid text utility to handle potentially complex theme values
@@ -171,8 +192,8 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 
 				// Font size
 				try {
-					rules['font-size'] = fluid.generate(from.fontSize, to.fontSize, context, {
-						checkSC144: true
+					rules['font-size'] = expr.generate(from.fontSize, to.fontSize, context, {
+						type: true
 					})
 				} catch (e) {
 					handle(e, '~text: Font size')
@@ -183,7 +204,7 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 					rules['line-height'] = from.lineHeight ?? null
 				} else {
 					try {
-						rules['line-height'] = fluid.generate(from.lineHeight, to.lineHeight, context)
+						rules['line-height'] = expr.generate(from.lineHeight, to.lineHeight, context)
 					} catch (e) {
 						handle(e, '~text: Line height')
 					}
@@ -194,7 +215,7 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 					rules['letter-spacing'] = from.letterSpacing ?? null
 				} else {
 					try {
-						rules['letter-spacing'] = fluid.generate(from.letterSpacing, to.letterSpacing, context)
+						rules['letter-spacing'] = expr.generate(from.letterSpacing, to.letterSpacing, context)
 					} catch (e) {
 						handle(e, '~text: Letter spacing')
 					}
@@ -234,7 +255,7 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 			if (s2Key === s1Key) return
 			addVariant(api, `~${s1Key}/${s2Key}`, ({ container }) => {
 				try {
-					fluid.rewrite(container, context, [s1, s2])
+					expr.rewrite(container, context, [s1, s2])
 					return '&'
 				} catch (e) {
 					handle(e, `~${s1Key}/${s2Key}`)
@@ -246,7 +267,7 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 		// Add `~screen/[arbitrary]?` variants
 		addVariantWithModifier(api, `~${s1Key}`, ({ container, modifier }) => {
 			try {
-				fluid.rewrite(container, context, [s1, modifier])
+				expr.rewrite(container, context, [s1, modifier])
 				return '&'
 			} catch (e) {
 				handle(e, `~${s1Key}${modifier ? '/' + modifier : ''}`)
@@ -257,7 +278,7 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 		// Add `~/screen` variants
 		addVariant(api, `~/${s1Key}`, ({ container }) => {
 			try {
-				fluid.rewrite(container, context, [, s1])
+				expr.rewrite(container, context, [, s1])
 				return '&'
 			} catch (e) {
 				handle(e, `~/${s1Key}`)
@@ -269,7 +290,7 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 	// Add `~/[arbitrary]?` variant
 	addVariantWithModifier(api, '~', ({ modifier, container }) => {
 		try {
-			fluid.rewrite(container, context, [, modifier])
+			expr.rewrite(container, context, [, modifier])
 			return '&'
 		} catch (e) {
 			handle(e, `~${modifier ? '/' + modifier : ''}`)
@@ -280,7 +301,7 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 	// Add `~min-[arbitrary]/(screen|[arbitrary])?` variant
 	matchVariant(api, '~min', (value, { modifier, container }) => {
 		try {
-			fluid.rewrite(container, context, [value, modifier])
+			expr.rewrite(container, context, [value, modifier])
 			return '&'
 		} catch (e) {
 			handle(e, `~min-[${value}]${modifier ? '/' + modifier : ''}`)
@@ -305,7 +326,7 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 			if (c2Key === c1Key) return
 			addVariant(api, `~@${c1Key}/${c2Key}`, ({ container }) => {
 				try {
-					fluid.rewrite(container, context, [c1, c2], true)
+					expr.rewrite(container, context, [c1, c2], true)
 					return '&'
 				} catch (e) {
 					handle(e, `~@${c1Key}/${c2Key}`)
@@ -317,7 +338,7 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 		// Add `~@container/[arbitrary]?` variants
 		addVariantWithModifier(api, `~@${c1Key}`, ({ container, modifier }) => {
 			try {
-				fluid.rewrite(container, context, [c1, modifier], true)
+				expr.rewrite(container, context, [c1, modifier], true)
 				return '&'
 			} catch (e) {
 				handle(e, `~@${c1Key}${modifier ? '/' + modifier : ''}`)
@@ -328,7 +349,7 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 		// Add `~@/container` variants
 		addVariant(api, `~@/${c1Key}`, ({ container }) => {
 			try {
-				fluid.rewrite(container, context, [, c1], true)
+				expr.rewrite(container, context, [, c1], true)
 				return '&'
 			} catch (e) {
 				handle(e, `~@/${c1Key}`)
@@ -343,7 +364,7 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 		'~@',
 		(value, { modifier, container }) => {
 			try {
-				fluid.rewrite(container, context, [value, modifier], true)
+				expr.rewrite(container, context, [value, modifier], true)
 				return '&'
 			} catch (e) {
 				handle(e, `~@`) // can't output ${value} without a reverse lookup from theme :/
@@ -353,25 +374,21 @@ export const fluidCorePlugins = plugin((api: PluginAPI) => {
 		{
 			values: {
 				...containers,
-				DEFAULT: null // so they can omit it and use fluid.defaultContainers; see log.warn above
+				DEFAULT: null // so they can omit it and use expr.defaultContainers; see log.warn above
 			}
 		}
 	)
+
+	inFluidPlugin = false
 })
 
-/**
- * Create fluid versions for a plugin's utilities.
- */
-export const fluidize = ({ handler, config }: Plugin): Plugin => ({
-	handler: (api) => handler(getFluidAPI(api, getContext(api.theme))),
-	config
-})
+export default fluid
 
 /**
- * Re-export all the default simple screens in rems, for better
- * compatibility with default utilities
+ * Tailwind's default screens converted to `rem`, for better
+ * compatibility with core plugins.
  */
-export const defaultThemeScreensInRems = mapObject(defaultTheme.screens ?? {}, (name, v) => {
+export const screens = mapObject(defaultTheme.screens ?? {}, (name, v) => {
 	if (typeof v !== 'string') return [name, v]
 	const len = Length.parse(v)
 	if (!len || len.unit !== 'px') return [name, v]
@@ -379,10 +396,10 @@ export const defaultThemeScreensInRems = mapObject(defaultTheme.screens ?? {}, (
 })
 
 /**
- * Re-export all the default simple screens in rems, for better
- * compatibility with default utilities
+ * Tailwind's default font sizes converted to `rem`, for better
+ * compatibility with core plugins.
  */
-export const defaultThemeFontSizeInRems = mapObject(
+export const fontSize = mapObject(
 	defaultTheme.fontSize ?? {},
 	(name, [_size, { lineHeight: _lineHeight }]) => {
 		const size = Length.parse(_size)
@@ -400,3 +417,5 @@ export const defaultThemeFontSizeInRems = mapObject(
 		]
 	}
 )
+
+export { default as extract } from './extractor'

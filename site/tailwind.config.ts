@@ -3,14 +3,13 @@ import plugin from 'tailwindcss/plugin'
 import typographyPlugin from '@tailwindcss/typography'
 import containerQueryPlugin from '@tailwindcss/container-queries'
 import defaultTheme from 'tailwindcss/defaultTheme'
-import {
-	fluidCorePlugins,
-	fluidExtractor,
-	defaultThemeScreensInRems,
-	defaultThemeFontSizeInRems,
-	type FluidConfig
+import fluid, {
+	extract,
+	screens as _screens,
+	fontSize,
+	type FluidThemeConfig
 } from 'fluid-tailwind'
-const { '2xl': _, ...screens } = defaultThemeScreensInRems
+const { '2xl': _, ...screens } = _screens
 import svgToDataUri from 'mini-svg-data-uri'
 // @ts-expect-error undocumented API
 import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette'
@@ -27,13 +26,13 @@ export default {
 					.match(/<[^/].*?>/g)
 					?.join() ?? ''
 		},
-		extract: fluidExtractor()
+		extract
 	},
 	corePlugins: {
 		container: false
 	},
 	theme: {
-		fontSize: defaultThemeFontSizeInRems,
+		fontSize,
 		screens: {
 			xs: '30rem',
 			...screens
@@ -53,7 +52,7 @@ export default {
 				grid: `radial-gradient(circle, rgba(250,250, 250, 0.0), #fafafa), url("data:image/svg+xml,%3Csvg id='patternId' width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='a' patternUnits='userSpaceOnUse' width='20' height='20' patternTransform='scale(1) rotate(0)'%3E%3Crect x='0' y='0' width='100%25' height='100%25' fill='hsla(0, 0%25, 100%25, 0)'/%3E%3Cpath d='M 10,-2.55e-7 V 20 Z M -1.1677362e-8,10 H 20 Z' stroke-width='0.5' stroke='hsla(0, 0%25, 0%25, 0.015)' fill='none'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='800%25' height='800%25' transform='translate(0,0)' fill='url(%23a)'/%3E%3C/svg%3E")`,
 				gradients: `radial-gradient(38.61% 47.1% at 41.44% 51.75%, theme('colors.yellow.300')33 0%, theme('colors.yellow.300')00 100%), radial-gradient(23.53% 56.72% at 37.45% 68.12%, theme('colors.purple.300') 0%, theme('colors.purple.300')00 100%), radial-gradient(33.67% 28.07% at 73.67% 49.32%, theme('colors.teal.300')aa 0%, theme('colors.teal.300')00 100%), radial-gradient(46.17% 24.74% at 59.13% 74.34%, theme('colors.orange.300') 0%, theme('colors.orange.300')00 100%), radial-gradient(32.45% 44.17% at 30.56% 70.83%, theme('colors.blue.300') 0%, theme('colors.blue.300')00 100%)`
 			},
-			fluid: {} satisfies FluidConfig,
+			fluid: {} satisfies FluidThemeConfig,
 			transitionTimingFunction: {
 				'in-expo': 'cubic-bezier(0.95, 0.05, 0.795, 0.035)',
 				'out-expo': 'cubic-bezier(0.19, 1, 0.22, 1)',
@@ -116,7 +115,7 @@ export default {
 		}
 	},
 	plugins: [
-		fluidCorePlugins,
+		fluid,
 		typographyPlugin,
 		containerQueryPlugin,
 		plugin(({ addVariant, matchUtilities, theme }) => {

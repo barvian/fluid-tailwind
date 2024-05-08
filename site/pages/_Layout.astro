@@ -143,7 +143,12 @@ const path = relative(root, file)
 			class="mt-16 justify-between border-t border-slate-200 pb-14 pt-10 text-sm text-slate-500 sm:flex lg:col-start-2 dark:border-slate-200/5"
 		>
 			<div class="mb-6 sm:mb-0 sm:flex">
-				<p>Copyright ©{new Date().getFullYear()}. Not affiliated with Tailwind Labs Inc.</p>
+				<p>
+					Built by <a
+						class="hover:text-slate-900 dark:hover:text-slate-400"
+						href="https://barvian.me">Max Barvian</a
+					>. Not affiliated with Tailwind Labs Inc.
+				</p>
 			</div>
 			<a class="hover:text-slate-900 dark:hover:text-slate-400" href={`${repo}/edit/main/${path}`}
 				>Edit this page on GitHub</a

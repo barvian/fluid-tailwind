@@ -12,10 +12,9 @@ import Resizer from '/components/Resizer.svelte'
 
 ## Features
 
-* Supports **all core plugins** out of the box (i.e. font size, margin, padding, width)
+* Supports **every utility** out of the box (including plugins)
 * Full **Intellisense** support
-* Ensures all fluid type meets [accessibility requirements](https://www.smashingmagazine.com/2023/11/addressing-accessibility-concerns-fluid-type/)
-* Comes with a `fluidize` method to add fluid versions of **any custom plugin**
+* Ensures all fluid type meets [accessibility requirements](#fluid-type-accessibility-errors)
 * **Flexible** enough to handle advanced use cases
 
 
@@ -36,18 +35,37 @@ import Resizer from '/components/Resizer.svelte'
   </Steps.Item>
   <Steps.Item>
     <>
+      ### Add the plugin
+
+      Add the plugin to your Tailwind configuration.
+    </>
+    <Fragment slot="code">
+      ```js title="tailwind.config.js" ins={1,6}
+      import fluid from 'fluid-tailwind'
+
+      export default {
+        // ...
+        plugins: [
+          fluid
+        ]
+      }
+      ```
+    </Fragment>
+  </Steps.Item>
+  <Steps.Item>
+    <>
       ### Add the [extractor](https://tailwindcss.com/docs/content-configuration#customizing-extraction-logic)
 
       The custom extractor lets you use the new `~` prefix in your Tailwind classes.
     </>
     <Fragment slot="code">
-      ```ts title="tailwind.config.ts" ins={1, 6} ins=/\: (\{)/ ins="files: " ins=/\](,)/ ins=/(\}),/
-      import { fluidExtractor } from 'fluid-tailwind'
+      ```js title="tailwind.config.js" ins=", { extract }" ins={6} ins=/\: (\{)/ ins="files: " ins=/\](,)/ ins=/(\}),/
+      import fluid, { extract } from 'fluid-tailwind'
 
       export default {
         content: {
           files: [/* ... */],
-          extract: fluidExtractor()
+          extract
         },
         // ...
       }
@@ -56,45 +74,27 @@ import Resizer from '/components/Resizer.svelte'
   </Steps.Item>
   <Steps.Item>
     <>
-      ### Add the fluid core plugins
+      ### Convert Tailwind's default screens and font sizes to `rem`
 
-      Add fluid versions of every enabled [core plugin](https://tailwindcss.com/docs/configuration#core-plugins).
-    </>
-    <Fragment slot="code">
-      ```ts title="tailwind.config.ts" ins=/, fluidCorePlugins/ ins={6}
-      import { fluidExtractor, fluidCorePlugins } from 'fluid-tailwind'
-
-      export default {
-        // ...
-        plugins: [
-          fluidCorePlugins
-        ]
-      }
-      ```
-    </Fragment>
-  </Steps.Item>
-  <Steps.Item>
-    <>
-      ### (Optional) Use `rem` screens and font sizes
-
-      If you're using Tailwind's default `fontSize` and `screens`, you can convert them to `rem` to [ensure greater compatibility](#all-lengths-must-have-the-same-unit) with core plugins.
+      You can skip this if you don't use Tailwind's default screens or font sizes.
       <Tip.Info>This [will be unnecessary](https://github.com/tailwindlabs/tailwindcss/pull/13469) in Tailwind v4</Tip.Info>
     </>
     <Fragment slot="code">
-      ```ts title="tailwind.config.ts" ins={6,7} ins=/, defaultThemeScreensInRems, defaultThemeFontSizeInRems/
-      import { fluidExtractor, fluidCorePlugins, defaultThemeScreensInRems, defaultThemeFontSizeInRems } from 'fluid-tailwind'
+      ```js title="tailwind.config.js" ins={6-7} ins=", screens, fontSize"
+      import fluid, { extract, screens, fontSize } from 'fluid-tailwind'
 
       export default {
         // ...
         theme: {
-          fontSize: defaultThemeFontSizeInRems,
-          screens: defaultThemeScreensInRems,
+          screens,
+          fontSize,
           extend: {
             fontSize: {
               // ...
             }
           }
         }
+        // ...
       }
       ```
     </Fragment>
@@ -114,7 +114,7 @@ Here's a quick overview:
 * The `~` prefix makes a utility fluid
 * Fluid utilities have a start and end value, separated by a `/`
 * Fluid utilities interpolate between their start and end value when the viewport is between the start and end point, respectively
-* The start and end points default to the smallest and largest screen, but [they can be customized](#customizing-default-screens) or [overridden per-utility](#customize-screens-per-utility)
+* The start and end points default to the smallest and largest screen, but [they can be customized](#custom-default-screens) or [overridden per-utility](#customize-screens-per-utility)
 
 ## Limitations
 
@@ -135,9 +135,9 @@ This includes:
   ```html
   <h1 class="~text-lg/xl">
   ```
-  ```ts title="tailwind.config.ts"
+  ```js title="tailwind.config.js"
+  // ...
   export default {
-    // ...
     theme: {
       screens: {
         'sm': '320px',
@@ -148,6 +148,7 @@ This includes:
         'xl': '2rem'
       }
     }
+    // ...
   }
   ```
 </Split>
@@ -174,22 +175,24 @@ can with i.e. `-mt-3`, because Tailwind would only negate the start value.
 
 ## Configuration
 
-### Customizing default screens
+### Custom default screens
 
 The default start and end screens can be set with a tuple `[start, end]`, where each
 value is a simple screen width.
 Either value can be omitted, in which case the plugin will use your smallest and largest
 screen, respectively.
 
-```ts title="tailwind.config.ts" mark={6}
-import { ..., type FluidConfig } from 'fluid-tailwind'
-
+```js title="tailwind.config.js" ins={5-8}
+// ...
 export default {
+  // ...
   theme: {
-    fluid: {
-      defaultScreens: ['20rem', '64rem']
-    } satisfies FluidConfig
-  }
+    /** @type {import('fluid-tailwind').FluidThemeConfig} */
+    fluid: ({ theme }) => ({
+      defaultScreens: ['20rem', theme('screens.lg')]
+    })
+  },
+  // ...
 }
 ```
 
@@ -207,7 +210,7 @@ the included `~` variant. For example:
 <h1 class="~md/lg:~text-base/4xl">Quick increase</h1>
 ```
 
-You can omit either start or end screen to use your [global defaults](#customizing-default-screens):
+You can omit either start or end screen to use your [global defaults](#custom-default-screens):
 
 <Tip.Good>Set start screen to `md`, end screen as default</Tip.Good>
 ```html mark="~md:"
@@ -244,7 +247,7 @@ installed, you can make the start/end points relative to the nearest `@container
 ```
 <Tip.Info>This may look confusing if you use [named containers](https://github.com/tailwindlabs/tailwindcss-container-queries#named-containers). Sorry about that; there's only so many ways to get values into Tailwind. In general, when you see the fluid `~` prefix, you know the `/` denotes a start/end pair.</Tip.Info>
 
-Just like the `~` variant, both start and end containers are optional and will use your [global defaults](#customizing-default-containers) if unset.
+Just like the `~` variant, both start and end containers are optional and will use your [global defaults](#custom-default-containers) if unset.
 
 <Tip.Good>Set end container to `lg`, start container as default</Tip.Good>
 ```html mark="~@/lg:"
@@ -258,38 +261,39 @@ Just like the `~` variant, both start and end containers are optional and will u
 ```
 <Tip.Info>Browser support for named containers in fluid CSS expressions [should arrive soon](https://github.com/w3c/csswg-drafts/issues/7858)</Tip.Info>
 
-#### Customizing default containers
+#### Custom default containers
 
 The default containers can be set in the same way as screens.
 Either value can be omitted, in which case the plugin will use your smallest and
 largest container, respectively.
 
-```ts title="tailwind.config.ts" mark={6}
-import { ..., type FluidConfig } from 'fluid-tailwind'
-
+```js title="tailwind.config.js" ins={7}
+// ...
 export default {
+  // ...
   theme: {
-    fluid: {
-      defaultContainers: [, '30rem']
-    } satisfies FluidConfig
-  }
+    /** @type {import('fluid-tailwind').FluidThemeConfig} */
+    fluid: ({ theme }) => ({
+      defaultContainers: [, theme('containers.2xl')]
+    })
+  },
+  // ...
 }
 ```
 
-### Fluidize other plugins
+### Fluid type accessibility errors
 
-When adding custom plugins to your `tailwind.config.js`, you can run them through
-the `fluidize` function to automatically add fluid versions of all their utilities and components:
+By default, the plugin will not generate fluid type that [would fail WCAG Success Criterion 1.4.4](https://www.smashingmagazine.com/2023/11/addressing-accessibility-concerns-fluid-type/).
+You can configure this with the `checkSC144` option:
 
-```ts title="tailwind.config.ts" ins=/, (fluidize)/ ins="fluidize(" ins=")"
-import { ..., fluidize } from 'fluid-tailwind'
-import myFavoritePlugin from '...'
-
+```js title="tailwind.config.js" ins={6}
+// ...
 export default {
   // ...
   plugins: [
-    fluidize(myFavoritePlugin)
-    // ...
+    fluid({
+      checkSC144: false // default: true
+    })
   ]
 }
 ```
@@ -314,23 +318,23 @@ when the viewport is our `lg` screen
 
 ### Custom prefix and/or separator
 
-If you're using a custom [`separator`](https://tailwindcss.com/docs/configuration#separator) or
-[`prefix`](https://tailwindcss.com/docs/configuration#prefix) in your Tailwind config,
-you'll need to pass them in to the custom extractor as well:
+If you're using a custom [`prefix`](https://tailwindcss.com/docs/configuration#prefix) or
+[`separator`](https://tailwindcss.com/docs/configuration#separator),
+you'll need to pass them in to the extractor as well:
 
-```ts title="tailwind.config.ts" ins={7,8}
-import { fluidExtractor } from 'fluid-tailwind'
+```js title="tailwind.config.js" ins={9-10}
+import fluid, { extract } from 'fluid-tailwind'
 
 export default {
+  prefix: 'tw-',
+  separator: '_',
   content: {
     files: [/* ... */],
-    extract: fluidExtractor({
+    extract: extract({
       prefix: 'tw-',
       separator: '_'
     })
   },
-  prefix: 'tw-',
-  separator: '_',
   // ...
 }
 ```
