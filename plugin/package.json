@@ -51,6 +51,6 @@
 		"filter-obj": "^5.1.0",
 		"map-obj": "^5.0.2",
 		"picocolors": "^1.0.0",
-		"tailwindcss-priv": "npm:tailwindcss@3.4.1"
+		"tailwindcss-priv": "npm:tailwindcss@3.4.3"
 	}
 }
