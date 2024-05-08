@@ -2,7 +2,7 @@ import { expect, it, spyOn } from 'bun:test'
 import './matchers'
 import { html, css, run } from './run'
 import colors from 'picocolors'
-import fluidPlugin from '../src'
+import fluid from '../src'
 
 const warn = spyOn(console, 'warn')
 
@@ -102,7 +102,7 @@ it(`allows warnings for WCAG SC 1.4.4 violations`, async () => {
 			}
 		],
 		plugins: [
-			fluidPlugin({
+			fluid({
 				checkSC144: false
 			})
 		]
