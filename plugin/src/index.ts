@@ -18,7 +18,7 @@ import getContext, {
 	type ResolvedFluidThemeConfig
 } from './util/context'
 import { Length, type RawValue } from './util/css'
-import * as fluid from './util/fluid'
+import * as expr from './util/expr'
 import { addVariant, addVariantWithModifier, matchVariant } from './util/tailwind'
 import { tuple } from './util/set'
 import { FluidError } from './util/errors'
@@ -71,7 +71,7 @@ function getFluidAPI(
 							if (end === null && DEFAULT) end = DEFAULT
 
 							try {
-								const clamp = fluid.generate(start, end, context)
+								const clamp = expr.generate(start, end, context)
 								return origFn(clamp, { modifier: null }) // don't pass along the modifier
 							} catch (e) {
 								handle(e, `~${util}`)
@@ -105,7 +105,7 @@ function getFluidAPI(
 }
 
 let inFluidPlugin = false
-const fluidPlugin = plugin.withOptions((options: PluginOptions = {}) => (api: PluginAPI) => {
+const fluid = plugin.withOptions((options: PluginOptions = {}) => (api: PluginAPI) => {
 	if (inFluidPlugin) return // prevent recursion when adding fluid versions of config.plugins
 	inFluidPlugin = true
 
@@ -192,7 +192,7 @@ const fluidPlugin = plugin.withOptions((options: PluginOptions = {}) => (api: Pl
 
 				// Font size
 				try {
-					rules['font-size'] = fluid.generate(from.fontSize, to.fontSize, context, {
+					rules['font-size'] = expr.generate(from.fontSize, to.fontSize, context, {
 						type: true
 					})
 				} catch (e) {
@@ -204,7 +204,7 @@ const fluidPlugin = plugin.withOptions((options: PluginOptions = {}) => (api: Pl
 					rules['line-height'] = from.lineHeight ?? null
 				} else {
 					try {
-						rules['line-height'] = fluid.generate(from.lineHeight, to.lineHeight, context)
+						rules['line-height'] = expr.generate(from.lineHeight, to.lineHeight, context)
 					} catch (e) {
 						handle(e, '~text: Line height')
 					}
@@ -215,7 +215,7 @@ const fluidPlugin = plugin.withOptions((options: PluginOptions = {}) => (api: Pl
 					rules['letter-spacing'] = from.letterSpacing ?? null
 				} else {
 					try {
-						rules['letter-spacing'] = fluid.generate(from.letterSpacing, to.letterSpacing, context)
+						rules['letter-spacing'] = expr.generate(from.letterSpacing, to.letterSpacing, context)
 					} catch (e) {
 						handle(e, '~text: Letter spacing')
 					}
@@ -255,7 +255,7 @@ const fluidPlugin = plugin.withOptions((options: PluginOptions = {}) => (api: Pl
 			if (s2Key === s1Key) return
 			addVariant(api, `~${s1Key}/${s2Key}`, ({ container }) => {
 				try {
-					fluid.rewrite(container, context, [s1, s2])
+					expr.rewrite(container, context, [s1, s2])
 					return '&'
 				} catch (e) {
 					handle(e, `~${s1Key}/${s2Key}`)
@@ -267,7 +267,7 @@ const fluidPlugin = plugin.withOptions((options: PluginOptions = {}) => (api: Pl
 		// Add `~screen/[arbitrary]?` variants
 		addVariantWithModifier(api, `~${s1Key}`, ({ container, modifier }) => {
 			try {
-				fluid.rewrite(container, context, [s1, modifier])
+				expr.rewrite(container, context, [s1, modifier])
 				return '&'
 			} catch (e) {
 				handle(e, `~${s1Key}${modifier ? '/' + modifier : ''}`)
@@ -278,7 +278,7 @@ const fluidPlugin = plugin.withOptions((options: PluginOptions = {}) => (api: Pl
 		// Add `~/screen` variants
 		addVariant(api, `~/${s1Key}`, ({ container }) => {
 			try {
-				fluid.rewrite(container, context, [, s1])
+				expr.rewrite(container, context, [, s1])
 				return '&'
 			} catch (e) {
 				handle(e, `~/${s1Key}`)
@@ -290,7 +290,7 @@ const fluidPlugin = plugin.withOptions((options: PluginOptions = {}) => (api: Pl
 	// Add `~/[arbitrary]?` variant
 	addVariantWithModifier(api, '~', ({ modifier, container }) => {
 		try {
-			fluid.rewrite(container, context, [, modifier])
+			expr.rewrite(container, context, [, modifier])
 			return '&'
 		} catch (e) {
 			handle(e, `~${modifier ? '/' + modifier : ''}`)
@@ -301,7 +301,7 @@ const fluidPlugin = plugin.withOptions((options: PluginOptions = {}) => (api: Pl
 	// Add `~min-[arbitrary]/(screen|[arbitrary])?` variant
 	matchVariant(api, '~min', (value, { modifier, container }) => {
 		try {
-			fluid.rewrite(container, context, [value, modifier])
+			expr.rewrite(container, context, [value, modifier])
 			return '&'
 		} catch (e) {
 			handle(e, `~min-[${value}]${modifier ? '/' + modifier : ''}`)
@@ -326,7 +326,7 @@ const fluidPlugin = plugin.withOptions((options: PluginOptions = {}) => (api: Pl
 			if (c2Key === c1Key) return
 			addVariant(api, `~@${c1Key}/${c2Key}`, ({ container }) => {
 				try {
-					fluid.rewrite(container, context, [c1, c2], true)
+					expr.rewrite(container, context, [c1, c2], true)
 					return '&'
 				} catch (e) {
 					handle(e, `~@${c1Key}/${c2Key}`)
@@ -338,7 +338,7 @@ const fluidPlugin = plugin.withOptions((options: PluginOptions = {}) => (api: Pl
 		// Add `~@container/[arbitrary]?` variants
 		addVariantWithModifier(api, `~@${c1Key}`, ({ container, modifier }) => {
 			try {
-				fluid.rewrite(container, context, [c1, modifier], true)
+				expr.rewrite(container, context, [c1, modifier], true)
 				return '&'
 			} catch (e) {
 				handle(e, `~@${c1Key}${modifier ? '/' + modifier : ''}`)
@@ -349,7 +349,7 @@ const fluidPlugin = plugin.withOptions((options: PluginOptions = {}) => (api: Pl
 		// Add `~@/container` variants
 		addVariant(api, `~@/${c1Key}`, ({ container }) => {
 			try {
-				fluid.rewrite(container, context, [, c1], true)
+				expr.rewrite(container, context, [, c1], true)
 				return '&'
 			} catch (e) {
 				handle(e, `~@/${c1Key}`)
@@ -364,7 +364,7 @@ const fluidPlugin = plugin.withOptions((options: PluginOptions = {}) => (api: Pl
 		'~@',
 		(value, { modifier, container }) => {
 			try {
-				fluid.rewrite(container, context, [value, modifier], true)
+				expr.rewrite(container, context, [value, modifier], true)
 				return '&'
 			} catch (e) {
 				handle(e, `~@`) // can't output ${value} without a reverse lookup from theme :/
@@ -374,7 +374,7 @@ const fluidPlugin = plugin.withOptions((options: PluginOptions = {}) => (api: Pl
 		{
 			values: {
 				...containers,
-				DEFAULT: null // so they can omit it and use fluid.defaultContainers; see log.warn above
+				DEFAULT: null // so they can omit it and use expr.defaultContainers; see log.warn above
 			}
 		}
 	)
@@ -382,7 +382,7 @@ const fluidPlugin = plugin.withOptions((options: PluginOptions = {}) => (api: Pl
 	inFluidPlugin = false
 })
 
-export default fluidPlugin
+export default fluid
 
 /**
  * Tailwind's default screens converted to `rem`, for better
