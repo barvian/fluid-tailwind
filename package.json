@@ -9,6 +9,7 @@
 	},
 	"scripts": {
 		"build": "pnpm -r build",
+		"dev": "pnpm -r --parallel dev",
 		"format": "prettier --write ."
 	}
 }
