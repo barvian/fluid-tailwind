@@ -22,6 +22,7 @@ import * as expr from './util/expr'
 import { addVariant, addVariantWithModifier, matchVariant } from './util/tailwind'
 import { tuple } from './util/set'
 import { FluidError } from './util/errors'
+import type { Container } from 'postcss'
 
 export type FluidThemeConfig = ResolvableTo<ResolvedFluidThemeConfig>
 
@@ -246,6 +247,26 @@ const fluid = plugin.withOptions((options: PluginOptions = {}) => (api: PluginAP
 	// Screen variants
 	// ---
 
+	// We need this for error output, so retrieve and cache
+	const separator = config('separator') ?? ':'
+
+	// Handle the rewrites and potential errors:
+	const rewrite = (
+		container: Container,
+		[startBP, endBP]: [Length | RawValue, Length | RawValue],
+		variant: string,
+		atContainer?: string | true
+	) => {
+		try {
+			expr.rewrite(container, context, [startBP, endBP], atContainer)
+			return '&'
+		} catch (e) {
+			const util = (container.first?.raws?.tailwind as { classCandidate?: string })?.classCandidate
+			handle(e, `${variant}${util ? separator + util : ''}`)
+			return []
+		}
+	}
+
 	if (screens?.DEFAULT) {
 		log.warn(
 			'inaccessible-default-screen',
@@ -257,61 +278,29 @@ const fluid = plugin.withOptions((options: PluginOptions = {}) => (api: PluginAP
 		// Add `~screen/screen` variants
 		Object.entries(screens).forEach(([s2Key, s2]) => {
 			if (s2Key === s1Key) return
-			addVariant(api, `~${s1Key}/${s2Key}`, ({ container }) => {
-				try {
-					expr.rewrite(container, context, [s1, s2])
-					return '&'
-				} catch (e) {
-					handle(e, `~${s1Key}/${s2Key}`)
-					return []
-				}
-			})
+			addVariant(api, `~${s1Key}/${s2Key}`, ({ container }) =>
+				rewrite(container, [s1, s2], `~${s1Key}/${s2Key}`)
+			)
 		})
 
 		// Add `~screen/[arbitrary]?` variants
-		addVariantWithModifier(api, `~${s1Key}`, ({ container, modifier }) => {
-			try {
-				expr.rewrite(container, context, [s1, modifier])
-				return '&'
-			} catch (e) {
-				handle(e, `~${s1Key}${modifier ? '/' + modifier : ''}`)
-				return []
-			}
-		})
+		addVariantWithModifier(api, `~${s1Key}`, ({ container, modifier }) =>
+			rewrite(container, [s1, modifier], `~${s1Key}${modifier ? '/' + modifier : ''}`)
+		)
 
 		// Add `~/screen` variants
-		addVariant(api, `~/${s1Key}`, ({ container }) => {
-			try {
-				expr.rewrite(container, context, [, s1])
-				return '&'
-			} catch (e) {
-				handle(e, `~/${s1Key}`)
-				return []
-			}
-		})
+		addVariant(api, `~/${s1Key}`, ({ container }) => rewrite(container, [, s1], `~/${s1Key}`))
 	})
 
 	// Add `~/[arbitrary]?` variant
-	addVariantWithModifier(api, '~', ({ modifier, container }) => {
-		try {
-			expr.rewrite(container, context, [, modifier])
-			return '&'
-		} catch (e) {
-			handle(e, `~${modifier ? '/' + modifier : ''}`)
-			return []
-		}
-	})
+	addVariantWithModifier(api, '~', ({ modifier, container }) =>
+		rewrite(container, [, modifier], `~${modifier ? '/' + modifier : ''}`)
+	)
 
 	// Add `~min-[arbitrary]/(screen|[arbitrary])?` variant
-	matchVariant(api, '~min', (value, { modifier, container }) => {
-		try {
-			expr.rewrite(container, context, [value, modifier])
-			return '&'
-		} catch (e) {
-			handle(e, `~min-[${value}]${modifier ? '/' + modifier : ''}`)
-			return []
-		}
-	})
+	matchVariant(api, '~min', (value, { modifier, container }) =>
+		rewrite(container, [value, modifier], `~min-[${value}]${modifier ? '/' + modifier : ''}`)
+	)
 
 	// Container variants
 	// ---
@@ -328,53 +317,29 @@ const fluid = plugin.withOptions((options: PluginOptions = {}) => (api: PluginAP
 		// Add `~@container/container` variants
 		Object.entries(containers).forEach(([c2Key, c2]) => {
 			if (c2Key === c1Key) return
-			addVariant(api, `~@${c1Key}/${c2Key}`, ({ container }) => {
-				try {
-					expr.rewrite(container, context, [c1, c2], true)
-					return '&'
-				} catch (e) {
-					handle(e, `~@${c1Key}/${c2Key}`)
-					return []
-				}
-			})
+			addVariant(api, `~@${c1Key}/${c2Key}`, ({ container }) =>
+				rewrite(container, [c1, c2], `~@${c1Key}/${c2Key}`, true)
+			)
 		})
 
 		// Add `~@container/[arbitrary]?` variants
-		addVariantWithModifier(api, `~@${c1Key}`, ({ container, modifier }) => {
-			try {
-				expr.rewrite(container, context, [c1, modifier], true)
-				return '&'
-			} catch (e) {
-				handle(e, `~@${c1Key}${modifier ? '/' + modifier : ''}`)
-				return []
-			}
-		})
+		addVariantWithModifier(api, `~@${c1Key}`, ({ container, modifier }) =>
+			rewrite(container, [c1, modifier], `~@${c1Key}${modifier ? '/' + modifier : ''}`, true)
+		)
 
 		// Add `~@/container` variants
-		addVariant(api, `~@/${c1Key}`, ({ container }) => {
-			try {
-				expr.rewrite(container, context, [, c1], true)
-				return '&'
-			} catch (e) {
-				handle(e, `~@/${c1Key}`)
-				return []
-			}
-		})
+		addVariant(api, `~@/${c1Key}`, ({ container }) =>
+			rewrite(container, [, c1], `~@/${c1Key}`, true)
+		)
 	})
 
 	// Add ~@[arbitrary]|container/[arbitrary]|container variant
 	matchVariant(
 		api,
 		'~@',
-		(value, { modifier, container }) => {
-			try {
-				expr.rewrite(container, context, [value, modifier], true)
-				return '&'
-			} catch (e) {
-				handle(e, `~@`) // can't output ${value} without a reverse lookup from theme :/
-				return []
-			}
-		},
+		(value, { modifier, container }) =>
+			// can't output ${value} without a reverse lookup from theme :/
+			rewrite(container, [value, modifier], `~@`, true),
 		{
 			values: {
 				...containers,

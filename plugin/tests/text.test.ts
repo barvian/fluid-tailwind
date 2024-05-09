@@ -94,6 +94,29 @@ it(`allows variants to fix SC 1.4.4 violations`, async () => {
 	`)
 })
 
+it(`reports SC 1.4.4 violations caused by variants`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~min-[20rem]/[40rem]:~text-[1rem]/[2.6rem]"></div>`
+			}
+		],
+		theme: {
+			screens: {
+				sm: '0.5rem',
+				lg: '120rem'
+			}
+		}
+	})
+	expect(result.css).toMatchFormattedCss(css``)
+	expect(warn).toHaveBeenCalledWith(
+		colors.bold(colors.yellow('warn')),
+		'-',
+		colors.bold('~min-[20rem]/[40rem]:~text-[1rem]/[2.6rem]') + ':',
+		'Fails WCAG SC 1.4.4 at i.e. 100rem'
+	)
+})
+
 it(`allows warnings for WCAG SC 1.4.4 violations`, async () => {
 	const result = await run({
 		content: [

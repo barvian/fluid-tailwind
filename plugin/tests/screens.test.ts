@@ -208,7 +208,7 @@ it(`fails if ~ variant is used on non-fluid utility`, async () => {
 	expect(warn).toHaveBeenCalledWith(
 		colors.bold(colors.yellow('warn')),
 		'-',
-		colors.bold('~') + ':',
+		colors.bold('~:relative') + ':',
 		'Fluid variants can only be used with fluid utilities'
 	)
 })
@@ -230,7 +230,7 @@ it(`fails if ~ variant is used with same start/end screens`, async () => {
 	expect(warn).toHaveBeenCalledWith(
 		colors.bold(colors.yellow('warn')),
 		'-',
-		colors.bold('~md/[30rem]') + ':',
+		colors.bold('~md/[30rem]:~p-1/2') + ':',
 		'Start and end breakpoints are both 30rem'
 	)
 })

@@ -220,7 +220,7 @@ it(`fails if ~@ variant is used on non-fluid utility`, async () => {
 	expect(warn).toHaveBeenCalledWith(
 		colors.bold(colors.yellow('warn')),
 		'-',
-		colors.bold('~@') + ':',
+		colors.bold('~@:relative') + ':',
 		'Fluid variants can only be used with fluid utilities'
 	)
 })
@@ -320,7 +320,7 @@ it(`fails if ~@ variant is used with same start/end containers`, async () => {
 	expect(warn).toHaveBeenCalledWith(
 		colors.bold(colors.yellow('warn')),
 		'-',
-		colors.bold('~@') + ':',
+		colors.bold('~@:~p-1/2') + ':',
 		'Start and end breakpoints are both 30rem'
 	)
 })
@@ -340,7 +340,7 @@ it(`fails if no containers`, async () => {
 	expect(warn).toHaveBeenCalledWith(
 		colors.bold(colors.yellow('warn')),
 		'-',
-		colors.bold('~@') + ':',
+		colors.bold('~@:~p-1/2') + ':',
 		'Missing default start breakpoint'
 	)
 })
@@ -363,7 +363,7 @@ it(`fails if containers with different units`, async () => {
 	expect(warn).toHaveBeenCalledWith(
 		colors.bold(colors.yellow('warn')),
 		'-',
-		colors.bold('~@') + ':',
+		colors.bold('~@:~p-1/2') + ':',
 		'Cannot sort simple breakpoints in `theme.containers` because they use different units'
 	)
 })
