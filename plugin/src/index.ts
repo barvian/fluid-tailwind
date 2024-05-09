@@ -113,35 +113,9 @@ const fluid = plugin.withOptions((options: PluginOptions = {}) => (api: PluginAP
 	const context = getContext(theme, options)
 	const { screens, containers } = context
 
-	// Add fluid versions for enabled core plugins
-	const fluidCoreAPI = getFluidAPI(api, context, {
-		// Filter out fontSize plugin
-		filter: (utils, options) => !utils.includes('text') || !options?.type?.includes('length')
-	})
-	Object.entries(corePlugins).forEach(([name, corePlugin]) => {
-		if (!corePluginEnabled(name)) return
-		corePlugin(fluidCoreAPI)
-	})
-
-	// Add fluid versions of external plugins
-	const fluidPluginAPI = getFluidAPI(api, context)
-	const plugins = config('plugins') as (Function | Plugin)[]
-	plugins.forEach((plug, i) => {
-		if (typeof plug === 'function') {
-			// It's a plugin.withOptions, but wasn't passed options so try executing it
-			// with no arguments:
-			try {
-				(plug() as Plugin).handler(fluidPluginAPI)
-			} catch (e) {
-				log.warn('fluid-tailwind', `Could not add fluid version of \`plugins[${i}]\``)
-			}
-		} else {
-			plug.handler(fluidPluginAPI)
-		}
-	})
-
 	// Add new fluid text utility to handle potentially complex theme values
 	// ---
+	// This has to be first so that utilities like ~leading (from corePlugins) can override it
 
 	type Values<Type> = Type extends KeyValuePair<any, infer Item> ? Item : never
 	type FontSize = Values<ThemeConfig['fontSize']>
@@ -237,6 +211,37 @@ const fluid = plugin.withOptions((options: PluginOptions = {}) => (api: PluginAP
 			type: ['absolute-size', 'relative-size', 'length', 'percentage']
 		}
 	)
+
+	// Add fluid versions for enabled core plugins
+	// ---
+
+	const fluidCoreAPI = getFluidAPI(api, context, {
+		// Filter out fontSize plugin
+		filter: (utils, options) => !utils.includes('text') || !options?.type?.includes('length')
+	})
+	Object.entries(corePlugins).forEach(([name, corePlugin]) => {
+		if (!corePluginEnabled(name)) return
+		corePlugin(fluidCoreAPI)
+	})
+
+	// Add fluid versions of external plugins
+	// ---
+
+	const fluidPluginAPI = getFluidAPI(api, context)
+	const plugins = config('plugins') as (Function | Plugin)[]
+	plugins.forEach((plug, i) => {
+		if (typeof plug === 'function') {
+			// It's a plugin.withOptions, but wasn't passed options so try executing it
+			// with no arguments:
+			try {
+				;(plug() as Plugin).handler(fluidPluginAPI)
+			} catch (e) {
+				log.warn('fluid-tailwind', `Could not add fluid version of \`plugins[${i}]\``)
+			}
+		} else {
+			plug.handler(fluidPluginAPI)
+		}
+	})
 
 	// Screen variants
 	// ---

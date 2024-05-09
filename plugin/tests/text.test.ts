@@ -166,6 +166,34 @@ it(`applies consistent line height`, async () => {
 	`)
 })
 
+it(`can be overridden by ~leading`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~text-sm/lg ~leading-3/4"></div>`
+			}
+		]
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~text-sm\/lg {
+			font-size: clamp(0.875rem, 0.696rem + 0.446vw, 1.125rem)
+				/* fluid type from 0.875rem at 40rem to 1.125rem at 96rem */;
+			line-height: clamp(
+				1.25rem,
+				0.89rem + 0.89vw,
+				1.75rem
+			); /* fluid from 1.25rem at 40rem to 1.75rem at 96rem */
+		}
+		.\~leading-3\/4 {
+			line-height: clamp(
+				0.75rem,
+				0.57rem + 0.45vw,
+				1rem
+			); /* fluid from 0.75rem at 40rem to 1rem at 96rem */
+		}
+	`)
+})
+
 it(`fails for inconsistent line height`, async () => {
 	const result = await run({
 		content: [
