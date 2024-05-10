@@ -365,3 +365,48 @@ it(`adds fluidized utilities from plugins.withOptions`, async () => {
 		}
 	`)
 })
+
+it(`adds fluidized utilities from function plugin`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="test-p-1 ~test-p-1/2"></div>`
+			}
+		],
+		plugins: [
+			// @ts-expect-error undocumented API
+			({ matchUtilities, theme }) => {
+				matchUtilities(
+					{
+						// @ts-expect-error undocumented API
+						'test-p': (val) => ({
+							padding: val
+						})
+					},
+					{
+						values: theme('padding')
+					}
+				)
+			},
+			fluid
+		],
+		theme: {
+			screens: {
+				sm: '30rem',
+				lg: '80rem'
+			}
+		}
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.test-p-1 {
+			padding: 0.25rem;
+		}
+		.\~test-p-1\/2 {
+			padding: clamp(
+				0.25rem,
+				0.1rem + 0.5vw,
+				0.5rem
+			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem */
+		}
+	`)
+})

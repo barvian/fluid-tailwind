@@ -1,5 +1,4 @@
 import plugin from 'tailwindcss/plugin'
-type Plugin = ReturnType<typeof plugin>
 import { corePlugins } from 'tailwindcss-priv/lib/corePlugins'
 import type {
 	CSSRuleObject,
@@ -23,6 +22,7 @@ import { addVariant, addVariantWithModifier, matchVariant } from './util/tailwin
 import { tuple } from './util/set'
 import { FluidError } from './util/errors'
 import type { Container } from 'postcss'
+import type { Config } from 'tailwindcss'
 
 export type FluidThemeConfig = ResolvableTo<ResolvedFluidThemeConfig>
 
@@ -225,19 +225,19 @@ const fluid = plugin.withOptions((options: PluginOptions = {}) => (api: PluginAP
 		corePlugin(fluidCoreAPI)
 	})
 
-	// Add fluid versions of external plugins
+	// Add fluid versions of other plugins
 	// ---
 
 	const fluidPluginAPI = getFluidAPI(api, context)
-	const plugins = config('plugins') as (Function | Plugin)[]
-	plugins.forEach((plug, i) => {
+	const plugins = config('plugins') as Config['plugins']
+	plugins?.forEach((plug, i) => {
+		if (!plug) return
+
 		if (typeof plug === 'function') {
-			// It's a plugin.withOptions, but wasn't passed options so try executing it
-			// with no arguments:
-			try {
-				;(plug() as Plugin).handler(fluidPluginAPI)
-			} catch (e) {
-				log.warn('fluid-tailwind', `Could not add fluid version of \`plugins[${i}]\``)
+			if ('__isOptionsFunction' in plug && plug.__isOptionsFunction) {
+				plug(undefined).handler(fluidPluginAPI)
+			} else {
+				plug(fluidPluginAPI)
 			}
 		} else {
 			plug.handler(fluidPluginAPI)
