@@ -2,7 +2,7 @@ import { expect, it, spyOn } from 'bun:test'
 import colors from 'picocolors'
 import './matchers'
 import { html, css, run } from './run'
-import { type FluidConfig } from '../src'
+import type { FluidThemeConfig } from '../src'
 
 const warn = spyOn(console, 'warn')
 
@@ -235,7 +235,7 @@ it(`respects defaultContainers config`, async () => {
 		theme: {
 			fluid: {
 				defaultContainers: ['30rem', '80rem']
-			} satisfies FluidConfig
+			} satisfies FluidThemeConfig
 		}
 	})
 	expect(result.css).toMatchFormattedCss(css`
@@ -259,7 +259,7 @@ it(`supports missing start defaultContainer`, async () => {
 		theme: {
 			fluid: {
 				defaultContainers: [, '80rem']
-			} satisfies FluidConfig,
+			} satisfies FluidThemeConfig,
 			containers: {
 				sm: '30rem'
 			}
@@ -286,7 +286,7 @@ it(`supports missing end defaultContainer`, async () => {
 		theme: {
 			fluid: {
 				defaultContainers: ['30rem']
-			} satisfies FluidConfig,
+			} satisfies FluidThemeConfig,
 			containers: {
 				lg: '80rem'
 			}

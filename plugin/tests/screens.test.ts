@@ -1,7 +1,7 @@
 import { expect, it, spyOn } from 'bun:test'
 import './matchers'
 import { html, css, run } from './run'
-import { type FluidConfig } from '../src'
+import type { FluidThemeConfig } from '../src'
 import colors from 'picocolors'
 
 const warn = spyOn(console, 'warn')
@@ -288,7 +288,7 @@ it(`supports missing start defaultScreen`, async () => {
 		theme: {
 			fluid: {
 				defaultScreens: [, '80rem']
-			} satisfies FluidConfig,
+			} satisfies FluidThemeConfig,
 			screens: {
 				sm: '30rem'
 			}
@@ -315,7 +315,7 @@ it(`supports missing end defaultScreen`, async () => {
 		theme: {
 			fluid: {
 				defaultScreens: ['30rem']
-			} satisfies FluidConfig,
+			} satisfies FluidThemeConfig,
 			screens: {
 				lg: '80rem'
 			}
