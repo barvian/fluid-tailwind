@@ -7,26 +7,39 @@ type ExtractorOptions = {
     prefix?: string
 }
 
+let defaultPatterns
+
 // This is the default extractor from 'tailwindcss-priv/src/lib/defaultExtractor'
 // with two extra chars to support the ~ prefix
 function extract(content: string): ReturnType<ExtractorFn>
 function extract(options: ExtractorOptions): ExtractorFn
 function extract(contentOrOptions: string | ExtractorOptions): ReturnType<ExtractorFn> | ExtractorFn {
-  let patterns = Array.from(buildRegExps(typeof contentOrOptions === 'string' ? undefined : contentOrOptions))
-
-  const extractor = (content: string) => {
+  
+  if (typeof contentOrOptions === 'string') {
+    defaultPatterns ??= Array.from(buildRegExps())
     let results: string[] = []
 
-    for (let pattern of patterns) {
-      for (let result of content.match(pattern) ?? []) {
+    for (const pattern of defaultPatterns) {
+      for (const result of contentOrOptions.match(pattern) ?? []) {
+        results.push(clipAtBalancedParens(result))
+      }
+    }
+    return results
+  }
+
+  const patterns = Array.from(buildRegExps(contentOrOptions))
+  
+  return (content: string) => {
+    let results: string[] = []
+
+    for (const pattern of patterns) {
+      for (const result of content.match(pattern) ?? []) {
         results.push(clipAtBalancedParens(result))
       }
     }
 
     return results
   }
-  if (typeof contentOrOptions === 'string') return extractor(contentOrOptions)
-  return extractor
 }
 
 export default extract
