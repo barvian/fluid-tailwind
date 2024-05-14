@@ -15,7 +15,7 @@
 <div class="not-prose @container ~min-w-[16rem]/[24rem] relative -mb-8 max-w-full">
 	<div
 		bind:this={well}
-		class="@container dark:bg-slate-850 relative box-content flex max-w-full flex-col items-center justify-center overflow-hidden rounded-t-xl border border-slate-900/5 bg-slate-50 bg-[-5px_-5px] p-6 pb-10 dark:border-white/5 {height}"
+		class="@container dark:bg-slate-850 bg-grid-slate-100 dark:bg-grid-slate-700/25 relative box-content flex max-w-full flex-col items-center justify-center overflow-hidden rounded-t-xl border border-slate-900/5 bg-slate-50 bg-[-5px_-5px] bg-[-5px_-5px] p-6 pb-10 dark:border-white/5 {height}"
 		style:margin-right="clamp(0px, {$margin}px, 50cqw)"
 	>
 		<slot />

@@ -10,6 +10,9 @@ import fluid, {
 	type FluidThemeConfig
 } from 'fluid-tailwind'
 const { '2xl': _, ...screens } = _screens
+import svgToDataUri from 'mini-svg-data-uri'
+// @ts-expect-error undocumented API
+import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette'
 
 export default {
 	content: {
@@ -150,6 +153,17 @@ export default {
 			addVariant('group-not-last-of-type', ':merge(.group):not(:last-of-type) &')
 			addVariant('group-not-first-of-type', ':merge(.group):not(:first-of-type) &')
 			addVariant('fonts-loaded', [':root:not([data-js]) &', '[data-fonts-loaded]:root &'])
+
+			matchUtilities(
+				{
+					'bg-grid': (value) => ({
+						backgroundImage: `url("${svgToDataUri(
+							`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="${value}"><path d="M0 .5H31.5V32"/></svg>`
+						)}")`
+					})
+				},
+				{ values: flattenColorPalette(theme('backgroundColor')), type: 'color' }
+			)
 		})
 	]
 } satisfies Config
