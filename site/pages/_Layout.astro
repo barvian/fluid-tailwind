@@ -35,7 +35,6 @@ const root = searchForWorkspaceRoot(file)
 const path = relative(root, file)
 ---
 
-<!doctype html>
 <html
 	lang="en"
 	class="min-h-screen scroll-pt-10 overflow-x-hidden bg-white antialiased motion-safe:scroll-smooth dark:bg-slate-900"
@@ -59,33 +58,30 @@ const path = relative(root, file)
 	</head>
 	<header class="~pt-5/8 ~pb-20/28 relative">
 		<div
-			class="~bottom-40/72 before:bg-grid-slate-900/[0.04] dark:before:bg-grid-slate-400/[0.05] after:bg-gradients absolute inset-0 -z-10 bg-slate-50 before:absolute before:inset-0 before:bg-[bottom_1px_center] before:[mask-image:linear-gradient(transparent,black)] after:absolute after:bottom-0 after:left-1/2 after:h-[120%] after:w-full after:max-w-[90rem] after:-translate-x-1/2 after:opacity-30 after:blur-3xl dark:border-b dark:border-slate-100/5 dark:bg-[#0B1120] dark:before:bg-bottom"
+			class="~bottom-40/72 after:bg-gradients dark:after:bg-fluid after:center absolute inset-0 -z-10 bg-slate-50 before:absolute before:inset-0 before:bg-[bottom_1px_center] before:[mask-image:linear-gradient(transparent,black)] after:absolute after:bottom-0 after:left-1/2 after:size-full after:max-w-[120rem] after:-translate-x-1/2 after:bg-cover after:bg-no-repeat after:opacity-30 after:blur-3xl dark:border-b dark:border-slate-100/5 dark:bg-[#0B1120] dark:before:bg-bottom dark:after:mix-blend-screen"
 		>
 		</div>
 		<nav class="~mb-20/28 container flex items-center justify-start">
 			<div class="flex items-center gap-4">
-				{/* <a href="//fluid.style"> */}
-				<Image src={logo} alt="Fluid for Tailwind logo" height="24" loading="eager" />
-				{/* </a> */}
-				{
-					/*
-					<svg class="mx-2 h-6" role="separator" viewBox="0 0 32 32"
-						><path
-							d="M22 5L9 28"
-							vector-effect="non-scaling-stroke"
-							class="stroke-slate-200 dark:stroke-slate-700"
-							stroke-linecap="round"
-							stroke-linejoin="round"></path></svg
-					>
-				*/
-				}
+				<svg
+					class="h-6"
+					role="presentation"
+					viewBox="0 0 43 43"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<rect width="43" height="43" rx="6" class="fill-slate-700 dark:fill-slate-600"></rect>
+					<path
+						d="M34 19.8607C32.7967 22.6573 31.6397 24.5463 30.5289 25.5278C29.3785 26.5093 28.195 27 26.9785 27C25.0744 26.8924 23.3686 25.9042 21.8612 24.0354L18.8264 20.2238C18.324 19.565 17.6694 19.249 16.8628 19.2759C16.0298 19.2759 15.3884 19.686 14.9388 20.5061C14.476 21.3531 13.9008 22.6707 13.2132 24.4589L10 22.5833C10.4099 21.2523 10.8727 20.1095 11.3884 19.1549C11.9041 18.2003 12.4595 17.4205 13.0545 16.8155C14.2843 15.6054 15.5603 15.0004 16.8826 15.0004C18.0331 14.987 19.1107 15.3164 20.1157 15.9886C21.1339 16.6474 22.0926 17.6692 22.9917 19.054C24.6182 21.5682 25.9537 22.8253 26.9983 22.8253C27.8579 22.8253 28.5719 22.3279 29.1405 21.333C29.4182 20.8221 29.7025 20.2574 29.9934 19.6389C30.2843 19.0204 30.562 18.3751 30.8264 17.7028L34 19.8607Z"
+						fill="white"></path>
+				</svg>
 				<span class="text-slate-700 dark:text-slate-200"
 					>Fluid for Tailwind<span class="max-[22rem]:sr-only"> CSS</span></span
 				>
 			</div>
 			<a
 				href={repo}
-				class="ml-auto flex items-center gap-2.5 text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
+				class="ml-auto flex items-center gap-2.5 text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
 				aria-label="View on GitHub"
 			>
 				<Stargazers client:only="svelte" />
@@ -98,7 +94,7 @@ const path = relative(root, file)
 		</nav>
 		<div class="container relative flex flex-col items-center">
 			<h1
-				class="~text-4xl/6xl max-w-3xl text-balance text-center font-extrabold tracking-tight text-slate-900 dark:text-white"
+				class="~text-4xl/6xl max-w-3xl text-balance text-center font-bold tracking-tight text-slate-900 dark:text-white"
 			>
 				{frontmatter.headline}
 			</h1>
@@ -112,15 +108,15 @@ const path = relative(root, file)
 			>
 			<div class="~mt-16/24 sm:~mt-24/36 relative w-full">
 				<Split
-					class="~h-[29.5rem]/[40rem] sm:ml-auto sm:w-[60%]"
-					shadow="shadow-xl"
+					class="~h-[29.5rem]/[40rem] sm:ml-auto sm:w-[60%] dark:bg-slate-900/70 dark:backdrop-blur dark:[--ec-frm-edActTabBg:transparent] dark:[--ec-frm-edTabBarBg:transparent] dark:[&_.frame]:![--code-background:transparent]"
+					shadow="shadow-xl dark:shadow-none"
 					rows="grid-rows-[minmax(0,1.68fr)]"
 				>
 					<Input />
 					<Output />
 				</Split>
 				<Browser
-					class="absolute -top-10 left-0 right-1/3 z-10 h-full max-sm:hidden"
+					class="supports-sda:animate-parallax supports-sda:top-0 supports-sda:[animation-timeline:view()] absolute -top-10 left-0 right-1/3 z-10 h-full max-sm:hidden"
 					client:intersecting={{ threshold: 0.5 }}
 				>
 					<Example />
@@ -145,13 +141,14 @@ const path = relative(root, file)
 			<div class="mb-6 sm:mb-0 sm:flex">
 				<p>
 					Built by <a
-						class="hover:text-slate-900 dark:hover:text-slate-400"
+						class="font-semibold hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300"
 						href="https://barvian.me">Max Barvian</a
 					>. Not affiliated with Tailwind Labs Inc.
 				</p>
 			</div>
-			<a class="hover:text-slate-900 dark:hover:text-slate-400" href={`${repo}/edit/main/${path}`}
-				>Edit this page on GitHub</a
+			<a
+				class="font-semibold hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300"
+				href={`${repo}/edit/main/${path}`}>Edit this page on GitHub</a
 			>
 		</footer>
 	</div>

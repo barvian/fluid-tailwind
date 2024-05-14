@@ -39,7 +39,7 @@ const codeOptions = {
 			editorTabBarBorderBottomColor: '#64748b4d',
 			editorActiveTabIndicatorBottomColor: '#7dd3fc',
 			editorActiveTabIndicatorHeight: '1.5px',
-			editorTabBarBackground: '#2b3447',
+			editorTabBarBackground: '#162032',
 			editorTabBorderRadius: '0',
 			frameBoxShadowCssValue: '0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a'
 		},
