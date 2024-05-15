@@ -67,7 +67,7 @@ function getFluidAPI(
 			Object.entries(utilities).forEach(([util, origFn]) => {
 				orig(
 					{
-						[`~${util}`](start, { modifier: end }) {
+						[`~${context.prefix}${util}`](start, { modifier: end }) {
 							// See note about default modifiers above
 							if (end === null && DEFAULT) end = DEFAULT
 
@@ -84,6 +84,7 @@ function getFluidAPI(
 						...options,
 						values,
 						supportsNegativeValues: false, // b/c Tailwind only negates the value, not the modifier
+						respectPrefix: false, // we add it manually, for better ordering
 						modifiers
 					}
 				)
@@ -111,8 +112,8 @@ const fluid = plugin.withOptions((options: PluginOptions = {}) => (api: PluginAP
 	inFluidPlugin = true
 
 	const { theme, config, corePlugins: corePluginEnabled, matchUtilities } = api
-	const context = getContext(theme, options)
-	const { screens, containers } = context
+	const context = getContext(theme, config, options)
+	const { screens, containers, prefix } = context
 
 	// Add new fluid text utility to handle potentially complex theme values
 	// ---
@@ -156,7 +157,7 @@ const fluid = plugin.withOptions((options: PluginOptions = {}) => (api: PluginAP
 	const { DEFAULT, ...fontSizeModifiers } = fontSizeValues
 	matchUtilities(
 		{
-			'~text'(_from, { modifier: _to }) {
+			[`~${prefix}text`](_from, { modifier: _to }) {
 				if (_to === null && DEFAULT) _to = DEFAULT
 
 				const from = normalize(_from)
@@ -209,6 +210,7 @@ const fluid = plugin.withOptions((options: PluginOptions = {}) => (api: PluginAP
 			values: fontSizeValues,
 			modifiers: fontSizeModifiers,
 			supportsNegativeValues: false,
+			respectPrefix: false,
 			type: ['absolute-size', 'relative-size', 'length', 'percentage']
 		}
 	)

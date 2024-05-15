@@ -1,4 +1,4 @@
-import type { KeyValuePair, PluginAPI, ThemeConfig } from 'tailwindcss/types/config'
+import type { KeyValuePair, PluginAPI, PrefixConfig, ThemeConfig } from 'tailwindcss/types/config'
 import mapObject, { mapObjectSkip } from 'map-obj'
 import { error } from './errors'
 import { Length } from './css'
@@ -16,8 +16,10 @@ export type ResolvedFluidThemeConfig = Partial<{
 
 export default function getContext(
 	theme: PluginAPI['theme'],
+	config: PluginAPI['config'],
 	{ checkSC144 = true }: PluginOptions = {}
 ) {
+	const prefix: PrefixConfig = config('prefix')
 	const themeConfig: ResolvedFluidThemeConfig = theme('fluid') ?? {}
 
 	// Filter breakpoints by simple valid lengths
@@ -92,6 +94,7 @@ export default function getContext(
 			)
 		},
 		theme,
+		prefix,
 		checkSC144
 	}
 }
