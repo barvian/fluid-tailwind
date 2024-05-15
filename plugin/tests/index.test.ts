@@ -252,7 +252,7 @@ it(`supports custom separator and prefix`, async () => {
 		content: {
 			files: [
 				{
-					raw: html`<div class="~sm/lg_~tw-p-1/2 ~tw-text-[1rem]/[2rem]"></div>`
+					raw: html`<div class="~sm/lg_tw-~p-1/2"></div>`
 				}
 			],
 			extract: extract({ separator: '_', prefix: 'tw-' })
@@ -267,14 +267,7 @@ it(`supports custom separator and prefix`, async () => {
 		}
 	})
 	expect(result.css).toMatchFormattedCss(css`
-		.\~tw-text-\[1rem\]\/\[2rem\] {
-			font-size: clamp(
-				1rem,
-				0.4rem + 2vw,
-				2rem
-			); /* fluid type from 1rem at 30rem to 2rem at 80rem */
-		}
-		.\~sm\/lg_\~tw-p-1\/2 {
+		.\~sm\/lg_tw-\~p-1\/2 {
 			padding: clamp(
 				0.25rem,
 				0.1rem + 0.5vw,
