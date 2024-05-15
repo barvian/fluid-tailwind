@@ -58,7 +58,7 @@ const path = relative(root, file)
 	</head>
 	<header class="~pt-5/8 ~pb-20/28 relative">
 		<div
-			class="~bottom-40/72 absolute inset-0 -z-10 overflow-clip bg-slate-50 dark:border-b dark:border-slate-100/5 dark:bg-[#0B1120]"
+			class="~bottom-40/72 absolute inset-0 -z-10 overflow-clip bg-slate-50 dark:border-b dark:border-white/5 dark:bg-[#0B1120]"
 		>
 			<div
 				class="bg-gradients dark:bg-fluid absolute inset-y-0 left-1/2 size-full max-w-[120rem] -translate-x-1/2 bg-[size:100%_100%] bg-no-repeat opacity-30 blur-3xl dark:mix-blend-screen"
@@ -103,7 +103,7 @@ const path = relative(root, file)
 				{frontmatter.headline}
 			</h1>
 			<p
-				class="prose prose-lg prose-slate dark:prose-invert mt-6 max-w-3xl text-balance text-center"
+				class="prose prose-lg prose-slate dark:prose-invert mt-6 max-w-3xl text-balance text-center dark:text-slate-300"
 				set:html={frontmatter.lead}
 			/>
 			<a
