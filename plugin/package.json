@@ -1,6 +1,6 @@
 {
 	"name": "fluid-tailwind",
-	"version": "0.2.2",
+	"version": "0.3.0",
 	"author": "Maxwell Barvian",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
