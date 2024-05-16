@@ -223,7 +223,7 @@ const fluid = plugin.withOptions((options: PluginOptions = {}) => (api: PluginAP
 		filter: (utils, options) => !utils.includes('text') || !options?.type?.includes('length')
 	})
 	Object.entries(corePlugins).forEach(([name, corePlugin]) => {
-		if (!corePluginEnabled(name)) return
+		if (name === 'preflight' || !corePluginEnabled(name)) return
 		corePlugin(fluidCoreAPI)
 	})
 
