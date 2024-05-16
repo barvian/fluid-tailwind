@@ -1,5 +1,5 @@
-import { type Container } from 'postcss'
-import { type KeyValuePair, type PluginAPI } from 'tailwindcss/types/config'
+import type { Container } from 'postcss'
+import type { KeyValuePair, PluginAPI } from 'tailwindcss/types/config'
 
 export const addVariant = (
 	api: PluginAPI,

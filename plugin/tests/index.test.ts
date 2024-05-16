@@ -4,7 +4,7 @@ import './matchers'
 import { html, css, run } from './run'
 import fluid, { fontSize, screens, extract, type FluidThemeConfig } from '../src'
 import plugin from 'tailwindcss/plugin'
-import { type PluginAPI } from 'tailwindcss/types/config'
+import type { PluginAPI } from 'tailwindcss/types/config'
 
 const warn = spyOn(console, 'warn')
 

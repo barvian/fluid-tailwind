@@ -1,8 +1,8 @@
 import { Container } from 'postcss'
-import { Length, RawValue } from './css'
+import { Length, type RawValue } from './css'
 import { codes, error } from './errors'
 import { clamp, precision, toPrecision } from './math'
-import { Context } from './context'
+import type { Context } from './context'
 
 // Convert a RawValue to a length, which also resolves theme() values
 const length = (val: RawValue | Length, { theme }: Context) => {

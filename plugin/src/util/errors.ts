@@ -24,7 +24,7 @@ export const codes = {
 } satisfies Record<string, (...args: any[]) => string>
 
 export class FluidError extends Error {
-	name = 'FluidError'
+	override name = 'FluidError'
 
 	constructor(
 		public code: keyof typeof codes,
