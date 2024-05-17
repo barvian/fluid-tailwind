@@ -1,5 +1,5 @@
 import plugin from 'tailwindcss/plugin'
-import { corePlugins } from 'tailwindcss-priv/lib/corePlugins'
+import { corePlugins } from 'tailwindcss-priv/src/corePlugins'
 import type {
 	CSSRuleObject,
 	KeyValuePair,
