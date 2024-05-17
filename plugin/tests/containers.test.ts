@@ -69,9 +69,6 @@ it(`allows ~@container/[arbitrary] variant`, async () => {
 			}
 		}
 	})
-	// TODO: file bug for erroneous container query? I think this is on Tailwind's end
-	// It should be fine to allow for now because [80rem] is an invalid container name:
-	// https://developer.mozilla.org/en-US/docs/Web/CSS/@container#container-name
 	expect(result.css).toMatchFormattedCss(css`
 		.\~\@md\/\[80rem\]\:\~p-1\/2 {
 			padding: clamp(
@@ -79,15 +76,6 @@ it(`allows ~@container/[arbitrary] variant`, async () => {
 				0.1rem + 0.5cqw,
 				0.5rem
 			); /* fluid from 0.25rem at 30rem to 0.5rem at 80rem (container) */
-		}
-		@container [80rem] (min-width: 30rem) {
-			.\@md\/\[80rem\]\:\~p-1\/2 {
-				padding: clamp(
-					0.25rem,
-					0.07rem + 0.45vw,
-					0.5rem
-				); /* fluid from 0.25rem at 40rem to 0.5rem at 96rem */
-			}
 		}
 	`)
 })

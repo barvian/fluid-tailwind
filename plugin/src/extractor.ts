@@ -66,7 +66,7 @@ function* buildRegExps({ separator = ':', prefix: _prefix = '' }: ExtractorOptio
           // ^ NEW:
 
           // This is here to make sure @container supports everything that other utilities do
-          /@(?:\w+)/,
+          /~?@(?:\w+)/,
         ]),
   
         // Normal/Arbitrary values
