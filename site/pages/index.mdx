@@ -315,24 +315,24 @@ If you're using a custom Tailwind [`prefix`](https://tailwindcss.com/docs/config
 [`separator`](https://tailwindcss.com/docs/configuration#separator),
 you'll need to pass them in to the extractor as well:
 
-```js title="tailwind.config.js" ins={9-10}
-import fluid, { extract } from 'fluid-tailwind'
+<Split rows="grid-rows-[auto]">
+  ```js title="tailwind.config.js" ins={9-10}
+  import fluid, { extract } from 'fluid-tailwind'
 
-export default {
-  prefix: 'tw-',
-  separator: '_',
-  content: {
-    files: [/* ... */],
-    extract: extract({
-      prefix: 'tw-',
-      separator: '_'
-    })
-  },
-  // ...
-}
-```
-
-<Tip.Good>Use a custom Tailwind prefix with fluid type</Tip.Good>
-```html mark="tw-"
-<div class="~tw-text-sm/xl">
-```
+  export default {
+    prefix: 'tw-',
+    separator: '_',
+    content: {
+      files: [/* ... */],
+      extract: extract({
+        prefix: 'tw-',
+        separator: '_'
+      })
+    },
+    // ...
+  }
+  ```
+  ```html title="index.html" mark="tw-"
+  <div class="~tw-text-sm/xl">
+  ```
+</Split>
