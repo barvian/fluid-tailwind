@@ -15,6 +15,9 @@ import svgToDataUri from 'mini-svg-data-uri'
 import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette'
 
 export default {
+	experimental: {
+		optimizeUniversalDefaults: true
+	},
 	content: {
 		files: ['./{pages,layouts,components}/**/*.{html,js,svelte,ts,astro,mdx}'],
 		transform: {
