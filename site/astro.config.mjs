@@ -7,14 +7,15 @@ import { readFileSync } from 'node:fs'
 import sectionize from 'remark-sectionize'
 import vercel from '@astrojs/vercel/static'
 import intersectingDirective from './directives/intersecting/register'
+import { sans, mono } from './theme'
 
 /** @type {import('astro-expressive-code').AstroExpressiveCodeOptions} */
 const codeOptions = {
 	theme: ExpressiveCodeTheme.fromJSONString(readFileSync('./vstheme.json', 'utf8')),
 	styleOverrides: {
 		uiFontSize: '0.75rem',
-		uiFontFamily: 'Inter var',
-		codeFontFamily: 'Fira Code VF',
+		uiFontFamily: sans.join(', '),
+		codeFontFamily: mono.join(', '),
 		codeFontSize: '0.875rem',
 		codePaddingBlock: '1.25rem',
 		uiPaddingBlock: '0.5rem',

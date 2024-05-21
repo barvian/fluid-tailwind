@@ -1,8 +1,8 @@
 import type { Config } from 'tailwindcss'
 import plugin from 'tailwindcss/plugin'
-import typographyPlugin from '@tailwindcss/typography'
-import containerQueryPlugin from '@tailwindcss/container-queries'
-import defaultTheme from 'tailwindcss/defaultTheme'
+import typography from '@tailwindcss/typography'
+import containerQueries from '@tailwindcss/container-queries'
+import { sans, mono } from './theme'
 import fluid, {
 	extract,
 	screens as _screens,
@@ -64,8 +64,8 @@ export default {
 				'4.5': '1.125rem'
 			},
 			fontFamily: {
-				sans: ['Inter var', ...defaultTheme.fontFamily.sans],
-				mono: ['Fira Code VF', ...defaultTheme.fontFamily.mono]
+				sans,
+				mono
 			},
 			fontSize: {
 				// '6xl': ['4rem', '4rem']
@@ -143,8 +143,8 @@ export default {
 	},
 	plugins: [
 		fluid,
-		typographyPlugin,
-		containerQueryPlugin,
+		typography,
+		containerQueries,
 		plugin(({ addVariant, matchUtilities, theme }) => {
 			addVariant('current', '&[aria-current="page"]')
 			addVariant('group-current', ':merge(.group)[aria-current="page"] &')
