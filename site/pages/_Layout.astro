@@ -12,7 +12,7 @@ import { relative } from 'node:path'
 import logo from '/assets/logo.svg'
 import preview from '/public/preview.png'
 import pkg from '/../plugin/package.json'
-import { Image, getImage } from 'astro:assets'
+import { getImage } from 'astro:assets'
 import Stargazers from '/components/Stargazers.svelte'
 
 const repo = pkg.repository.url.replace(/^git\+/, '').replace(/\.git$/, '')

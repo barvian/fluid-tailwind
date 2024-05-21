@@ -19,6 +19,7 @@ export default {
 		optimizeUniversalDefaults: true
 	},
 	corePlugins: {
+		container: false,
 		ringOpacity: false,
 		textOpacity: false,
 		borderOpacity: false,
@@ -39,9 +40,6 @@ export default {
 					?.join() ?? ''
 		},
 		extract
-	},
-	corePlugins: {
-		container: false
 	},
 	theme: {
 		fontSize,
