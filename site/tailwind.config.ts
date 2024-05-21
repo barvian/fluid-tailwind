@@ -18,6 +18,15 @@ export default {
 	experimental: {
 		optimizeUniversalDefaults: true
 	},
+	corePlugins: {
+		ringOpacity: false,
+		textOpacity: false,
+		borderOpacity: false,
+		divideOpacity: false,
+		backdropOpacity: false,
+		backgroundOpacity: false,
+		placeholderOpacity: false
+	},
 	content: {
 		files: ['./{pages,layouts,components}/**/*.{html,js,svelte,ts,astro,mdx}'],
 		transform: {
