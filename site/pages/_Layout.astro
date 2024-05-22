@@ -56,6 +56,14 @@ const path = relative(root, file)
 		<meta name="description" content={frontmatter.description} />
 		<meta property="og:description" content={frontmatter.description} />
 		<meta name="twitter:description" content={frontmatter.description} />
+		<script type="application/ld+json">
+			{
+				"@context": "https://schema.org",
+				"@type": "WebSite",
+				"name": "Fluid for Tailwind CSS",
+				"url": "https://fluid.tw/"
+			}
+		</script>
 	</head>
 	<header class="~pt-5/8 ~pb-20/28 relative">
 		<div
