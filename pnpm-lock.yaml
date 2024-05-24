@@ -81,9 +81,6 @@ importers:
       '@astrojs/tailwind':
         specifier: ^5.0.0
         version: 5.1.0(astro@4.4.4(@types/node@20.11.20)(typescript@5.3.3))(tailwindcss@3.4.1)
-      '@tailwindcss/container-queries':
-        specifier: ^0.1.1
-        version: 0.1.1(tailwindcss@3.4.1)
       '@tailwindcss/typography':
         specifier: ^0.5.9
         version: 0.5.10(tailwindcss@3.4.1)
@@ -128,8 +125,8 @@ importers:
         specifier: ^4.2.0
         version: 4.2.0
       tw-reset:
-        specifier: ^0.0.1
-        version: 0.0.1(tailwindcss@3.4.1)
+        specifier: ^0.0.2
+        version: 0.0.2(tailwindcss@3.4.1)
       typescript:
         specifier: '>=5.0.0'
         version: 5.3.3
@@ -2812,8 +2809,8 @@ packages:
   tunnel-agent@0.6.0:
     resolution: {integrity: sha512-McnNiV1l8RYeY8tBgEpuodCC1mLUdbSN+CYBL7kJsJNInOP8UjDDEwdk6Mw60vdLLrr5NHKZhMAOSrR2NZuQ+w==}
 
-  tw-reset@0.0.1:
-    resolution: {integrity: sha512-thHOsRbcC2qxxmoGzVV7gOjuRW+hydKn+uDkq6htV9T56iEZpwMCSPC86imwIZp/hPZPW+eNbdDTuiR3/+sOnQ==}
+  tw-reset@0.0.2:
+    resolution: {integrity: sha512-CnuobM3AZk5NiEDnQGm66mkvg9HXZ3F1luHN33qmvii/uJA3/rVZDHsJa5l9zJG18OYQwZlb4Ov4gBaq//gD1w==}
     peerDependencies:
       tailwindcss: ^3.2.0
 
@@ -6418,7 +6415,7 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
-  tw-reset@0.0.1(tailwindcss@3.4.1):
+  tw-reset@0.0.2(tailwindcss@3.4.1):
     dependencies:
       '@tailwindcss/container-queries': 0.1.1(tailwindcss@3.4.1)
       picocolors: 1.0.1
