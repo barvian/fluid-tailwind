@@ -34,7 +34,7 @@ export default {
 				xs: '30rem'
 			},
 			fluid: (({ theme }) => ({
-				defaultScreens: [, theme('screens.lg')]
+				defaultScreens: [, theme('screens.xl')]
 			})) satisfies FluidThemeConfig,
 			animation: {
 				parallax: 'parallax linear both'
