@@ -127,6 +127,9 @@ importers:
       sharp-cli:
         specifier: ^4.2.0
         version: 4.2.0
+      tw-reset:
+        specifier: ^0.0.1
+        version: 0.0.1(tailwindcss@3.4.1)
       typescript:
         specifier: '>=5.0.0'
         version: 5.3.3
@@ -2233,6 +2236,9 @@ packages:
   picocolors@1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
 
+  picocolors@1.0.1:
+    resolution: {integrity: sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==}
+
   picomatch@2.3.1:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
@@ -2805,6 +2811,11 @@ packages:
 
   tunnel-agent@0.6.0:
     resolution: {integrity: sha512-McnNiV1l8RYeY8tBgEpuodCC1mLUdbSN+CYBL7kJsJNInOP8UjDDEwdk6Mw60vdLLrr5NHKZhMAOSrR2NZuQ+w==}
+
+  tw-reset@0.0.1:
+    resolution: {integrity: sha512-thHOsRbcC2qxxmoGzVV7gOjuRW+hydKn+uDkq6htV9T56iEZpwMCSPC86imwIZp/hPZPW+eNbdDTuiR3/+sOnQ==}
+    peerDependencies:
+      tailwindcss: ^3.2.0
 
   type-fest@2.19.0:
     resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
@@ -5706,6 +5717,8 @@ snapshots:
 
   picocolors@1.0.0: {}
 
+  picocolors@1.0.1: {}
+
   picomatch@2.3.1: {}
 
   pify@2.3.0: {}
@@ -6404,6 +6417,12 @@ snapshots:
   tunnel-agent@0.6.0:
     dependencies:
       safe-buffer: 5.2.1
+
+  tw-reset@0.0.1(tailwindcss@3.4.1):
+    dependencies:
+      '@tailwindcss/container-queries': 0.1.1(tailwindcss@3.4.1)
+      picocolors: 1.0.1
+      tailwindcss: 3.4.1
 
   type-fest@2.19.0: {}
 

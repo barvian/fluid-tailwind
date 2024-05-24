@@ -1,32 +1,17 @@
 import type { Config } from 'tailwindcss'
 import plugin from 'tailwindcss/plugin'
 import typography from '@tailwindcss/typography'
-import containerQueries from '@tailwindcss/container-queries'
 import { sans, mono } from './theme'
-import fluid, {
-	extract,
-	screens as _screens,
-	fontSize,
-	type FluidThemeConfig
-} from 'fluid-tailwind'
-const { '2xl': _, ...screens } = _screens
+import reset from 'tw-reset'
+import fluid, { extract, fontSize, type FluidThemeConfig } from 'fluid-tailwind'
 import svgToDataUri from 'mini-svg-data-uri'
 // @ts-expect-error undocumented API
 import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette'
 
 export default {
-	experimental: {
-		optimizeUniversalDefaults: true
-	},
+	presets: [reset],
 	corePlugins: {
-		container: false,
-		ringOpacity: false,
-		textOpacity: false,
-		borderOpacity: false,
-		divideOpacity: false,
-		backdropOpacity: false,
-		backgroundOpacity: false,
-		placeholderOpacity: false
+		container: false
 	},
 	content: {
 		files: ['./{pages,layouts,components}/**/*.{html,js,svelte,ts,astro,mdx}'],
@@ -43,11 +28,14 @@ export default {
 	},
 	theme: {
 		fontSize,
-		screens: {
-			xs: '30rem',
-			...screens
-		},
+
 		extend: {
+			screens: {
+				xs: '30rem'
+			},
+			fluid: (({ theme }) => ({
+				defaultScreens: [, theme('screens.lg')]
+			})) satisfies FluidThemeConfig,
 			animation: {
 				parallax: 'parallax linear both'
 			},
@@ -82,7 +70,6 @@ export default {
 				gradients: `radial-gradient(38.61% 47.1% at 41.44% 51.75%, theme('colors.green.300' / 20%) 0%, theme('colors.green.300' / 0%) 100%), radial-gradient(23.53% 56.72% at 37.45% 68.12%, theme('colors.pink.300' / 50%) 0%, theme('colors.pink.300' / 0%) 100%), radial-gradient(33.67% 28.07% at 73.67% 49.32%, theme('colors.blue.300') 0%, theme('colors.blue.300' / 20%) 100%)`,
 				fluid: `url('./fluid.jpg')`
 			},
-			fluid: {} satisfies FluidThemeConfig,
 			transitionTimingFunction: {
 				'in-expo': 'cubic-bezier(0.95, 0.05, 0.795, 0.035)',
 				'out-expo': 'cubic-bezier(0.19, 1, 0.22, 1)',
@@ -151,7 +138,6 @@ export default {
 	plugins: [
 		fluid,
 		typography,
-		containerQueries,
 		plugin(({ addVariant, matchUtilities, theme }) => {
 			addVariant('current', '&[aria-current="page"]')
 			addVariant('group-current', ':merge(.group)[aria-current="page"] &')
