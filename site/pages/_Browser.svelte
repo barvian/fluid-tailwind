@@ -68,6 +68,30 @@
 						</svg>localhost
 					</div>
 				</div>
+				<div class="flex justify-end">
+					<svg
+						class="h-4.5 text-slate-500 dark:text-slate-600"
+						stroke="currentColor"
+						viewBox="0 0 18 17"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							d="M5 13H2.5C1.67157 13 1 12.3284 1 11.5V2.5C1 1.67157 1.67157 1 2.5 1H11.5C12.3284 1 13 1.67157 13 2.5V4"
+							stroke-width="1.5"
+							vector-effect="non-scaling-stroke"
+						/>
+						<rect
+							x="5"
+							y="4"
+							width="12"
+							height="12"
+							rx="1.5"
+							stroke-width="1.5"
+							vector-effect="non-scaling-stroke"
+						/>
+					</svg>
+				</div>
 			</div>
 			<!-- Viewport -->
 			<div class="relative flex-1 overflow-hidden rounded-b-xl pb-8">
