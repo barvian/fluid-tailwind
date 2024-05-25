@@ -105,6 +105,9 @@ export default {
 							'@apply hover:text-[--tw-prose-links-hover] font-semibold decoration-[1px] hover:decoration-[1.5px] underline-offset-[0.125em]':
 								{}
 						},
+						code: {
+							'@apply before:hidden after:hidden': {}
+						},
 						h3: {
 							'margin-top': '2.4em'
 						},
