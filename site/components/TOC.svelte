@@ -34,7 +34,7 @@
 			<a
 				href="#{heading.slug}"
 				class="block border-l {heading.depth === 2 ? 'pl-4' : 'pl-6'} -ml-px {isActive[heading.slug]
-					? 'border-current font-semibold text-sky-500 dark:text-sky-400'
+					? 'border-current font-semibold text-sky-500 dark:text-sky-300'
 					: 'border-transparent text-slate-700 hover:border-slate-400 hover:text-slate-900 dark:text-slate-400 dark:hover:border-slate-500 dark:hover:text-slate-300'}"
 			>
 				{heading.text}
