@@ -60,7 +60,7 @@ export const components = { a: Link }
       The custom extractor lets you use the new `~` prefix in your Tailwind classes.
     </>
     <Fragment slot="code">
-      ```js title="tailwind.config.js" ins=", { extract }" ins={6} ins=/\: (\{)/ ins="files: " ins=/\](,)/ ins=/(\}),/
+      ```js title="tailwind.config.js" ins=", { extract }" ins={6} mark=/\: (\{)/ mark="files: " mark=/\](,)/ mark=/(\}),/
       import fluid, { extract } from 'fluid-tailwind'
 
       export default {
