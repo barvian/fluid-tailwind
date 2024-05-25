@@ -102,7 +102,7 @@ export default {
 							'@apply border-t border-slate-100': {}
 						},
 						a: {
-							'@apply hover:text-[--tw-prose-links-hover] font-semibold decoration-[1px] hover:decoration-[1.5px] underline-offset-[0.125em]':
+							'@apply hover:text-[--tw-prose-links-hover] font-semibold decoration-[1px] hover:decoration-[1.5px] underline-offset-[0.25em]':
 								{}
 						},
 						code: {
