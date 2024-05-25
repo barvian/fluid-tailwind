@@ -86,9 +86,6 @@ export default {
 			typography: (({ theme }) => ({
 				DEFAULT: {
 					css: {
-						'--tw-prose-links-hover': 'var(--tw-prose-links)',
-						'--tw-prose-invert-links-hover': 'var(--tw-prose-links-invert)',
-
 						'&>section': {
 							'@apply py-12 first:pt-0 last:pb-0': {}
 						},
@@ -102,8 +99,7 @@ export default {
 							'@apply border-t border-slate-100': {}
 						},
 						a: {
-							'@apply hover:text-[--tw-prose-links-hover] font-semibold no-underline border-b border-sky-300 hover:border-b-2':
-								{}
+							'@apply font-semibold no-underline border-b border-sky-300 hover:border-b-2': {}
 						},
 						code: {
 							'@apply before:hidden after:hidden': {}
@@ -134,20 +130,11 @@ export default {
 				},
 				invert: {
 					css: {
-						'--tw-prose-links-hover': 'var(--tw-prose-invert-links-hover)',
 						'>section + section': {
 							'@apply border-slate-800': {}
 						}
 					}
 				}
-				/*slate: {
-					css: {
-						'--tw-prose-links': theme('colors.sky.500'),
-						'--tw-prose-links-hover': theme('colors.sky.400'),
-						'--tw-prose-invert-links': theme('colors.sky.400'),
-						'--tw-prose-invert-links-hover': theme('colors.sky.300')
-					}
-				}*/
 			})) satisfies ResolvableTo<Record<string, unknown>>
 		}
 	},
