@@ -175,16 +175,6 @@ export default {
 }
 ```
 
-### Negative values
-
-You can't use the dash prefix `-` to negate fluid utilities like you
-can with i.e. `-mt-3`, because Tailwind would only negate the start value.
-
-<Tip.Bad>Trying to use `-` to negate a fluid utility</Tip.Bad>
-```html del=/(\-)\~/
-<div class="-~mt-3/5">
-```
-
 ## Configuration
 
 ### Custom default screens
@@ -247,6 +237,15 @@ If you want to set an arbitrary start screen with the `~` variant, you have to u
 <Tip.Good>Using `~min-[]` to set an arbitrary start screen</Tip.Good>
 ```html mark="~min-[20rem]"
 <div class="~min-[20rem]/lg:~text-base/4xl">
+```
+
+### Negative values
+
+To negate fluid utilities, the dash comes after the fluid `~` prefix:
+
+<Tip.Good>Negating a fluid utility</Tip.Good>
+```html mark=/\~(\-)/
+<div class="~-mt-3/5">
 ```
 
 ### Container queries

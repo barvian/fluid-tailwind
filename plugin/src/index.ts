@@ -83,9 +83,35 @@ function getFluidAPI(
 					{
 						...options,
 						values,
-						supportsNegativeValues: false, // b/c Tailwind only negates the value, not the modifier
-						respectPrefix: false, // we add it manually, for better ordering
-						modifiers
+						modifiers,
+						supportsNegativeValues: false, // we add it manually, to override Tailwind's default behavior of only negating the value (not the modifier)
+						respectPrefix: false // we add it manually, for better ordering
+					}
+				)
+
+				if (!options?.supportsNegativeValues) return
+
+				orig(
+					{
+						[`~-${context.prefix}${util}`](start, { modifier: end }) {
+							// See note about default modifiers above
+							if (end === null && DEFAULT) end = DEFAULT
+
+							try {
+								const clamp = expr.generate(start, end, context, { negate: true })
+								return origFn(clamp, { modifier: null }) // don't pass along the modifier
+							} catch (e) {
+								handle(e, `~-${util}`)
+								return null
+							}
+						}
+					},
+					{
+						...options,
+						values,
+						modifiers,
+						supportsNegativeValues: false,
+						respectPrefix: false
 					}
 				)
 			})

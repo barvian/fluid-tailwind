@@ -41,13 +41,15 @@ export const generate = (
 		endBP: _endBP,
 		atContainer,
 		type = false,
-		final = false
+		final = false,
+		negate = false
 	}: {
 		startBP?: RawValue | Length
 		endBP?: RawValue | Length
 		atContainer?: string | true
 		type?: boolean
 		final?: boolean
+		negate?: boolean
 	} = {}
 ) => {
 	if (!_start) error('missing-start')
@@ -67,6 +69,11 @@ export const generate = (
 	const unit = start.unit
 
 	if (start.number === end.number) error('no-change', start)
+
+	if (negate) {
+		start.number *= -1
+		end.number *= -1
+	}
 
 	const comment = <C extends keyof typeof codes>(
 		code?: C,
