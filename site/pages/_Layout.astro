@@ -15,6 +15,7 @@ import pkg from '/../plugin/package.json'
 import { getImage } from 'astro:assets'
 import Stargazers from '/components/Stargazers.svelte'
 import { Content as Lead } from './_lead.mdx'
+import Link from '/components/Link.astro'
 
 const repo = pkg.repository.url.replace(/^git\+/, '').replace(/\.git$/, '')
 
@@ -155,15 +156,15 @@ const path = relative(root, file)
 		>
 			<div class="mb-6 sm:mb-0 sm:flex">
 				<p>
-					Built by <a
+					Built by <Link
 						class="font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300"
-						href="https://barvian.me">Max Barvian</a
+						href="https://barvian.me">Max Barvian</Link
 					>. Not affiliated with Tailwind Labs Inc.
 				</p>
 			</div>
-			<a
+			<Link
 				class="font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300"
-				href={`${repo}/edit/main/${path}`}>Edit this page on GitHub</a
+				href={`${repo}/edit/main/${path}`}>Edit this page on GitHub</Link
 			>
 		</footer>
 	</div>
