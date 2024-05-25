@@ -139,15 +139,15 @@ export default {
 							'@apply border-slate-800': {}
 						}
 					}
-				},
-				slate: {
+				}
+				/*slate: {
 					css: {
 						'--tw-prose-links': theme('colors.sky.500'),
 						'--tw-prose-links-hover': theme('colors.sky.400'),
 						'--tw-prose-invert-links': theme('colors.sky.400'),
 						'--tw-prose-invert-links-hover': theme('colors.sky.300')
 					}
-				}
+				}*/
 			})) satisfies ResolvableTo<Record<string, unknown>>
 		}
 	},
