@@ -8,7 +8,7 @@ import type { PluginAPI } from 'tailwindcss/types/config'
 
 const warn = spyOn(console, 'warn')
 
-it(`should be possible to use defaultTheme...InRems values`, async () => {
+it(`should be possible to use converted defaultTheme values`, async () => {
 	const result = await run({
 		content: [
 			{
