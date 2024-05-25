@@ -367,7 +367,7 @@ export const screens = mapObject(defaultTheme.screens ?? {}, (name, v) => {
 })
 
 /**
- * Tailwind's default font sizes converted to `rem`, for better
+ * Tailwind's default font sizes, with all line heights converted to `rem` for better
  * compatibility with core plugins.
  */
 export const fontSize = mapObject(

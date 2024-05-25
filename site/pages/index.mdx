@@ -75,26 +75,20 @@ export const components = { a: Link }
   </Steps.Item>
   <Steps.Item>
     <>
-      ### Convert Tailwind's default screens and font sizes to `rem`
+      ### Convert Tailwind's default screens to `rem`
 
-      You can skip this if you don't use Tailwind's default screens or font sizes.
+      You can skip this if you override Tailwind's default screens or use [`tw-reset`](https://github.com/barvian/tw-reset).
       <Tip.Info>This [will be unnecessary](https://github.com/tailwindlabs/tailwindcss/pull/13469) in Tailwind v4</Tip.Info>
     </>
     <Fragment slot="code">
-      ```js title="tailwind.config.js" ins={6-7} ins=", screens, fontSize"
-      import fluid, { extract, screens, fontSize } from 'fluid-tailwind'
+      ```js title="tailwind.config.js" ins={6} ins=", screens"
+      import fluid, { extract, screens } from 'fluid-tailwind'
 
       export default {
         // ...
         theme: {
           screens,
-          fontSize,
-          extend: {
-            fontSize: {
-              // ...
-            }
-          }
-        }
+        },
         // ...
       }
       ```
@@ -137,8 +131,8 @@ This includes:
   <h1 class="~text-lg/xl">
   ```
   ```js title="tailwind.config.js"
-  // ...
   export default {
+    // ...
     theme: {
       screens: {
         'sm': '320px',
@@ -162,6 +156,23 @@ This includes:
 <Tip.Bad>Trying to interpolate between non-lengths like colors</Tip.Bad>
 ```html
 <h1 class="~text-white/red-500">
+```
+
+#### Tailwind's default large font sizes
+
+Tailwind's default font sizes starting at `5xl` use unitless line heights that can't
+be fluidized. If you want to use these values fluidly, you can convert them to `rem` with the built-in `fontSize` export:
+
+```js title="tailwind.config.js" ins={6} ins=", fontSize"
+import fluid, { extract, fontSize } from 'fluid-tailwind'
+
+export default {
+  // ...
+  theme: {
+    fontSize
+  },
+  // ...
+}
 ```
 
 ### Negative values
