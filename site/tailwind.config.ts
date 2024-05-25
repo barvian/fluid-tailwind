@@ -7,6 +7,7 @@ import fluid, { extract, fontSize, type FluidThemeConfig } from 'fluid-tailwind'
 import svgToDataUri from 'mini-svg-data-uri'
 // @ts-expect-error undocumented API
 import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette'
+import type { ResolvableTo } from 'tailwindcss/types/config'
 
 export default {
 	presets: [reset],
@@ -82,9 +83,12 @@ export default {
 			supports: {
 				sda: 'timeline-scope: none'
 			},
-			typography: {
+			typography: (({ theme }) => ({
 				DEFAULT: {
 					css: {
+						'--tw-prose-links-hover': 'var(--tw-prose-links)',
+						'--tw-prose-invert-links-hover': 'var(--tw-prose-links-invert)',
+
 						'&>section': {
 							'@apply py-12 first:pt-0 last:pb-0': {}
 						},
@@ -98,7 +102,7 @@ export default {
 							'@apply border-t border-slate-100': {}
 						},
 						a: {
-							'@apply font-semibold decoration-[1px] hover:decoration-[1.5px] underline-offset-[0.125em]':
+							'@apply hover:text-[--tw-prose-links-hover] font-semibold decoration-[1px] hover:decoration-[1.5px] underline-offset-[0.125em]':
 								{}
 						},
 						h3: {
@@ -127,12 +131,21 @@ export default {
 				},
 				invert: {
 					css: {
+						'--tw-prose-links-hover': 'var(--tw-prose-invert-links-hover)',
 						'>section + section': {
 							'@apply border-slate-800': {}
 						}
 					}
+				},
+				slate: {
+					css: {
+						'--tw-prose-links': theme('colors.sky.500'),
+						'--tw-prose-links-hover': theme('colors.sky.400'),
+						'--tw-prose-invert-links': theme('colors.sky.400'),
+						'--tw-prose-invert-links-hover': theme('colors.sky.300')
+					}
 				}
-			}
+			})) satisfies ResolvableTo<Record<string, unknown>>
 		}
 	},
 	plugins: [
