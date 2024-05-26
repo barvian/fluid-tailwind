@@ -26,7 +26,7 @@
 		"test": "bun test",
 		"build": "tsup-node src/index.ts --format esm,cjs --no-splitting --clean && tsc -p tsconfig.build.json --emitDeclarationOnly",
 		"dev": "pnpm run build --watch",
-		"prepublishOnly": "pnpm run build && pnpm run test"
+		"prepublishOnly": "pnpm install && pnpm run build && pnpm run test"
 	},
 	"files": [
 		"dist",
