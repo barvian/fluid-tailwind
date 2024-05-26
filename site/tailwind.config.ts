@@ -29,7 +29,6 @@ export default {
 	},
 	theme: {
 		fontSize,
-
 		extend: {
 			screens: {
 				xs: '30rem'

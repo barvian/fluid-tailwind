@@ -14,6 +14,7 @@
 		"declaration": true,
 		"module": "ES2022",
 		"moduleResolution": "Bundler",
+		"stripInternal": true,
 		"outDir": "dist",
 		"lib": ["es2022"]
 	},

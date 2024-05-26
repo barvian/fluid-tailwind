@@ -14,8 +14,6 @@ export async function run(config: Config, input = `@tailwind utilities;@tailwind
 			files: config.content,
 			extract
 		}
-	} else {
-		config.content.extract ??= extract
 	}
 
 	config.corePlugins ??= {}

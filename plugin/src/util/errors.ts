@@ -20,7 +20,10 @@ export const codes = {
 	'no-change-bp': (val: Length) => `Start and end breakpoints are both ${val.cssText}`,
 	'bp-not-found': (key: string, name: string) => `Could not find \`theme.${key}.${name}\``,
 	'no-utility': () => 'Fluid variants can only be used with fluid utilities',
-	'fails-sc-144': (failingBp: Length) => `Fails WCAG SC 1.4.4 at i.e. ${failingBp.cssText}`
+	'fails-sc-144': (failingBp: Length) => `Fails WCAG SC 1.4.4 at i.e. ${failingBp.cssText}`,
+	'extractor-missing': () => `fluid-tailwind: Fluid extractor not found in your Tailwind config`,
+	'extractor-option-mismatch': (opt: string, val: string) =>
+		`fluid-tailwind: You must pass in your \`config.${opt}\` to the fluid extractor, i.e. \`extract({ ${opt}: \'${val}\' })\``
 } satisfies Record<string, (...args: any[]) => string>
 
 export class FluidError extends Error {

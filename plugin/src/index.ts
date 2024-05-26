@@ -2,6 +2,7 @@ import plugin from 'tailwindcss/plugin'
 import { corePlugins } from 'tailwindcss-priv/src/corePlugins'
 import type {
 	CSSRuleObject,
+	ExtractorFn,
 	KeyValuePair,
 	PluginAPI,
 	ResolvableTo,
@@ -20,9 +21,16 @@ import { Length, type RawValue } from './util/css'
 import * as expr from './util/expr'
 import { addVariant, addVariantWithModifier, matchVariant } from './util/tailwind'
 import { tuple } from './util/set'
-import { FluidError } from './util/errors'
+import { FluidError, error } from './util/errors'
 import type { Container } from 'postcss'
 import type { Config } from 'tailwindcss'
+import {
+	IS_FLUID_EXTRACT,
+	DEFAULT_PREFIX,
+	DEFAULT_SEPARATOR,
+	PASSED_PREFIX,
+	PASSED_SEPARATOR
+} from './extractor'
 
 export type FluidThemeConfig = ResolvableTo<ResolvedFluidThemeConfig>
 
@@ -89,8 +97,8 @@ function getFluidAPI(
 					}
 				)
 
+				// Add negative version if supported
 				if (!options?.supportsNegativeValues) return
-
 				orig(
 					{
 						[`~-${context.prefix}${util}`](start, { modifier: end }) {
@@ -132,14 +140,29 @@ function getFluidAPI(
 	}
 }
 
-let inFluidPlugin = false
-const fluid = plugin.withOptions((options: PluginOptions = {}) => (api: PluginAPI) => {
-	if (inFluidPlugin) return // prevent recursion when adding fluid versions of config.plugins
-	inFluidPlugin = true
-
+const IS_FLUID_PLUGIN = Symbol()
+const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
 	const { config, theme, corePlugins: corePluginEnabled, matchUtilities } = api
 	const context = getContext(config, theme, options)
-	const { screens, containers, prefix } = context
+	const { screens, containers, prefix, separator } = context
+
+	// Make sure they remembered to pass in extractor correctly
+	const extractor = config('content.extract.DEFAULT') as ExtractorFn
+	if (!extractor || !(IS_FLUID_EXTRACT in extractor)) {
+		error('extractor-missing')
+	}
+	if (
+		prefix !== DEFAULT_PREFIX &&
+		(!(PASSED_PREFIX in extractor) || extractor[PASSED_PREFIX] !== prefix)
+	) {
+		error('extractor-option-mismatch', 'prefix', prefix)
+	}
+	if (
+		separator !== DEFAULT_SEPARATOR &&
+		(!(PASSED_SEPARATOR in extractor) || extractor[PASSED_SEPARATOR] !== separator)
+	) {
+		error('extractor-option-mismatch', 'separator', separator)
+	}
 
 	// Add new fluid text utility to handle potentially complex theme values
 	// ---
@@ -260,23 +283,17 @@ const fluid = plugin.withOptions((options: PluginOptions = {}) => (api: PluginAP
 	const plugins = config('plugins') as Config['plugins']
 	plugins?.forEach((plug, i) => {
 		if (!plug) return
-
-		if (typeof plug === 'function') {
-			if ('__isOptionsFunction' in plug && plug.__isOptionsFunction) {
-				plug(undefined).handler(fluidPluginAPI)
-			} else {
-				plug(fluidPluginAPI)
-			}
-		} else {
-			plug.handler(fluidPluginAPI)
-		}
+		const handler =
+			typeof plug === 'function'
+				? '__isOptionsFunction' in plug && plug.__isOptionsFunction
+					? plug(undefined).handler
+					: plug
+				: plug.handler
+		if (!(IS_FLUID_PLUGIN in handler)) handler(fluidPluginAPI)
 	})
 
 	// Screen variants
 	// ---
-
-	// We need this for error output, so retrieve and cache
-	const separator = config('separator') ?? ':'
 
 	// Handle the rewrites and potential errors:
 	const rewrite = (
@@ -375,10 +392,12 @@ const fluid = plugin.withOptions((options: PluginOptions = {}) => (api: PluginAP
 			}
 		}
 	)
-
-	inFluidPlugin = false
-})
-
+}
+// Make sure it's named fluid, b/c it shows up in IntelliSense:
+const fluid = plugin.withOptions((options: PluginOptions = {}) =>
+	// Organized this way to attach the symbol correctly, and also assuage Prettier:
+	Object.assign((api: PluginAPI) => fluidPlugin(options, api), { [IS_FLUID_PLUGIN]: true })
+)
 export default fluid
 
 /**

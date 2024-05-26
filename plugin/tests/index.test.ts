@@ -277,6 +277,72 @@ it(`respects defaultScreens config`, async () => {
 	`)
 })
 
+it(`errors if extractor wasn't used`, () => {
+	return expect(
+		run({
+			content: {
+				files: [{ raw: html`` }]
+			}
+		})
+	).rejects.toThrow('fluid-tailwind: Fluid extractor not found in your Tailwind config')
+})
+
+it(`errors if custom prefix wasn't passed into extractor`, () => {
+	return expect(
+		run({
+			prefix: 'tw-',
+			content: {
+				files: [{ raw: html`` }],
+				extract
+			}
+		})
+	).rejects.toThrow(
+		`fluid-tailwind: You must pass in your \`config.prefix\` to the fluid extractor, i.e. \`extract({ prefix: 'tw-' })\``
+	)
+})
+
+it(`errors if different prefix was passed into extractor`, () => {
+	return expect(
+		run({
+			prefix: 'tw-',
+			content: {
+				files: [{ raw: html`` }],
+				extract: extract({ prefix: 'tw' })
+			}
+		})
+	).rejects.toThrow(
+		`fluid-tailwind: You must pass in your \`config.prefix\` to the fluid extractor, i.e. \`extract({ prefix: 'tw-' })\``
+	)
+})
+
+it(`errors if custom separator wasn't passed into extractor`, () => {
+	return expect(
+		run({
+			separator: '_',
+			content: {
+				files: [{ raw: html`` }],
+				extract
+			}
+		})
+	).rejects.toThrow(
+		`fluid-tailwind: You must pass in your \`config.separator\` to the fluid extractor, i.e. \`extract({ separator: '_' })\``
+	)
+})
+
+it(`errors if different separator was passed into extractor`, () => {
+	return expect(
+		run({
+			separator: '_',
+			content: {
+				files: [{ raw: html`` }],
+				extract: extract({ separator: '|' })
+			}
+		})
+	).rejects.toThrow(
+		`fluid-tailwind: You must pass in your \`config.separator\` to the fluid extractor, i.e. \`extract({ separator: '_' })\``
+	)
+})
+
 it(`supports custom separator and prefix`, async () => {
 	const result = await run({
 		content: {

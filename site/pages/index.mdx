@@ -36,15 +36,19 @@ export const components = { a: Link }
   </Steps.Item>
   <Steps.Item>
     <>
-      ### Add the plugin
+      ### Add the plugin and [extractor](https://tailwindcss.com/docs/content-configuration#customizing-extraction-logic)
 
-      Add the plugin to your Tailwind configuration.
+      The custom extractor lets you use the new `~` modifier in your Tailwind classes.
     </>
     <Fragment slot="code">
-      ```js title="tailwind.config.js" ins={1,6}
-      import fluid from 'fluid-tailwind'
+      ```js title="tailwind.config.js" ins={1,6,10} mark=/\: (\{)/ mark="files:" mark=/\](,)/ mark=/(\}),/
+      import fluid, { extract } from 'fluid-tailwind'
 
       export default {
+        content: {
+          files: [/* ... */],
+          extract
+        },
         // ...
         plugins: [
           fluid
@@ -55,30 +59,11 @@ export const components = { a: Link }
   </Steps.Item>
   <Steps.Item>
     <>
-      ### Add the [extractor](https://tailwindcss.com/docs/content-configuration#customizing-extraction-logic)
-
-      The custom extractor lets you use the new `~` prefix in your Tailwind classes.
-    </>
-    <Fragment slot="code">
-      ```js title="tailwind.config.js" ins=", { extract }" ins={6} mark=/\: (\{)/ mark="files: " mark=/\](,)/ mark=/(\}),/
-      import fluid, { extract } from 'fluid-tailwind'
-
-      export default {
-        content: {
-          files: [/* ... */],
-          extract
-        },
-        // ...
-      }
-      ```
-    </Fragment>
-  </Steps.Item>
-  <Steps.Item>
-    <>
       ### Convert Tailwind's default screens to `rem`
 
-      You can skip this if you override Tailwind's default screens or use [`tw-reset`](https://github.com/barvian/tw-reset).
-      <Tip.Info>This [will be unnecessary](https://github.com/tailwindlabs/tailwindcss/pull/13469) in Tailwind v4</Tip.Info>
+      <Tip.Info>You can skip this if you [override Tailwind's default screens](https://tailwindcss.com/docs/screens#overriding-the-defaults) or use [`tw-reset`](https://github.com/barvian/tw-reset)</Tip.Info>
+
+      This [will be unnecessary](https://github.com/tailwindlabs/tailwindcss/pull/13469) in Tailwind v4.
     </>
     <Fragment slot="code">
       ```js title="tailwind.config.js" ins={6} ins=", screens"
@@ -87,7 +72,7 @@ export const components = { a: Link }
       export default {
         // ...
         theme: {
-          screens,
+          screens
         },
         // ...
       }
@@ -106,7 +91,7 @@ export const components = { a: Link }
 ```
 
 Here's a quick overview:
-* The `~` prefix makes a utility fluid
+* The `~` modifier makes a utility fluid
 * Fluid utilities have a start and end value, separated by a `/`
 * Fluid utilities interpolate between their start and end value when the viewport is between the start and end point, respectively
 * The start and end points default to the smallest and largest screen, but [they can be customized](#custom-default-screens) or [overridden per-utility](#customize-screens-per-utility)
@@ -241,7 +226,7 @@ If you want to set an arbitrary start screen with the `~` variant, you have to u
 
 ### Negative values
 
-To negate fluid utilities, the dash comes after the fluid `~` prefix:
+To negate fluid utilities, the dash comes after the fluid `~` modifier:
 
 <Tip.Good>Negating a fluid utility</Tip.Good>
 ```html mark=/\~(\-)/
@@ -256,7 +241,7 @@ installed, you can make the start/end points relative to the nearest `@container
 ```html mark="~@md/lg:"
 <h1 class="~@md/lg:~text-base/4xl">Relative to container</h1>
 ```
-<Tip.Info>This may look confusing if you use [named containers](https://github.com/tailwindlabs/tailwindcss-container-queries#named-containers). Sorry about that; there's only so many ways to get values into Tailwind. In general, when you see the fluid `~` prefix, you know the `/` denotes a start/end pair.</Tip.Info>
+<Tip.Info>This may look confusing if you use [named containers](https://github.com/tailwindlabs/tailwindcss-container-queries#named-containers). Sorry about that; there's only so many ways to get values into Tailwind. In general, when you see the fluid `~` modifier, you know the `/` denotes a start/end pair.</Tip.Info>
 
 Just like the `~` variant, both start and end containers are optional and will use your [global defaults](#custom-default-containers) if unset.
 
@@ -320,9 +305,9 @@ is our `md` screen
 1. When we get to our `lg` screen, we interpolate between the opposite `4xl` and `base`, starting
 when the viewport is our `lg` screen
 
-### Custom Tailwind prefix and/or separator
+### Using with a custom prefix or separator
 
-If you're using a custom Tailwind [`prefix`](https://tailwindcss.com/docs/configuration#prefix) or
+If you're using a custom [`prefix`](https://tailwindcss.com/docs/configuration#prefix) or
 [`separator`](https://tailwindcss.com/docs/configuration#separator),
 you'll need to pass them in to the extractor as well:
 

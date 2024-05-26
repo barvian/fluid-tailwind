@@ -9,6 +9,10 @@ type ExtractorOptions = {
 
 let defaultPatterns
 
+/** @internal */
+export const DEFAULT_PREFIX = '', DEFAULT_SEPARATOR = ':', // these aren't available in `tailwindcss/defaultConfig`
+PASSED_PREFIX = Symbol(), PASSED_SEPARATOR = Symbol(), IS_FLUID_EXTRACT = Symbol()
+
 // This is the default extractor from 'tailwindcss-priv/src/lib/defaultExtractor'
 // with two extra chars to support the ~ prefix
 function extract(content: string): ReturnType<ExtractorFn>
@@ -28,7 +32,7 @@ function extract(contentOrOptions: string | ExtractorOptions): ReturnType<Extrac
 
   const patterns = Array.from(buildRegExps(contentOrOptions))
   
-  return (content: string) => {
+  return Object.assign((content: string) => {
     let results: string[] = []
 
     for (const pattern of patterns) {
@@ -38,12 +42,17 @@ function extract(contentOrOptions: string | ExtractorOptions): ReturnType<Extrac
     }
 
     return results
-  }
+  }, {
+    [IS_FLUID_EXTRACT]: true,
+    [PASSED_PREFIX]: contentOrOptions.prefix ?? DEFAULT_PREFIX,
+    [PASSED_SEPARATOR]: contentOrOptions.separator ?? DEFAULT_SEPARATOR
+  })
 }
+extract[IS_FLUID_EXTRACT] = true
 
 export default extract
 
-function* buildRegExps({ separator = ':', prefix: _prefix = '' }: ExtractorOptions = {}) {
+function* buildRegExps({ separator = DEFAULT_SEPARATOR, prefix: _prefix = DEFAULT_PREFIX }: ExtractorOptions = {}) {
   const prefix = _prefix !== ''
       ? regex.optional(regex.pattern([/-?/, regex.escape(_prefix)]))
       : ''

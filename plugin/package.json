@@ -1,6 +1,6 @@
 {
 	"name": "fluid-tailwind",
-	"version": "0.3.2",
+	"version": "0.3.3",
 	"author": "Maxwell Barvian",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
@@ -24,7 +24,7 @@
 	],
 	"scripts": {
 		"test": "bun test",
-		"build": "tsup src/index.ts --format esm,cjs --no-splitting --clean && tsc -p tsconfig.build.json --emitDeclarationOnly",
+		"build": "tsup-node src/index.ts --format esm,cjs --no-splitting --clean && tsc -p tsconfig.build.json --emitDeclarationOnly",
 		"dev": "pnpm run build --watch",
 		"prepublishOnly": "pnpm run build && pnpm run test"
 	},
@@ -37,8 +37,9 @@
 	},
 	"devDependencies": {
 		"@tailwindcss/container-queries": "^0.1.1",
-		"@types/bun": "^1.0.5",
+		"@types/bun": "^1.1.3",
 		"@types/dlv": "^1.1.4",
+		"bun": "^1.1.10",
 		"dlv": "^1.1.3",
 		"jest-diff": "^29.7.0",
 		"postcss": "^8.4.17",
