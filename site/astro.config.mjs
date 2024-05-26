@@ -64,6 +64,7 @@ const codeOptions = {
 }
 
 export default defineConfig({
+	site: 'https://fluid.tw',
 	srcDir: '.',
 	markdown: {
 		remarkPlugins: [sectionize]
