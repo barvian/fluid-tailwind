@@ -52,6 +52,7 @@ const path = relative(root, file)
 		<meta property="twitter:image" content={image} />
 		<meta name="generator" content={Astro.generator} />
 		<title>{frontmatter.title}</title>
+		<link rel="canonical" href={Astro.url} />
 		<meta property="og:title" content={frontmatter.title} />
 		<meta name="twitter:title" content={frontmatter.title} />
 		<meta name="description" content={frontmatter.description} />
