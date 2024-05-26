@@ -397,3 +397,24 @@ it(`doesn't apply inconsistent letter spacing`, async () => {
 		}
 	`)
 })
+
+it(`outputs nothing if font-size errors`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~text-sm/lg"></div>`
+			}
+		],
+		theme: {
+			fontSize: {
+				sm: ['1rem', { lineHeight: '1rem', fontWeight: 600, letterSpacing: '.01rem' }],
+				lg: ['6rem', { lineHeight: '6rem', fontWeight: 600, letterSpacing: '0.02rem' }]
+			}
+		}
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~text-sm\/lg {
+			font-size:; /* not fluid type from 1rem at 40rem to 6rem at 96rem: Fails WCAG SC 1.4.4 at i.e. 200rem */
+		}
+	`)
+})

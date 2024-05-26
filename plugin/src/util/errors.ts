@@ -35,16 +35,20 @@ export class FluidError extends Error {
 	) {
 		super(message)
 	}
+
+	static fromCode<C extends keyof typeof codes>(code: C, ...args: Parameters<(typeof codes)[C]>) {
+		const fn = codes[code]
+
+		// @ts-expect-error
+		const message = fn(...args)
+
+		return new this(code, message)
+	}
 }
 
 export function error<C extends keyof typeof codes>(
 	code: C,
 	...args: Parameters<(typeof codes)[C]>
 ): never {
-	const fn = codes[code]
-
-	// @ts-expect-error
-	const message = fn(...args)
-
-	throw new FluidError(code, message)
+	throw FluidError.fromCode(code, ...args)
 }

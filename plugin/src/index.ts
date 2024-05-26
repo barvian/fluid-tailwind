@@ -80,7 +80,7 @@ function getFluidAPI(
 							if (end === null && DEFAULT) end = DEFAULT
 
 							try {
-								const clamp = expr.generate(start, end, context)
+								const [clamp] = expr.generate(start, end, context)
 								return origFn(clamp, { modifier: null }) // don't pass along the modifier
 							} catch (e) {
 								handle(e, `~${util}`)
@@ -106,7 +106,7 @@ function getFluidAPI(
 							if (end === null && DEFAULT) end = DEFAULT
 
 							try {
-								const clamp = expr.generate(start, end, context, { negate: true })
+								const [clamp] = expr.generate(start, end, context, { negate: true })
 								return origFn(clamp, { modifier: null }) // don't pass along the modifier
 							} catch (e) {
 								handle(e, `~-${util}`)
@@ -216,9 +216,12 @@ const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
 
 				// Font size
 				try {
-					rules['font-size'] = expr.generate(from.fontSize, to.fontSize, context, {
+					const [clamp, err] = expr.generate(from.fontSize, to.fontSize, context, {
 						type: true
 					})
+					rules['font-size'] = clamp
+					// Don't output anything else if this one failed:
+					if (err) return rules
 				} catch (e) {
 					handle(e, '~text: Font size')
 				}
@@ -228,7 +231,7 @@ const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
 					rules['line-height'] = from.lineHeight ?? null
 				} else {
 					try {
-						rules['line-height'] = expr.generate(from.lineHeight, to.lineHeight, context)
+						rules['line-height'] = expr.generate(from.lineHeight, to.lineHeight, context)[0]
 					} catch (e) {
 						handle(e, '~text: Line height')
 					}
@@ -239,7 +242,11 @@ const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
 					rules['letter-spacing'] = from.letterSpacing ?? null
 				} else {
 					try {
-						rules['letter-spacing'] = expr.generate(from.letterSpacing, to.letterSpacing, context)
+						rules['letter-spacing'] = expr.generate(
+							from.letterSpacing,
+							to.letterSpacing,
+							context
+						)[0]
 					} catch (e) {
 						handle(e, '~text: Letter spacing')
 					}

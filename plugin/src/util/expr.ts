@@ -1,6 +1,6 @@
 import { Container } from 'postcss'
 import { Length, type RawValue } from './css'
-import { codes, error } from './errors'
+import { FluidError, codes, error } from './errors'
 import { clamp, precision, toPrecision } from './math'
 import type { Context } from './context'
 
@@ -51,7 +51,7 @@ export const generate = (
 		final?: boolean
 		negate?: boolean
 	} = {}
-) => {
+): [expr: string] | [expr: string, err: FluidError] => {
 	if (!_start) error('missing-start')
 	const start = length(_start, context)
 	if (!start) error('non-length-start', _start as string)
@@ -78,11 +78,14 @@ export const generate = (
 	const comment = <C extends keyof typeof codes>(
 		code?: C,
 		...args: typeof code extends undefined ? never : Parameters<(typeof codes)[C]>
-	) =>
-		`/* ${code ? 'not ' : ''}fluid${type ? ' type' : ''} from ${start.cssText} at ${startBP.cssText} to ${end.cssText} at ${endBP.cssText}${atContainer ? ' (container)' : ''}${
+	): [expr: string] | [expr: string, err: FluidError] => {
+		const expr = `/* ${code ? 'not ' : ''}fluid${type ? ' type' : ''} from ${start.cssText} at ${startBP.cssText} to ${end.cssText} at ${endBP.cssText}${atContainer ? ' (container)' : ''}${
 			// @ts-expect-error
 			code ? ': ' + codes[code](...args) : ''
 		} */`
+		if (code) return [expr, FluidError.fromCode(code, ...args)]
+		return [expr]
+	}
 
 	if (startBP.number === 0) {
 		startBP.unit = endBP.unit
@@ -126,7 +129,9 @@ export const generate = (
 			return (final ? error : comment)('fails-sc-144', endBP)
 	}
 
-	return `clamp(${min},${toPrecision(intercept, p)}${unit} + ${toPrecision(slope * 100, p)}${atContainer ? 'cqw' : 'vw'},${max})${comment()}`
+	return [
+		`clamp(${min},${toPrecision(intercept, p)}${unit} + ${toPrecision(slope * 100, p)}${atContainer ? 'cqw' : 'vw'},${max})${comment()}`
+	]
 }
 
 export const rewrite = (
@@ -161,7 +166,7 @@ export const rewrite = (
 					atContainer,
 					type: Boolean(type),
 					final: true
-				})
+				})[0]
 			}
 		)
 	})
