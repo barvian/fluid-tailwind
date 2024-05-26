@@ -17,6 +17,8 @@ import Stargazers from '/components/Stargazers.svelte'
 import { Content as Lead } from './_lead.mdx'
 import Link from '/components/Link.astro'
 
+const canonicalURL = new URL(Astro.url.pathname, Astro.site)
+
 const repo = pkg.repository.url.replace(/^git\+/, '').replace(/\.git$/, '')
 
 const previewOptimized = await getImage({ src: preview, format: 'png' })
@@ -52,6 +54,7 @@ const path = relative(root, file)
 		<meta property="twitter:image" content={image} />
 		<meta name="generator" content={Astro.generator} />
 		<title>{frontmatter.title}</title>
+		<link rel="canonical" href={canonicalURL} />
 		<meta property="og:title" content={frontmatter.title} />
 		<meta name="twitter:title" content={frontmatter.title} />
 		<meta name="description" content={frontmatter.description} />
