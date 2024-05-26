@@ -1,6 +1,6 @@
 import type { ExtractorFn } from "tailwindcss/types/config"
 // @ts-expect-error untyped source file
-import * as regex from 'tailwindcss-priv/src/lib/regex'
+import * as regex from 'tailwindcss/src/lib/regex'
 
 type ExtractorOptions = {
     separator?: string
@@ -13,7 +13,7 @@ let defaultPatterns
 export const DEFAULT_PREFIX = '', DEFAULT_SEPARATOR = ':', // these aren't available in `tailwindcss/defaultConfig`
 PASSED_PREFIX = Symbol(), PASSED_SEPARATOR = Symbol(), IS_FLUID_EXTRACT = Symbol()
 
-// This is the default extractor from 'tailwindcss-priv/src/lib/defaultExtractor'
+// This is the default extractor from 'tailwindcss/src/lib/defaultExtractor'
 // with two extra chars to support the ~ prefix
 function extract(content: string): ReturnType<ExtractorFn>
 function extract(options: ExtractorOptions): ExtractorFn

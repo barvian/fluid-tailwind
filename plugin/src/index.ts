@@ -1,5 +1,5 @@
 import plugin from 'tailwindcss/plugin'
-import { corePlugins } from 'tailwindcss-priv/src/corePlugins'
+import { corePlugins } from 'tailwindcss/src/corePlugins'
 import type {
 	CSSRuleObject,
 	ExtractorFn,

@@ -32,9 +32,6 @@ importers:
       picocolors:
         specifier: ^1.0.0
         version: 1.0.0
-      tailwindcss-priv:
-        specifier: npm:tailwindcss@3.4.3
-        version: tailwindcss@3.4.3
     devDependencies:
       '@tailwindcss/container-queries':
         specifier: ^0.1.1
@@ -77,22 +74,22 @@ importers:
         version: 0.4.1(prettier-plugin-astro@0.13.0)(prettier@3.2.5)(typescript@5.3.3)
       '@astrojs/mdx':
         specifier: ^2.1.1
-        version: 2.1.1(astro@4.4.4(@types/node@20.11.20)(typescript@5.3.3))
+        version: 2.1.1(astro@4.4.4(@types/node@20.12.12)(typescript@5.3.3))
       '@astrojs/svelte':
         specifier: ^5.0.0
-        version: 5.0.3(astro@4.4.4(@types/node@20.11.20)(typescript@5.3.3))(svelte@4.2.12)(typescript@5.3.3)(vite@5.1.4(@types/node@20.11.20))
+        version: 5.0.3(astro@4.4.4(@types/node@20.12.12)(typescript@5.3.3))(svelte@4.2.12)(typescript@5.3.3)(vite@5.1.4(@types/node@20.12.12))
       '@astrojs/tailwind':
         specifier: ^5.0.0
-        version: 5.1.0(astro@4.4.4(@types/node@20.11.20)(typescript@5.3.3))(tailwindcss@3.4.1)
+        version: 5.1.0(astro@4.4.4(@types/node@20.12.12)(typescript@5.3.3))(tailwindcss@3.4.1)
       '@tailwindcss/typography':
         specifier: ^0.5.9
         version: 0.5.10(tailwindcss@3.4.1)
       astro:
         specifier: ^4.4.0
-        version: 4.4.4(@types/node@20.11.20)(typescript@5.3.3)
+        version: 4.4.4(@types/node@20.12.12)(typescript@5.3.3)
       astro-expressive-code:
         specifier: ^0.33.4
-        version: 0.33.4(astro@4.4.4(@types/node@20.11.20)(typescript@5.3.3))
+        version: 0.33.4(astro@4.4.4(@types/node@20.12.12)(typescript@5.3.3))
       filter-obj:
         specifier: ^5.1.0
         version: 5.1.0
@@ -116,11 +113,11 @@ importers:
         version: 1.0.0
       vite:
         specifier: ^5.1.4
-        version: 5.1.4(@types/node@20.11.20)
+        version: 5.1.4(@types/node@20.12.12)
     devDependencies:
       '@astrojs/vercel':
         specifier: ^7.3.1
-        version: 7.3.3(astro@4.4.4(@types/node@20.11.20)(typescript@5.3.3))
+        version: 7.3.3(astro@4.4.4(@types/node@20.12.12)(typescript@5.3.3))
       sharp:
         specifier: ^0.33.2
         version: 0.33.2
@@ -831,9 +828,6 @@ packages:
 
   '@types/nlcst@1.0.4':
     resolution: {integrity: sha512-ABoYdNQ/kBSsLvZAekMhIPMQ3YUZvavStpKYs7BjLLuKVmIMA0LUgZ7b54zzuWJRbHF80v1cNf4r90Vd6eMQDg==}
-
-  '@types/node@20.11.20':
-    resolution: {integrity: sha512-7/rR21OS+fq8IyHTgtLkDK949uzsa6n8BkziAKtPVpugIkO6D+/ooXMvzXxDnZrmtXVfjb1bKQafYpb8s89LOg==}
 
   '@types/node@20.12.12':
     resolution: {integrity: sha512-eWLDGF/FOSPtAvEqeRAQ4C8LSA7M1I7i0ky1I8U7kD1J5ITyW3AsRhQrKVoWf5pFKZ2kILsEGJhsI9r93PYnOw==}
@@ -2770,11 +2764,6 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
-  tailwindcss@3.4.3:
-    resolution: {integrity: sha512-U7sxQk/n397Bmx4JHbJx/iSOOv5G+II3f1kpLpY2QeUv5DcPdcTsYLlusZfq1NthHS1c1cZoyFmmkex1rzke0A==}
-    engines: {node: '>=14.0.0'}
-    hasBin: true
-
   tar-fs@2.1.1:
     resolution: {integrity: sha512-V0r2Y9scmbDRLCNex/+hYzvp/zyYjvFbHPNgVTKfQvVrb6guiE/fxP+XblDNR011utopbkex2nM4dHNV6GDsng==}
 
@@ -3247,12 +3236,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@astrojs/mdx@2.1.1(astro@4.4.4(@types/node@20.11.20)(typescript@5.3.3))':
+  '@astrojs/mdx@2.1.1(astro@4.4.4(@types/node@20.12.12)(typescript@5.3.3))':
     dependencies:
       '@astrojs/markdown-remark': 4.2.1
       '@mdx-js/mdx': 3.0.1
       acorn: 8.11.3
-      astro: 4.4.4(@types/node@20.11.20)(typescript@5.3.3)
+      astro: 4.4.4(@types/node@20.12.12)(typescript@5.3.3)
       es-module-lexer: 1.4.1
       estree-util-visit: 2.0.0
       github-slugger: 2.0.0
@@ -3272,10 +3261,10 @@ snapshots:
     dependencies:
       prismjs: 1.29.0
 
-  '@astrojs/svelte@5.0.3(astro@4.4.4(@types/node@20.11.20)(typescript@5.3.3))(svelte@4.2.12)(typescript@5.3.3)(vite@5.1.4(@types/node@20.11.20))':
+  '@astrojs/svelte@5.0.3(astro@4.4.4(@types/node@20.12.12)(typescript@5.3.3))(svelte@4.2.12)(typescript@5.3.3)(vite@5.1.4(@types/node@20.12.12))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 3.0.2(svelte@4.2.12)(vite@5.1.4(@types/node@20.11.20))
-      astro: 4.4.4(@types/node@20.11.20)(typescript@5.3.3)
+      '@sveltejs/vite-plugin-svelte': 3.0.2(svelte@4.2.12)(vite@5.1.4(@types/node@20.12.12))
+      astro: 4.4.4(@types/node@20.12.12)(typescript@5.3.3)
       svelte: 4.2.12
       svelte2tsx: 0.6.27(svelte@4.2.12)(typescript@5.3.3)
     transitivePeerDependencies:
@@ -3283,9 +3272,9 @@ snapshots:
       - typescript
       - vite
 
-  '@astrojs/tailwind@5.1.0(astro@4.4.4(@types/node@20.11.20)(typescript@5.3.3))(tailwindcss@3.4.1)':
+  '@astrojs/tailwind@5.1.0(astro@4.4.4(@types/node@20.12.12)(typescript@5.3.3))(tailwindcss@3.4.1)':
     dependencies:
-      astro: 4.4.4(@types/node@20.11.20)(typescript@5.3.3)
+      astro: 4.4.4(@types/node@20.12.12)(typescript@5.3.3)
       autoprefixer: 10.4.17(postcss@8.4.35)
       postcss: 8.4.35
       postcss-load-config: 4.0.2(postcss@8.4.35)
@@ -3305,12 +3294,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@astrojs/vercel@7.3.3(astro@4.4.4(@types/node@20.11.20)(typescript@5.3.3))':
+  '@astrojs/vercel@7.3.3(astro@4.4.4(@types/node@20.12.12)(typescript@5.3.3))':
     dependencies:
       '@astrojs/internal-helpers': 0.2.1
       '@vercel/analytics': 1.2.2
       '@vercel/nft': 0.24.4
-      astro: 4.4.4(@types/node@20.11.20)(typescript@5.3.3)
+      astro: 4.4.4(@types/node@20.12.12)(typescript@5.3.3)
       esbuild: 0.19.12
       fast-glob: 3.3.2
       set-cookie-parser: 2.6.0
@@ -3813,26 +3802,26 @@ snapshots:
 
   '@sinclair/typebox@0.27.8': {}
 
-  '@sveltejs/vite-plugin-svelte-inspector@2.0.0(@sveltejs/vite-plugin-svelte@3.0.2(svelte@4.2.12)(vite@5.1.4(@types/node@20.11.20)))(svelte@4.2.12)(vite@5.1.4(@types/node@20.11.20))':
+  '@sveltejs/vite-plugin-svelte-inspector@2.0.0(@sveltejs/vite-plugin-svelte@3.0.2(svelte@4.2.12)(vite@5.1.4(@types/node@20.12.12)))(svelte@4.2.12)(vite@5.1.4(@types/node@20.12.12))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 3.0.2(svelte@4.2.12)(vite@5.1.4(@types/node@20.11.20))
+      '@sveltejs/vite-plugin-svelte': 3.0.2(svelte@4.2.12)(vite@5.1.4(@types/node@20.12.12))
       debug: 4.3.4
       svelte: 4.2.12
-      vite: 5.1.4(@types/node@20.11.20)
+      vite: 5.1.4(@types/node@20.12.12)
     transitivePeerDependencies:
       - supports-color
 
-  '@sveltejs/vite-plugin-svelte@3.0.2(svelte@4.2.12)(vite@5.1.4(@types/node@20.11.20))':
+  '@sveltejs/vite-plugin-svelte@3.0.2(svelte@4.2.12)(vite@5.1.4(@types/node@20.12.12))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte-inspector': 2.0.0(@sveltejs/vite-plugin-svelte@3.0.2(svelte@4.2.12)(vite@5.1.4(@types/node@20.11.20)))(svelte@4.2.12)(vite@5.1.4(@types/node@20.11.20))
+      '@sveltejs/vite-plugin-svelte-inspector': 2.0.0(@sveltejs/vite-plugin-svelte@3.0.2(svelte@4.2.12)(vite@5.1.4(@types/node@20.12.12)))(svelte@4.2.12)(vite@5.1.4(@types/node@20.12.12))
       debug: 4.3.4
       deepmerge: 4.3.1
       kleur: 4.1.5
       magic-string: 0.30.7
       svelte: 4.2.12
       svelte-hmr: 0.15.3(svelte@4.2.12)
-      vite: 5.1.4(@types/node@20.11.20)
-      vitefu: 0.2.5(vite@5.1.4(@types/node@20.11.20))
+      vite: 5.1.4(@types/node@20.12.12)
+      vitefu: 0.2.5(vite@5.1.4(@types/node@20.12.12))
     transitivePeerDependencies:
       - supports-color
 
@@ -3908,11 +3897,6 @@ snapshots:
   '@types/nlcst@1.0.4':
     dependencies:
       '@types/unist': 2.0.10
-
-  '@types/node@20.11.20':
-    dependencies:
-      undici-types: 5.26.5
-    optional: true
 
   '@types/node@20.12.12':
     dependencies:
@@ -4077,13 +4061,13 @@ snapshots:
 
   astring@1.8.6: {}
 
-  astro-expressive-code@0.33.4(astro@4.4.4(@types/node@20.11.20)(typescript@5.3.3)):
+  astro-expressive-code@0.33.4(astro@4.4.4(@types/node@20.12.12)(typescript@5.3.3)):
     dependencies:
-      astro: 4.4.4(@types/node@20.11.20)(typescript@5.3.3)
+      astro: 4.4.4(@types/node@20.12.12)(typescript@5.3.3)
       hast-util-to-html: 8.0.4
       remark-expressive-code: 0.33.4
 
-  astro@4.4.4(@types/node@20.11.20)(typescript@5.3.3):
+  astro@4.4.4(@types/node@20.12.12)(typescript@5.3.3):
     dependencies:
       '@astrojs/compiler': 2.6.0
       '@astrojs/internal-helpers': 0.2.1
@@ -4144,8 +4128,8 @@ snapshots:
       tsconfck: 3.0.2(typescript@5.3.3)
       unist-util-visit: 5.0.0
       vfile: 6.0.1
-      vite: 5.1.4(@types/node@20.11.20)
-      vitefu: 0.2.5(vite@5.1.4(@types/node@20.11.20))
+      vite: 5.1.4(@types/node@20.12.12)
+      vitefu: 0.2.5(vite@5.1.4(@types/node@20.12.12))
       which-pm: 2.1.1
       yargs-parser: 21.1.1
       zod: 3.22.4
@@ -6381,33 +6365,6 @@ snapshots:
     transitivePeerDependencies:
       - ts-node
 
-  tailwindcss@3.4.3:
-    dependencies:
-      '@alloc/quick-lru': 5.2.0
-      arg: 5.0.2
-      chokidar: 3.6.0
-      didyoumean: 1.2.2
-      dlv: 1.1.3
-      fast-glob: 3.3.2
-      glob-parent: 6.0.2
-      is-glob: 4.0.3
-      jiti: 1.21.0
-      lilconfig: 2.1.0
-      micromatch: 4.0.5
-      normalize-path: 3.0.0
-      object-hash: 3.0.0
-      picocolors: 1.0.0
-      postcss: 8.4.35
-      postcss-import: 15.1.0(postcss@8.4.35)
-      postcss-js: 4.0.1(postcss@8.4.35)
-      postcss-load-config: 4.0.2(postcss@8.4.35)
-      postcss-nested: 6.0.1(postcss@8.4.35)
-      postcss-selector-parser: 6.0.15
-      resolve: 1.22.8
-      sucrase: 3.35.0
-    transitivePeerDependencies:
-      - ts-node
-
   tar-fs@2.1.1:
     dependencies:
       chownr: 1.1.4
@@ -6659,18 +6616,18 @@ snapshots:
       unist-util-stringify-position: 4.0.0
       vfile-message: 4.0.2
 
-  vite@5.1.4(@types/node@20.11.20):
+  vite@5.1.4(@types/node@20.12.12):
     dependencies:
       esbuild: 0.19.12
       postcss: 8.4.35
       rollup: 4.12.0
     optionalDependencies:
-      '@types/node': 20.11.20
+      '@types/node': 20.12.12
       fsevents: 2.3.3
 
-  vitefu@0.2.5(vite@5.1.4(@types/node@20.11.20)):
+  vitefu@0.2.5(vite@5.1.4(@types/node@20.12.12)):
     optionalDependencies:
-      vite: 5.1.4(@types/node@20.11.20)
+      vite: 5.1.4(@types/node@20.12.12)
 
   volar-service-css@0.0.30(@volar/language-service@2.0.4):
     dependencies:
