@@ -299,7 +299,7 @@ it(`supports checkExtractConfig to skip extract checks`, () => {
 				})
 			]
 		})
-	).rejects
+	).resolves.toBeTruthy()
 })
 
 it(`errors if custom prefix wasn't passed into extractor`, () => {
