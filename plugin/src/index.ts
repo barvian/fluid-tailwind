@@ -147,21 +147,23 @@ const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
 	const { screens, containers, prefix, separator } = context
 
 	// Make sure they remembered to pass in extractor correctly
-	const extractor = config('content.extract.DEFAULT') as ExtractorFn
-	if (!extractor || !(IS_FLUID_EXTRACT in extractor)) {
-		error('extractor-missing')
-	}
-	if (
-		prefix !== DEFAULT_PREFIX &&
-		(!(PASSED_PREFIX in extractor) || extractor[PASSED_PREFIX] !== prefix)
-	) {
-		error('extractor-option-mismatch', 'prefix', prefix)
-	}
-	if (
-		separator !== DEFAULT_SEPARATOR &&
-		(!(PASSED_SEPARATOR in extractor) || extractor[PASSED_SEPARATOR] !== separator)
-	) {
-		error('extractor-option-mismatch', 'separator', separator)
+	if (context.checkExtractConfig) {
+		const extractor = config('content.extract.DEFAULT') as ExtractorFn
+		if (!extractor || !(IS_FLUID_EXTRACT in extractor)) {
+			error('extractor-missing')
+		}
+		if (
+			prefix !== DEFAULT_PREFIX &&
+			(!(PASSED_PREFIX in extractor) || extractor[PASSED_PREFIX] !== prefix)
+		) {
+			error('extractor-option-mismatch', 'prefix', prefix)
+		}
+		if (
+			separator !== DEFAULT_SEPARATOR &&
+			(!(PASSED_SEPARATOR in extractor) || extractor[PASSED_SEPARATOR] !== separator)
+		) {
+			error('extractor-option-mismatch', 'separator', separator)
+		}
 	}
 
 	// Add new fluid text utility to handle potentially complex theme values

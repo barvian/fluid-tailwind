@@ -287,6 +287,21 @@ it(`errors if extractor wasn't used`, () => {
 	).rejects.toThrow('fluid-tailwind: Fluid extractor not found in your Tailwind config')
 })
 
+it(`supports checkExtractConfig to skip extract checks`, () => {
+	return expect(
+		run({
+			content: {
+				files: [{ raw: html`` }]
+			},
+			plugins: [
+				fluid({
+					checkExtractConfig: false
+				})
+			]
+		})
+	).rejects
+})
+
 it(`errors if custom prefix wasn't passed into extractor`, () => {
 	return expect(
 		run({
