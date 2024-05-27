@@ -33,7 +33,7 @@
 		"README.md"
 	],
 	"peerDependencies": {
-		"tailwindcss": "3.4.3"
+		"tailwindcss": "3.2.0 - 3.2.4 || 3.2.6 - 3.4.3"
 	},
 	"devDependencies": {
 		"@tailwindcss/container-queries": "^0.1.1",
