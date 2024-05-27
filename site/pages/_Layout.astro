@@ -16,6 +16,7 @@ import { getImage } from 'astro:assets'
 import Stargazers from '/components/Stargazers.svelte'
 import { Content as Lead } from './_lead.mdx'
 import Link from '/components/Link.astro'
+import External from '/components/icons/External.astro'
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
@@ -121,10 +122,19 @@ const path = relative(root, file)
 			>
 				<Lead />
 			</div>
-			<a
-				class="~mt-6/8 dark:highlight-white/20 inline-flex h-12 items-center justify-center rounded-lg bg-slate-900 px-6 font-semibold text-white hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 active:bg-slate-900 dark:bg-sky-500 dark:hover:bg-sky-400 dark:active:bg-sky-500"
-				href="#installation">Get started</a
-			>
+			<div class="~mt-6/8 flex flex-wrap items-center justify-center gap-6">
+				<a
+					class="dark:highlight-white/20 flex h-12 items-center justify-center rounded-lg bg-slate-900 px-6 font-semibold text-white hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 active:bg-slate-900 dark:bg-sky-500 dark:hover:bg-sky-400 dark:active:bg-sky-500"
+					href="#installation">Get started</a
+				>
+				<a
+					class="flex h-12 items-center rounded-lg border border-slate-900/15 px-6 text-sm font-semibold text-slate-900 hover:bg-slate-900/5 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 dark:border-white/15 dark:text-white dark:hover:bg-white/10"
+					href="https://play.tailwindcss.com/mmXTrLbScx"
+				>
+					Try in Tailwind Play
+					<External class="h-5" />
+				</a>
+			</div>
 			<div class="~mt-16/24 lg:~mt-24/36 relative w-full">
 				<Split
 					class="~h-[29.5rem]/[40rem] lg:ml-auto lg:w-[61.8%] dark:bg-slate-900/70 dark:backdrop-blur dark:[--ec-frm-edActTabBg:transparent] dark:[--ec-frm-edTabBarBg:transparent] dark:[&_.frame]:![--code-background:transparent]"
