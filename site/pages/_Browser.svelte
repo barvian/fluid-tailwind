@@ -78,7 +78,7 @@
 					>
 						<path
 							d="M5 13H2.5C1.67157 13 1 12.3284 1 11.5V2.5C1 1.67157 1.67157 1 2.5 1H11.5C12.3284 1 13 1.67157 13 2.5V4"
-							stroke-width="1.5"
+							stroke-width="1.25"
 							vector-effect="non-scaling-stroke"
 						/>
 						<rect
@@ -87,7 +87,7 @@
 							width="12"
 							height="12"
 							rx="1.5"
-							stroke-width="1.5"
+							stroke-width="1.25"
 							vector-effect="non-scaling-stroke"
 						/>
 					</svg>
