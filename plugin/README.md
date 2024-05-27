@@ -1,6 +1,6 @@
 [![Fluid for Tailwind CSS](https://fluid.tw/preview.webp)](https://fluid.tw)
 
-A Tailwind plugin to easily generate fluid `clamp()` values with every built-in utility.
+A fluid `clamp()` plugin for Tailwind that works with every utility.
 
 ---
 
