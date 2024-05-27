@@ -53,12 +53,12 @@
 				</div>
 				<div>
 					<div
-						class="mx-auto flex w-4/5 items-center justify-center rounded-md bg-slate-100 py-1.5 text-xs font-medium ring-1 ring-inset ring-slate-900/5 dark:bg-slate-900 dark:text-slate-500"
+						class="mx-auto flex w-4/5 items-center justify-center rounded-md bg-slate-200 py-1.5 text-xs font-medium text-slate-600 dark:bg-slate-900 dark:text-slate-500"
 					>
 						<svg
 							viewBox="0 0 20 20"
 							fill="currentColor"
-							class="mr-1.5 h-3.5 w-3.5 text-slate-300 dark:text-slate-500"
+							class="mr-1.5 h-3.5 w-3.5 text-slate-500 dark:text-slate-500"
 						>
 							<path
 								fill-rule="evenodd"
