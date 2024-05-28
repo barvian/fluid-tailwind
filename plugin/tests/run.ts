@@ -2,7 +2,7 @@ import path from 'path'
 import postcss from 'postcss'
 import tailwind, { type Config } from 'tailwindcss'
 import containerQueries from '@tailwindcss/container-queries'
-import fluid, { extract, fontSize, screens } from '../src'
+import fluid, { extract, fontSize, screens } from '../dist'
 
 export let css = String.raw
 export let html = String.raw

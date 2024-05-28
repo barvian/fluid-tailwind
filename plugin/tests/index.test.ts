@@ -2,7 +2,7 @@ import { expect, it, spyOn } from 'bun:test'
 import colors from 'picocolors'
 import './matchers'
 import { html, css, run } from './run'
-import fluid, { fontSize, screens, extract, type FluidThemeConfig } from '../src'
+import fluid, { fontSize, screens, extract, type FluidThemeConfig } from '../dist'
 import plugin from 'tailwindcss/plugin'
 import type { PluginAPI } from 'tailwindcss/types/config'
 

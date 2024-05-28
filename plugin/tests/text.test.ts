@@ -2,7 +2,7 @@ import { expect, it, spyOn } from 'bun:test'
 import './matchers'
 import { html, css, run } from './run'
 import colors from 'picocolors'
-import fluid from '../src'
+import fluid from '../dist'
 
 const warn = spyOn(console, 'warn')
 
