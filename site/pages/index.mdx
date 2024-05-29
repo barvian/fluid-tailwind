@@ -18,7 +18,6 @@ export const components = { a: Link }
 * Ensures fluid type meets [accessibility requirements](#fluid-type-accessibility-errors)
 * **Flexible** enough to handle advanced use cases
 
-
 ## Installation
 
 <Steps.Root>
@@ -57,28 +56,6 @@ export const components = { a: Link }
       ```
     </Fragment>
   </Steps.Item>
-  <Steps.Item>
-    <>
-      ### Convert Tailwind's default screens to `rem`
-
-      <Tip.Info>You can skip this if you [override Tailwind's default screens](https://tailwindcss.com/docs/screens#overriding-the-defaults) or use [`tw-reset`](https://github.com/barvian/tw-reset)</Tip.Info>
-
-      This [will be unnecessary](https://github.com/tailwindlabs/tailwindcss/pull/13469) in Tailwind v4.
-    </>
-    <Fragment slot="code">
-      ```js title="tailwind.config.js" ins={6} ins=", screens"
-      import fluid, { extract, screens } from 'fluid-tailwind'
-
-      export default {
-        // ...
-        theme: {
-          screens
-        },
-        // ...
-      }
-      ```
-    </Fragment>
-  </Steps.Item>
 </Steps.Root>
 
 ## Basic usage
@@ -98,16 +75,11 @@ Here's a quick overview:
 
 ## Limitations
 
-### All lengths must have the same unit
-
-Due to CSS restrictions, fluid expressions can only be computed if **all involved lengths have the same unit**.
-This includes:
-* Start value / end value
-* Start point / end point
+Due to CSS restrictions, fluid expressions can only be computed if the start/end values and points are lengths literals (i.e. `1rem`) with the same unit.
 
 <Tip.Bad>Trying to interpolate between two different units</Tip.Bad>
 ```html
-<h1 class="~text-[1rem]/[24px]">
+<h1 class="~p-[1rem]/[18px]">
 ```
 
 <Tip.Bad>Trying to set `font-size` in `rem` when the screens are in `px`</Tip.Bad>
@@ -133,7 +105,7 @@ This includes:
   ```
 </Split>
 
-<Tip.Bad>Using expressions like `calc()`</Tip.Bad>
+<Tip.Bad>Using non-literal values like `calc()`</Tip.Bad>
 ```html
 <h1 class="~text-base/[calc(1.5rem-2px)]">
 ```
@@ -143,23 +115,38 @@ This includes:
 <h1 class="~text-white/red-500">
 ```
 
-#### Tailwind's default large font sizes
+### Tailwind's default theme
 
-Tailwind's default font sizes `5xl`–`9xl` use unitless line heights that can't
-be fluidized. If you want to use these values fluidly, you can convert them to `rem` with the built-in `fontSize` export:
+Tailwind v3's [default screens](https://tailwindcss.com/docs/screens) are in `px`, while its default
+[spacing](https://tailwindcss.com/docs/customizing-spacing#default-spacing-scale) and
+[font sizes](https://tailwindcss.com/docs/font-size) are in `rem`.
+This doesn't bode well with the CSS restrictions mentioned above, so `fluid-tailwind` provides `rem` equivalents
+for the default screens:
 
-```js title="tailwind.config.js" ins={6} ins=", fontSize"
-import fluid, { extract, fontSize } from 'fluid-tailwind'
+```js title="tailwind.config.js" ins={6} ins=", screens"
+import fluid, { extract, screens } from 'fluid-tailwind'
 
 export default {
   // ...
   theme: {
-    fontSize,
-    extend: {
-      fontSize: {
-        // ...
-      }
-    }
+    screens
+  },
+  // ...
+}
+```
+<Tip.Info>[Tailwind v4 will use `rem` screens by default](https://github.com/tailwindlabs/tailwindcss/pull/13469).</Tip.Info>
+
+Similarly, the line heights used for Tailwind's default font sizes `5xl`–`9xl` are unitless, which can't be fluidized.
+`fluid-tailwind` provides `rem` equivalents for those as well:
+
+```js title="tailwind.config.js" ins={7} ins=", fontSize"
+import fluid, { extract, screens, fontSize } from 'fluid-tailwind'
+
+export default {
+  // ...
+  theme: {
+    screens,
+    fontSize
   },
   // ...
 }
