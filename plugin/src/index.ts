@@ -147,6 +147,8 @@ const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
 	const { screens, containers, prefix, separator } = context
 
 	// Make sure they remembered to pass in extractor correctly
+	// Don't error, b/c i.e. prettier-plugin-tailwindcss and Tailwind Play
+	// override `config.content` anyway
 	const extractor = config('content.extract.DEFAULT') as ExtractorFn
 	if (!extractor || !(IS_FLUID_EXTRACT in extractor)) {
 		log.warn('fluid-tailwind', codes['extractor-missing']())
