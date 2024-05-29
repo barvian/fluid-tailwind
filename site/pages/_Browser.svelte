@@ -30,7 +30,7 @@
 				duration: 0,
 				delay: 0
 			})
-		}, 500 /* initial delay */ + 250 /* another delay, accounting for cursor press transition */)
+		}, 400 /* initial delay */ + 250 /* another delay, accounting for cursor press transition */)
 	})
 </script>
 
@@ -113,7 +113,7 @@
 				draggable="false"
 				class="group absolute left-full top-0 flex h-full cursor-ew-resize touch-pan-y items-center justify-center px-2"
 				aria-label="Resize"
-				in:fade={{ duration: 200, delay: 250 }}
+				in:fade={{ duration: 200, delay: 100 }}
 				use:resize={{
 					direction: 'right',
 					value: margin,
