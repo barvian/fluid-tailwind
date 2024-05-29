@@ -21,7 +21,7 @@ import { Length, type RawValue } from './util/css'
 import * as expr from './util/expr'
 import { addVariant, addVariantWithModifier, matchVariant } from './util/tailwind'
 import { tuple } from './util/set'
-import { FluidError, error } from './util/errors'
+import { FluidError, codes, error } from './util/errors'
 import type { Container } from 'postcss'
 import type { Config } from 'tailwindcss'
 import {
@@ -147,23 +147,19 @@ const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
 	const { screens, containers, prefix, separator } = context
 
 	// Make sure they remembered to pass in extractor correctly
-	if (context.checkExtractConfig) {
-		const extractor = config('content.extract.DEFAULT') as ExtractorFn
-		if (!extractor || !(IS_FLUID_EXTRACT in extractor)) {
-			error('extractor-missing')
-		}
-		if (
-			prefix !== DEFAULT_PREFIX &&
-			(!(PASSED_PREFIX in extractor) || extractor[PASSED_PREFIX] !== prefix)
-		) {
-			error('extractor-option-mismatch', 'prefix', prefix)
-		}
-		if (
-			separator !== DEFAULT_SEPARATOR &&
-			(!(PASSED_SEPARATOR in extractor) || extractor[PASSED_SEPARATOR] !== separator)
-		) {
-			error('extractor-option-mismatch', 'separator', separator)
-		}
+	const extractor = config('content.extract.DEFAULT') as ExtractorFn
+	if (!extractor || !(IS_FLUID_EXTRACT in extractor)) {
+		log.warn('fluid-tailwind', codes['extractor-missing']())
+	} else if (
+		prefix !== DEFAULT_PREFIX &&
+		(!(PASSED_PREFIX in extractor) || extractor[PASSED_PREFIX] !== prefix)
+	) {
+		log.warn('fluid-tailwind', codes['extractor-option-mismatch']('prefix', prefix))
+	} else if (
+		separator !== DEFAULT_SEPARATOR &&
+		(!(PASSED_SEPARATOR in extractor) || extractor[PASSED_SEPARATOR] !== separator)
+	) {
+		log.warn('fluid-tailwind', codes['extractor-option-mismatch']('separator', separator))
 	}
 
 	// Add new fluid text utility to handle potentially complex theme values

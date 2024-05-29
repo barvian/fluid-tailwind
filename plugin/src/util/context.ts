@@ -12,7 +12,6 @@ import { unique } from './set'
 
 export type PluginOptions = {
 	checkSC144?: boolean
-	checkExtractConfig?: boolean
 }
 
 type Breakpoints = [string] | [undefined, string] | [string, string]
@@ -24,7 +23,7 @@ export type ResolvedFluidThemeConfig = Partial<{
 export default function getContext(
 	config: PluginAPI['config'],
 	theme: PluginAPI['theme'],
-	{ checkSC144 = true, checkExtractConfig = true }: PluginOptions = {}
+	{ checkSC144 = true }: PluginOptions = {}
 ) {
 	const prefix: PrefixConfig = config('prefix')
 	const separator: SeparatorConfig = config('separator')
@@ -104,8 +103,7 @@ export default function getContext(
 		theme,
 		prefix,
 		separator,
-		checkSC144,
-		checkExtractConfig
+		checkSC144
 	}
 }
 export type Context = ReturnType<typeof getContext>

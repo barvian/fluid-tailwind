@@ -277,84 +277,88 @@ it(`respects defaultScreens config`, async () => {
 	`)
 })
 
-it(`errors if extractor wasn't used`, () => {
-	return expect(
-		run({
-			content: {
-				files: [{ raw: html`` }]
-			}
-		})
-	).rejects.toThrow('fluid-tailwind: Fluid extractor not found in your Tailwind config')
-})
+it(`warns if extractor wasn't used`, async () => {
+	const result = await run({
+		content: {
+			files: [{ raw: html`` }]
+		}
+	})
 
-it(`supports checkExtractConfig to skip extract checks`, () => {
-	return expect(
-		run({
-			content: {
-				files: [{ raw: html`` }]
-			},
-			plugins: [
-				fluid({
-					checkExtractConfig: false
-				})
-			]
-		})
-	).resolves.toBeTruthy()
-})
-
-it(`errors if custom prefix wasn't passed into extractor`, () => {
-	return expect(
-		run({
-			prefix: 'tw-',
-			content: {
-				files: [{ raw: html`` }],
-				extract
-			}
-		})
-	).rejects.toThrow(
-		`fluid-tailwind: You must pass in your \`config.prefix\` to the fluid extractor, i.e. \`extract({ prefix: 'tw-' })\``
+	expect(result.css).toMatchFormattedCss(css``)
+	expect(warn).toHaveBeenCalledWith(
+		colors.bold(colors.yellow('warn')),
+		'-',
+		colors.bold('fluid-tailwind') + ':',
+		'Fluid extractor not found in your Tailwind config'
 	)
 })
 
-it(`errors if different prefix was passed into extractor`, () => {
-	return expect(
-		run({
-			prefix: 'tw-',
-			content: {
-				files: [{ raw: html`` }],
-				extract: extract({ prefix: 'tw' })
-			}
-		})
-	).rejects.toThrow(
-		`fluid-tailwind: You must pass in your \`config.prefix\` to the fluid extractor, i.e. \`extract({ prefix: 'tw-' })\``
+it(`warns if custom prefix wasn't passed into extractor`, async () => {
+	const result = await run({
+		prefix: 'tw-',
+		content: {
+			files: [{ raw: html`` }],
+			extract
+		}
+	})
+	expect(result.css).toMatchFormattedCss(css``)
+	expect(warn).toHaveBeenCalledWith(
+		colors.bold(colors.yellow('warn')),
+		'-',
+		colors.bold('fluid-tailwind') + ':',
+		`You must pass in your \`config.prefix\` to the fluid extractor, i.e. \`extract({ prefix: 'tw-' })\``
 	)
 })
 
-it(`errors if custom separator wasn't passed into extractor`, () => {
-	return expect(
-		run({
-			separator: '_',
-			content: {
-				files: [{ raw: html`` }],
-				extract
-			}
-		})
-	).rejects.toThrow(
-		`fluid-tailwind: You must pass in your \`config.separator\` to the fluid extractor, i.e. \`extract({ separator: '_' })\``
+it(`warns if different prefix was passed into extractor`, async () => {
+	const result = await run({
+		prefix: 'tw-',
+		content: {
+			files: [{ raw: html`` }],
+			extract: extract({ prefix: 'tw' })
+		}
+	})
+
+	expect(result.css).toMatchFormattedCss(css``)
+	expect(warn).toHaveBeenCalledWith(
+		colors.bold(colors.yellow('warn')),
+		'-',
+		colors.bold('fluid-tailwind') + ':',
+		`You must pass in your \`config.prefix\` to the fluid extractor, i.e. \`extract({ prefix: 'tw-' })\``
 	)
 })
 
-it(`errors if different separator was passed into extractor`, () => {
-	return expect(
-		run({
-			separator: '_',
-			content: {
-				files: [{ raw: html`` }],
-				extract: extract({ separator: '|' })
-			}
-		})
-	).rejects.toThrow(
-		`fluid-tailwind: You must pass in your \`config.separator\` to the fluid extractor, i.e. \`extract({ separator: '_' })\``
+it(`warns if custom separator wasn't passed into extractor`, async () => {
+	const result = await run({
+		separator: '_',
+		content: {
+			files: [{ raw: html`` }],
+			extract
+		}
+	})
+	expect(result.css).toMatchFormattedCss(css``)
+	expect(warn).toHaveBeenCalledWith(
+		colors.bold(colors.yellow('warn')),
+		'-',
+		colors.bold('fluid-tailwind') + ':',
+		`You must pass in your \`config.separator\` to the fluid extractor, i.e. \`extract({ separator: '_' })\``
+	)
+})
+
+it(`warns if different separator was passed into extractor`, async () => {
+	const result = await run({
+		separator: '_',
+		content: {
+			files: [{ raw: html`` }],
+			extract: extract({ separator: '|' })
+		}
+	})
+	expect(result.css).toMatchFormattedCss(css``)
+	expect(warn).toHaveBeenCalledWith(
+		colors.bold(colors.yellow('warn')),
+		'-',
+		colors.bold('fluid-tailwind') + ':',
+		`You must pass in your \`config.separator\` to the fluid extractor, i.e. \`extract({ separator: '_' })\``
 	)
 })
 
