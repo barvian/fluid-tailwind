@@ -1,8 +1,9 @@
 <div class="my-6 flex items-start space-x-4">
 	<div
 		class="relative mt-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-400 text-white ring-2 ring-rose-400"
+		aria-label="Bad"
 	>
-		<svg width="6" height="6" class="overflow-visible" aria-hidden="true">
+		<svg width="6" height="6" class="overflow-visible" role="presentation">
 			<path
 				d="M0 0L6 6M6 0L0 6"
 				fill="none"

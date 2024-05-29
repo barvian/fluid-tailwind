@@ -1,5 +1,5 @@
 import plugin from 'tailwindcss/plugin'
-import { corePlugins } from 'tailwindcss/src/corePlugins'
+import { corePlugins } from 'tailwindcss-priv/src/corePlugins'
 import type {
 	CSSRuleObject,
 	ExtractorFn,
@@ -409,6 +409,8 @@ const fluid = plugin.withOptions((options: PluginOptions = {}) =>
 )
 export default fluid
 
+export { default as extract } from './extractor'
+
 /**
  * Tailwind's default screens converted to `rem`, for better
  * compatibility with core plugins.
@@ -442,5 +444,3 @@ export const fontSize = mapObject(
 		]
 	}
 )
-
-export { default as extract } from './extractor'

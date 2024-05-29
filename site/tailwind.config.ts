@@ -122,7 +122,7 @@ export default {
 						'.expressive-code': {
 							'@apply z-10 mt-5 mb-8': {}
 						},
-						'.expressive-code+[data-info]': {
+						'.expressive-code+.InfoTip': {
 							'@apply -mt-3': {}
 						}
 					}
@@ -142,6 +142,7 @@ export default {
 		typography,
 		plugin(({ addVariant, matchUtilities, theme }) => {
 			addVariant('current', '&[aria-current="page"]')
+			addVariant('light', '@media (prefers-color-scheme: light)')
 			addVariant('group-current', ':merge(.group)[aria-current="page"] &')
 			addVariant('aria-hidden', '&[aria-hidden="true"]')
 			addVariant('js', '[data-js]:root &')
