@@ -20,9 +20,9 @@
 
 	onMount(() => {
 		setTimeout(() => (showCursor = true), 0)
-		setTimeout(() => (animating = true), 500) // wait to show the pressed cursor state
+		setTimeout(() => (animating = true), 400) // wait to show the pressed cursor state
 		setTimeout(async () => {
-			await margin.set(26) // biggest value, in rems
+			await margin.set(23) // biggest value, in rems
 			animating = showCursor = false
 			didAnimate = true
 			// Convert to pixels
