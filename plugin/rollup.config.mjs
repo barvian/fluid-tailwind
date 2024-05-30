@@ -4,6 +4,7 @@ import typescript from '@rollup/plugin-typescript'
 import json from '@rollup/plugin-json'
 import { defineConfig } from 'rollup'
 import nodeExternals from 'rollup-plugin-node-externals'
+import del from 'rollup-plugin-delete'
 
 export default defineConfig({
 	input: 'src/index.ts',
@@ -18,6 +19,9 @@ export default defineConfig({
 		}
 	],
 	plugins: [
+		del({
+			targets: ['dist/*']
+		}),
 		{
 			name: 'transform-imports-in-corePlugins',
 			resolveId: {
