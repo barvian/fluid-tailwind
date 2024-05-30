@@ -45,7 +45,10 @@ export default defineConfig({
 			builtinsPrefix: 'strip', // for skypack, which adds them on top
 			exclude: 'tailwindcss-priv' // which is to say, don't mark it as external
 		}),
-		typescript(),
+		typescript({
+			noEmitOnError: true,
+			exclude: ['tests/**/*.ts']
+		}),
 		json(),
 		resolve(),
 		commonjs()

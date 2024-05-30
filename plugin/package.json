@@ -24,7 +24,7 @@
 	],
 	"scripts": {
 		"test": "bun test",
-		"build": "rollup -c && tsc -p tsconfig.build.json --emitDeclarationOnly",
+		"build": "rollup -c",
 		"dev": "rollup -cw",
 		"prepublishOnly": "pnpm run build && pnpm run test"
 	},
