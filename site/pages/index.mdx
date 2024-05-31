@@ -87,7 +87,7 @@ Due to CSS restrictions, fluid expressions can only be computed if the start/end
 <Tip.Bad>Trying to set `font-size` in `rem` when the screens are in `px`</Tip.Bad>
 <Split rows="grid-rows-[auto]">
   ```html
-  <h1 class="~text-lg/xl">
+  <h1 class="~text-[1rem]/[2rem]">
   ```
   ```js title="tailwind.config.js"
   export default {
@@ -96,10 +96,6 @@ Due to CSS restrictions, fluid expressions can only be computed if the start/end
       screens: {
         'sm': '320px',
         '2xl': '1280px' 
-      },
-      fontSize: {
-        'lg': '1.5rem',
-        'xl': '2rem'
       }
     }
     // ...
