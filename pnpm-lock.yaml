@@ -84,6 +84,9 @@ importers:
       tailwindcss-priv:
         specifier: npm:tailwindcss@3.4.3
         version: tailwindcss@3.4.3
+      tslib:
+        specifier: ^2.6.2
+        version: 2.6.2
       typescript:
         specifier: '>=5.4.0'
         version: 5.4.5
