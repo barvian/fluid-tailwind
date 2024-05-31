@@ -152,8 +152,8 @@ export default {
 
 ### Troubleshooting
 
-In case a fluid utility can't generate a `clamp()`, it will output an empty rule with
-a comment in the selector:
+Tailwind doesn't currently provide any error reporting tools for plugins, so in case a fluid utility
+can't generate a `clamp()`, it will output an empty rule with a comment in the selector:
 
 ```css
 .\~mt-\[10px\]\/\[1\.5rem\] /* error - Start `10px` and end `1.5rem` units don't match */ {}
