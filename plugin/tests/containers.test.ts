@@ -1,10 +1,7 @@
-import { expect, it, spyOn } from 'bun:test'
-import colors from 'picocolors'
+import { expect, it } from 'bun:test'
 import './matchers'
 import { html, css, run } from './run'
 import type { FluidThemeConfig } from '../dist'
-
-const warn = spyOn(console, 'warn')
 
 it(`allows ~@container/container variant`, async () => {
 	const result = await run({
@@ -204,13 +201,11 @@ it(`fails if ~@ variant is used on non-fluid utility`, async () => {
 			}
 		]
 	})
-	expect(result.css).toMatchFormattedCss(css``)
-	expect(warn).toHaveBeenCalledWith(
-		colors.bold(colors.yellow('warn')),
-		'-',
-		colors.bold('~@:relative') + ':',
-		'Fluid variants can only be used with fluid utilities'
-	)
+	expect(result.css).toMatchFormattedCss(css`
+		.\~\@\:relative {
+			/* error - Fluid variants can only be used with fluid utilities */
+		}
+	`)
 })
 
 it(`respects defaultContainers config`, async () => {
@@ -304,13 +299,11 @@ it(`fails if ~@ variant is used with same start/end containers`, async () => {
 			}
 		}
 	})
-	expect(result.css).toMatchFormattedCss(css``)
-	expect(warn).toHaveBeenCalledWith(
-		colors.bold(colors.yellow('warn')),
-		'-',
-		colors.bold('~@:~p-1/2') + ':',
-		'Start and end breakpoints are both 30rem'
-	)
+	expect(result.css).toMatchFormattedCss(css`
+		.\~\@\[30rem\]\/md\:\~p-1\/2 {
+			/* error - Start and end breakpoints are both ${'`'}30rem${'`'} */
+		}
+	`)
 })
 
 it(`fails if no containers`, async () => {
@@ -324,13 +317,11 @@ it(`fails if no containers`, async () => {
 			containers: {}
 		}
 	})
-	expect(result.css).toMatchFormattedCss(``)
-	expect(warn).toHaveBeenCalledWith(
-		colors.bold(colors.yellow('warn')),
-		'-',
-		colors.bold('~@:~p-1/2') + ':',
-		'Missing default start breakpoint'
-	)
+	expect(result.css).toMatchFormattedCss(css`
+		.\~\@\:\~p-1\/2 {
+			/* error - Missing default start breakpoint */
+		}
+	`)
 })
 
 it(`fails if containers with different units`, async () => {
@@ -347,13 +338,11 @@ it(`fails if containers with different units`, async () => {
 			}
 		}
 	})
-	expect(result.css).toMatchFormattedCss(``)
-	expect(warn).toHaveBeenCalledWith(
-		colors.bold(colors.yellow('warn')),
-		'-',
-		colors.bold('~@:~p-1/2') + ':',
-		'Cannot sort simple breakpoints in `theme.containers` because they use different units'
-	)
+	expect(result.css).toMatchFormattedCss(css`
+		.\~\@\:\~p-1\/2 {
+			/* error - Cannot sort simple breakpoints in ${'`'}theme.containers${'`'} because they use different units */
+		}
+	`)
 })
 
 it(`allows zeroed start container`, async () => {

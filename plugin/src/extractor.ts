@@ -13,8 +13,9 @@ let defaultPatterns
 export const DEFAULT_PREFIX = '', DEFAULT_SEPARATOR = ':', // these aren't available in `tailwindcss/defaultConfig`
 PASSED_PREFIX = Symbol(), PASSED_SEPARATOR = Symbol(), IS_FLUID_EXTRACT = Symbol()
 
-// This is the default extractor from 'tailwindcss-priv/src/lib/defaultExtractor'
-// with two extra chars to support the ~ prefix
+/**
+ * Tailwind's default extractor, with small tweaks to support the ~ modifier.
+ */
 function extract(content: string): ReturnType<ExtractorFn>
 function extract(options: ExtractorOptions): ExtractorFn
 function extract(contentOrOptions: string | ExtractorOptions): ReturnType<ExtractorFn> | ExtractorFn {

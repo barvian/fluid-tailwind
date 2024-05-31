@@ -10,6 +10,8 @@ import * as Tip from '/components/Tip'
 import Resizer from '/components/Resizer.svelte'
 import Link from '/components/Link.astro'
 export const components = { a: Link }
+import { Image } from 'astro:assets'
+import inspector from './_inspector.png'
 
 ## Features
 
@@ -151,6 +153,25 @@ export default {
   // ...
 }
 ```
+
+### Troubleshooting
+
+In case a fluid utility can't generate a `clamp()`, it will output an empty class with
+a comment in the selector:
+
+```css
+.\~mt-\[10px\]\/\[1\.5rem\] /* error - Start `10px` and end `1.5rem` units don't match */ {}
+```
+
+You should be able to see this if you have the [official IntelliSense plugin](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
+installed and hover over the class. Otherwise, you can see it if you click the location for the empty rule in your browser's inspector:
+
+<figure>
+  <div class="rounded-lg overflow-clip dark:after:rounded-[inherit] dark:after:absolute dark:after:inset-0 dark:after:size-full dark:after:ring dark:after:ring-inset dark:after:ring-white/10 w-fit relative">
+    <Image src={inspector} quality={100} class="w-[340px] my-0 dark:ring-white/10" alt="Screenshot of a mouse clicking on the location for an empty fluid ruleset in the inspector" />
+  </div>
+  <figcaption>Chrome's Styles pane</figcaption>
+</figure>
 
 ## Configuration
 

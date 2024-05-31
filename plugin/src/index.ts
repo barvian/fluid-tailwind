@@ -21,8 +21,8 @@ import { Length, type RawValue } from './util/css'
 import * as expr from './util/expr'
 import { addVariant, addVariantWithModifier, matchVariant } from './util/tailwind'
 import { tuple } from './util/set'
-import { FluidError, codes, error } from './util/errors'
-import type { Container } from 'postcss'
+import { FluidError, codes } from './util/errors'
+import { Comment, Root, Rule } from 'postcss'
 import type { Config } from 'tailwindcss'
 import {
 	IS_FLUID_EXTRACT,
@@ -40,9 +40,9 @@ type FilterFn = (
 	options: Parameters<MatchUtilOrComp>[1]
 ) => boolean | null | undefined
 
-const handle = (e: unknown, source: string) => {
+const makeComment = (e: unknown, raw = true) => {
 	if (e instanceof FluidError) {
-		log.warn(source, e.message)
+		return `${raw ? '/* ' : ''}error - ${e.message}${raw ? ' */' : ''}`
 	} else throw e
 }
 
@@ -80,11 +80,12 @@ function getFluidAPI(
 							if (end === null && DEFAULT) end = DEFAULT
 
 							try {
-								const [clamp] = expr.generate(start, end, context)
+								const clamp = expr.generate(start, end, context)
 								return origFn(clamp, { modifier: null }) // don't pass along the modifier
 							} catch (e) {
-								handle(e, `~${util}`)
-								return null
+								return {
+									[makeComment(e)]: {}
+								}
 							}
 						}
 					},
@@ -106,11 +107,12 @@ function getFluidAPI(
 							if (end === null && DEFAULT) end = DEFAULT
 
 							try {
-								const [clamp] = expr.generate(start, end, context, { negate: true })
+								const clamp = expr.generate(start, end, context, { negate: true })
 								return origFn(clamp, { modifier: null }) // don't pass along the modifier
 							} catch (e) {
-								handle(e, `~-${util}`)
-								return null
+								return {
+									[makeComment(e)]: {}
+								}
 							}
 						}
 					},
@@ -216,14 +218,11 @@ const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
 
 				// Font size
 				try {
-					const [clamp, err] = expr.generate(from.fontSize, to.fontSize, context, {
+					rules['font-size'] = expr.generate(from.fontSize, to.fontSize, context, {
 						type: true
 					})
-					rules['font-size'] = clamp
-					// Don't output anything else if this one failed:
-					if (err) return rules
 				} catch (e) {
-					handle(e, '~text: Font size')
+					rules['font-size'] = makeComment(e)
 				}
 
 				// Line height. Make sure to use double equals to catch nulls and strings <-> numbers
@@ -231,9 +230,9 @@ const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
 					rules['line-height'] = from.lineHeight ?? null
 				} else {
 					try {
-						rules['line-height'] = expr.generate(from.lineHeight, to.lineHeight, context)[0]
+						rules['line-height'] = expr.generate(from.lineHeight, to.lineHeight, context)
 					} catch (e) {
-						handle(e, '~text: Line height')
+						rules['line-height'] = makeComment(e)
 					}
 				}
 
@@ -242,13 +241,9 @@ const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
 					rules['letter-spacing'] = from.letterSpacing ?? null
 				} else {
 					try {
-						rules['letter-spacing'] = expr.generate(
-							from.letterSpacing,
-							to.letterSpacing,
-							context
-						)[0]
+						rules['letter-spacing'] = expr.generate(from.letterSpacing, to.letterSpacing, context)
 					} catch (e) {
-						handle(e, '~text: Letter spacing')
+						rules['letter-spacing'] = makeComment(e)
 					}
 				}
 
@@ -256,7 +251,7 @@ const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
 				if (from.fontWeight == to.fontWeight) {
 					rules['font-weight'] = from.fontWeight ? from.fontWeight + '' : null
 				} else {
-					log.warn('~text', `Mismatched font weights`)
+					rules['font-weight'] = makeComment(FluidError.fromCode('mismatched-font-weights'))
 				}
 
 				return rules
@@ -304,24 +299,35 @@ const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
 
 	// Handle the rewrites and potential errors:
 	const rewrite = (
-		container: Container,
+		container: Root,
 		[startBP, endBP]: [Length | RawValue, Length | RawValue],
-		variant: string,
 		atContainer?: string | true
 	) => {
 		try {
 			expr.rewrite(container, context, [startBP, endBP], atContainer)
 			return '&'
 		} catch (e) {
-			const util = (container.first?.raws?.tailwind as { classCandidate?: string })?.classCandidate
-			handle(e, `${variant}${util ? separator + util : ''}`)
-			return []
+			const comment = new Comment({ text: makeComment(e, false) })
+
+			// Override first rule so there's no duplicates, and b/c it has the right class:
+			let firstRule: Rule | undefined
+			container.walkRules((rule) => {
+				firstRule = rule
+				return false
+			})
+			container.removeAll()
+			if (firstRule) {
+				firstRule.removeAll()
+				firstRule.append(comment)
+				container.append(firstRule)
+			}
+			return '&'
 		}
 	}
 
 	if (screens?.DEFAULT) {
 		log.warn(
-			'inaccessible-default-screen',
+			'fluid-tailwind',
 			`Your DEFAULT screen breakpoint must be renamed to be used in fluid variants`
 		)
 	}
@@ -330,28 +336,24 @@ const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
 		// Add `~screen/screen` variants
 		Object.entries(screens).forEach(([s2Key, s2]) => {
 			if (s2Key === s1Key) return
-			addVariant(api, `~${s1Key}/${s2Key}`, ({ container }) =>
-				rewrite(container, [s1, s2], `~${s1Key}/${s2Key}`)
-			)
+			addVariant(api, `~${s1Key}/${s2Key}`, ({ container }) => rewrite(container, [s1, s2]))
 		})
 
 		// Add `~screen/[arbitrary]?` variants
 		addVariantWithModifier(api, `~${s1Key}`, ({ container, modifier }) =>
-			rewrite(container, [s1, modifier], `~${s1Key}${modifier ? '/' + modifier : ''}`)
+			rewrite(container, [s1, modifier])
 		)
 
 		// Add `~/screen` variants
-		addVariant(api, `~/${s1Key}`, ({ container }) => rewrite(container, [, s1], `~/${s1Key}`))
+		addVariant(api, `~/${s1Key}`, ({ container }) => rewrite(container, [, s1]))
 	})
 
 	// Add `~/[arbitrary]?` variant
-	addVariantWithModifier(api, '~', ({ modifier, container }) =>
-		rewrite(container, [, modifier], `~${modifier ? '/' + modifier : ''}`)
-	)
+	addVariantWithModifier(api, '~', ({ modifier, container }) => rewrite(container, [, modifier]))
 
 	// Add `~min-[arbitrary]/(screen|[arbitrary])?` variant
 	matchVariant(api, '~min', (value, { modifier, container }) =>
-		rewrite(container, [value, modifier], `~min-[${value}]${modifier ? '/' + modifier : ''}`)
+		rewrite(container, [value, modifier])
 	)
 
 	// Container variants
@@ -360,7 +362,7 @@ const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
 
 	if (containers?.DEFAULT) {
 		log.warn(
-			'inaccessible-default-container',
+			'fluid-tailwind',
 			`Your DEFAULT container breakpoint must be renamed to be used in fluid variants`
 		)
 	}
@@ -369,20 +371,16 @@ const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
 		// Add `~@container/container` variants
 		Object.entries(containers).forEach(([c2Key, c2]) => {
 			if (c2Key === c1Key) return
-			addVariant(api, `~@${c1Key}/${c2Key}`, ({ container }) =>
-				rewrite(container, [c1, c2], `~@${c1Key}/${c2Key}`, true)
-			)
+			addVariant(api, `~@${c1Key}/${c2Key}`, ({ container }) => rewrite(container, [c1, c2], true))
 		})
 
 		// Add `~@container/[arbitrary]?` variants
 		addVariantWithModifier(api, `~@${c1Key}`, ({ container, modifier }) =>
-			rewrite(container, [c1, modifier], `~@${c1Key}${modifier ? '/' + modifier : ''}`, true)
+			rewrite(container, [c1, modifier], true)
 		)
 
 		// Add `~@/container` variants
-		addVariant(api, `~@/${c1Key}`, ({ container }) =>
-			rewrite(container, [, c1], `~@/${c1Key}`, true)
-		)
+		addVariant(api, `~@/${c1Key}`, ({ container }) => rewrite(container, [, c1], true))
 	})
 
 	// Add ~@[arbitrary]|container/[arbitrary]|container variant
@@ -391,7 +389,7 @@ const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
 		'~@',
 		(value, { modifier, container }) =>
 			// can't output ${value} without a reverse lookup from theme :/
-			rewrite(container, [value, modifier], `~@`, true),
+			rewrite(container, [value, modifier], true),
 		{
 			values: {
 				...containers,

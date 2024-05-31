@@ -1,10 +1,7 @@
-import { expect, it, spyOn } from 'bun:test'
+import { expect, it } from 'bun:test'
 import './matchers'
 import { html, css, run } from './run'
-import colors from 'picocolors'
 import fluid from '../dist'
-
-const warn = spyOn(console, 'warn')
 
 it(`respects ~text from DEFAULT`, async () => {
 	const result = await run({
@@ -108,13 +105,11 @@ it(`reports SC 1.4.4 violations caused by variants`, async () => {
 			}
 		}
 	})
-	expect(result.css).toMatchFormattedCss(css``)
-	expect(warn).toHaveBeenCalledWith(
-		colors.bold(colors.yellow('warn')),
-		'-',
-		colors.bold('~min-[20rem]/[40rem]:~text-[1rem]/[2.6rem]') + ':',
-		'Fails WCAG SC 1.4.4 at i.e. 100rem'
-	)
+	expect(result.css).toMatchFormattedCss(css`
+		.\~min-\[20rem\]\/\[40rem\]\:\~text-\[1rem\]\/\[2\.6rem\] {
+			/* error - Fails WCAG SC 1.4.4 at i.e. 100rem */
+		}
+	`)
 })
 
 it(`allows warnings for WCAG SC 1.4.4 violations`, async () => {
@@ -233,19 +228,11 @@ it(`fails for inconsistent line height`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css`
 		.\~text-sm\/lg {
-			font-size: clamp(
-				1rem,
-				0.29rem + 1.79vw,
-				2rem
-			); /* fluid type from 1rem at 40rem to 2rem at 96rem */
+			font-size: clamp(1rem, 0.29rem + 1.79vw, 2rem)
+				/* fluid type from 1rem at 40rem to 2rem at 96rem */;
+			line-height:; /* error - Start value ${'`'}1.5${'`'} is not a length */
 		}
 	`)
-	expect(warn).toHaveBeenCalledWith(
-		colors.bold(colors.yellow('warn')),
-		'-',
-		colors.bold('~text: Line height') + ':',
-		'Start value `1.5` is not a length'
-	)
 })
 
 it(`applies consistent font weight`, async () => {
@@ -310,19 +297,11 @@ it(`fails for inconsistent font weights`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css`
 		.\~text-sm\/lg {
-			font-size: clamp(
-				1rem,
-				0.29rem + 1.79vw,
-				2rem
-			); /* fluid type from 1rem at 40rem to 2rem at 96rem */
+			font-size: clamp(1rem, 0.29rem + 1.79vw, 2rem)
+				/* fluid type from 1rem at 40rem to 2rem at 96rem */;
+			font-weight:; /* error - Mismatched font weights */
 		}
 	`)
-	expect(warn).toHaveBeenCalledWith(
-		colors.bold(colors.yellow('warn')),
-		'-',
-		colors.bold('~text') + ':',
-		'Mismatched font weights'
-	)
 })
 
 it(`fluidizes compatible letter spacing`, async () => {
@@ -394,27 +373,6 @@ it(`doesn't apply inconsistent letter spacing`, async () => {
 			font-size: clamp(1rem, 0.29rem + 1.79vw, 2rem)
 				/* fluid type from 1rem at 40rem to 2rem at 96rem */;
 			letter-spacing:; /* not fluid from 0.3em at 40rem to 0.2em at 96rem: Breakpoint and value units don't match */
-		}
-	`)
-})
-
-it(`outputs nothing if font-size errors`, async () => {
-	const result = await run({
-		content: [
-			{
-				raw: html`<div class="~text-sm/lg"></div>`
-			}
-		],
-		theme: {
-			fontSize: {
-				sm: ['1rem', { lineHeight: '1rem', fontWeight: 600, letterSpacing: '.01rem' }],
-				lg: ['6rem', { lineHeight: '6rem', fontWeight: 600, letterSpacing: '0.02rem' }]
-			}
-		}
-	})
-	expect(result.css).toMatchFormattedCss(css`
-		.\~text-sm\/lg {
-			font-size:; /* not fluid type from 1rem at 40rem to 6rem at 96rem: Fails WCAG SC 1.4.4 at i.e. 200rem */
 		}
 	`)
 })

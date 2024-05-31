@@ -1,10 +1,10 @@
-import type { Container } from 'postcss'
+import type { Root } from 'postcss'
 import type { KeyValuePair, PluginAPI } from 'tailwindcss/types/config'
 
 export const addVariant = (
 	api: PluginAPI,
 	variant: string,
-	definition: string | string[] | ((extra: { container: Container }) => string | string[])
+	definition: string | string[] | ((extra: { container: Root }) => string | string[])
 ) =>
 	api.addVariant(
 		variant,
@@ -15,10 +15,7 @@ export const addVariant = (
 export const matchVariant = <T = string>(
 	api: PluginAPI,
 	name: string,
-	cb: (
-		value: T | string,
-		extra: { modifier: string | null; container: Container }
-	) => string | string[],
+	cb: (value: T | string, extra: { modifier: string | null; container: Root }) => string | string[],
 	options?: {
 		values?: KeyValuePair<string, T>
 		sort?(
@@ -37,7 +34,7 @@ export const matchVariant = <T = string>(
 export const addVariantWithModifier = (
 	api: PluginAPI,
 	variant: string,
-	fn: (extra: { container: Container; modifier: string | null }) => string | string[]
+	fn: (extra: { container: Root; modifier: string | null }) => string | string[]
 ) =>
 	api.matchVariant(
 		variant,

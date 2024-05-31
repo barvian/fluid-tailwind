@@ -70,13 +70,10 @@ it(`requires a change in values`, async () => {
 			}
 		]
 	})
-	expect(result.css).toMatchFormattedCss(css``)
-	expect(warn).toHaveBeenCalledWith(
-		colors.bold(colors.yellow('warn')),
-		'-',
-		colors.bold('~p') + ':',
-		'Start and end values are both 0.25rem'
-	)
+	expect(result.css).toMatchFormattedCss(css`
+		.\~p-1\/1 /* error - Start and end values are both ${'`'}0.25rem${'`'} */ {
+		}
+	`)
 })
 
 it(`handles zeroed values`, async () => {
@@ -189,7 +186,7 @@ it(`errors when start = end screen`, async () => {
 	})
 	expect(result.css).toMatchFormattedCss(css`
 		.\~p-1\/2 {
-			padding:; /* not fluid from 0.25rem at 30rem to 0.5rem at 30rem: Start and end breakpoints are both 30rem */
+			padding:; /* not fluid from 0.25rem at 30rem to 0.5rem at 30rem: Start and end breakpoints are both ${'`'}30rem${'`'} */
 		}
 	`)
 })
@@ -202,13 +199,10 @@ it(`requires values with same units`, async () => {
 			}
 		]
 	})
-	expect(result.css).toMatchFormattedCss(css``)
-	expect(warn).toHaveBeenCalledWith(
-		colors.bold(colors.yellow('warn')),
-		'-',
-		colors.bold('~p') + ':',
-		"Start `1px` and end `2rem` units don't match"
-	)
+	expect(result.css).toMatchFormattedCss(css`
+		.\~p-\[1px\]\/\[2rem\] /* error - Start ${'`'}1px${'`'} and end ${'`'}2rem${'`'} units don't match */ {
+		}
+	`)
 })
 
 it(`requires length literals`, async () => {
@@ -219,13 +213,10 @@ it(`requires length literals`, async () => {
 			}
 		]
 	})
-	expect(result.css).toMatchFormattedCss(css``)
-	expect(warn).toHaveBeenCalledWith(
-		colors.bold(colors.yellow('warn')),
-		'-',
-		colors.bold('~p') + ':',
-		'End value `calc(2rem)` is not a length'
-	)
+	expect(result.css).toMatchFormattedCss(css`
+		.\~p-\[1rem\]\/\[calc\(2rem\)\] /* error - End value ${'`'}calc(2rem)${'`'} is not a length */ {
+		}
+	`)
 })
 
 it(`supports negative length literals`, async () => {

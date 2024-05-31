@@ -1,4 +1,4 @@
-import { Container } from 'postcss'
+import { Root } from 'postcss'
 import { Length, type RawValue } from './css'
 import { FluidError, codes, error } from './errors'
 import { clamp, precision, toPrecision } from './math'
@@ -51,7 +51,7 @@ export const generate = (
 		final?: boolean
 		negate?: boolean
 	} = {}
-): [expr: string] | [expr: string, err: FluidError] => {
+) => {
 	if (!_start) error('missing-start')
 	const start = length(_start, context)
 	if (!start) error('non-length-start', _start as string)
@@ -78,14 +78,11 @@ export const generate = (
 	const comment = <C extends keyof typeof codes>(
 		code?: C,
 		...args: typeof code extends undefined ? never : Parameters<(typeof codes)[C]>
-	): [expr: string] | [expr: string, err: FluidError] => {
-		const expr = `/* ${code ? 'not ' : ''}fluid${type ? ' type' : ''} from ${start.cssText} at ${startBP.cssText} to ${end.cssText} at ${endBP.cssText}${atContainer ? ' (container)' : ''}${
+	) =>
+		`/* ${code ? 'not ' : ''}fluid${type ? ' type' : ''} from ${start.cssText} at ${startBP.cssText} to ${end.cssText} at ${endBP.cssText}${atContainer ? ' (container)' : ''}${
 			// @ts-expect-error
 			code ? ': ' + codes[code](...args) : ''
 		} */`
-		if (code) return [expr, FluidError.fromCode(code, ...args)]
-		return [expr]
-	}
 
 	if (startBP.number === 0) {
 		startBP.unit = endBP.unit
@@ -129,13 +126,11 @@ export const generate = (
 			return (final ? error : comment)('fails-sc-144', endBP)
 	}
 
-	return [
-		`clamp(${min},${toPrecision(intercept, p)}${unit} + ${toPrecision(slope * 100, p)}${atContainer ? 'cqw' : 'vw'},${max})${comment()}`
-	]
+	return `clamp(${min},${toPrecision(intercept, p)}${unit} + ${toPrecision(slope * 100, p)}${atContainer ? 'cqw' : 'vw'},${max})${comment()}`
 }
 
 export const rewrite = (
-	container: Container,
+	container: Root,
 	context: Context,
 	[startBP, endBP]: [Length | RawValue, Length | RawValue],
 	atContainer?: string | true
@@ -153,6 +148,14 @@ export const rewrite = (
 		}
 	})()
 
+	// Check first to see if this was a fluid utility that errored
+	let failedFluid: string | undefined
+	container.walkRules((rule) => {
+		failedFluid = rule.selector.match(/~.*?\/\* error - (.*?) \*\/\s*$/)?.[1]
+		if (failedFluid) return false
+	})
+	if (failedFluid) throw new FluidError(failedFluid)
+
 	// Walk through each `property: value` and rewrite any fluid expressions
 	let foundExpr = false
 	container.walkDecls((decl) => {
@@ -166,7 +169,7 @@ export const rewrite = (
 					atContainer,
 					type: Boolean(type),
 					final: true
-				})[0]
+				})
 			}
 		)
 	})

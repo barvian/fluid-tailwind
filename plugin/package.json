@@ -1,6 +1,6 @@
 {
 	"name": "fluid-tailwind",
-	"version": "0.3.8",
+	"version": "0.3.9",
 	"author": "Maxwell Barvian",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
@@ -53,7 +53,7 @@
 		"rollup-plugin-node-externals": "^7.1.2",
 		"tailwindcss": "^3.2.0",
 		"tailwindcss-priv": "npm:tailwindcss@3.4.3",
-		"typescript": ">=5.0.0"
+		"typescript": ">=5.4.0"
 	},
 	"dependencies": {
 		"filter-obj": "^5.1.0",

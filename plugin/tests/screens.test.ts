@@ -1,10 +1,7 @@
-import { expect, it, spyOn } from 'bun:test'
+import { expect, it } from 'bun:test'
 import './matchers'
 import { html, css, run } from './run'
 import type { FluidThemeConfig } from '../dist'
-import colors from 'picocolors'
-
-const warn = spyOn(console, 'warn')
 
 it(`allows ~screen/screen variant`, async () => {
 	const result = await run({
@@ -196,6 +193,36 @@ it(`allows ~min-[arbitrary]/[arbitrary] variant`, async () => {
 	`)
 })
 
+it(`fails for different start/end screen units`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~min-[30rem]/[10px]:~p-1/2"></div>`
+			}
+		]
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~min-\[30rem\]\/\[10px\]\:\~p-1\/2 {
+			/* error - Start breakpoint ${'`'}30rem${'`'} and end breakpoint ${'`'}10px${'`'} units don't match */
+		}
+	`)
+})
+
+it(`correctly handles errors with inside media queries`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~min-[30rem]/[10px]:sm:~p-1/2"></div>`
+			}
+		]
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~min-\[30rem\]\/\[10px\]\:sm\:\~p-1\/2 {
+			/* error - Start breakpoint ${'`'}30rem${'`'} and end breakpoint ${'`'}10px${'`'} units don't match */
+		}
+	`)
+})
+
 it(`fails if ~ variant is used on non-fluid utility`, async () => {
 	const result = await run({
 		content: [
@@ -204,13 +231,26 @@ it(`fails if ~ variant is used on non-fluid utility`, async () => {
 			}
 		]
 	})
-	expect(result.css).toMatchFormattedCss(css``)
-	expect(warn).toHaveBeenCalledWith(
-		colors.bold(colors.yellow('warn')),
-		'-',
-		colors.bold('~:relative') + ':',
-		'Fluid variants can only be used with fluid utilities'
-	)
+	expect(result.css).toMatchFormattedCss(css`
+		.\~\:relative {
+			/* error - Fluid variants can only be used with fluid utilities */
+		}
+	`)
+})
+
+it(`re-presents error if ~ variant is used on failed fluid utility`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="~:~p-[3px]/[3rem]"></div>`
+			}
+		]
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.\~\:\~p-\[3px\]\/\[3rem\] {
+			/* error - Start ${'`'}3px${'`'} and end ${'`'}3rem${'`'} units don't match */
+		}
+	`)
 })
 
 it(`fails if ~ variant is used with same start/end screens`, async () => {
@@ -226,13 +266,11 @@ it(`fails if ~ variant is used with same start/end screens`, async () => {
 			}
 		}
 	})
-	expect(result.css).toMatchFormattedCss(css``)
-	expect(warn).toHaveBeenCalledWith(
-		colors.bold(colors.yellow('warn')),
-		'-',
-		colors.bold('~md/[30rem]:~p-1/2') + ':',
-		'Start and end breakpoints are both 30rem'
-	)
+	expect(result.css).toMatchFormattedCss(css`
+		.\~md\/\[30rem\]\:\~p-1\/2 {
+			/* error - Start and end breakpoints are both ${'`'}30rem${'`'} */
+		}
+	`)
 })
 
 it(`fails if no screens`, async () => {
@@ -246,13 +284,10 @@ it(`fails if no screens`, async () => {
 			screens: {}
 		}
 	})
-	expect(result.css).toMatchFormattedCss(``)
-	expect(warn).toHaveBeenCalledWith(
-		colors.bold(colors.yellow('warn')),
-		'-',
-		colors.bold('~p') + ':',
-		'Missing default start breakpoint'
-	)
+	expect(result.css).toMatchFormattedCss(css`
+		.\~p-1\/2 /* error - Missing default start breakpoint */ {
+		}
+	`)
 })
 
 it(`fails if screens with different units`, async () => {
@@ -269,13 +304,10 @@ it(`fails if screens with different units`, async () => {
 			}
 		}
 	})
-	expect(result.css).toMatchFormattedCss(``)
-	expect(warn).toHaveBeenCalledWith(
-		colors.bold(colors.yellow('warn')),
-		'-',
-		colors.bold('~p') + ':',
-		'Cannot sort simple breakpoints in `theme.screens` because they use different units'
-	)
+	expect(result.css).toMatchFormattedCss(css`
+		.\~p-1\/2 /* error - Cannot sort simple breakpoints in ${'`'}theme.screens${'`'} because they use different units */ {
+		}
+	`)
 })
 
 it(`supports missing start defaultScreen`, async () => {
