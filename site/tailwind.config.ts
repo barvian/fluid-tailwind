@@ -1,13 +1,13 @@
 import type { Config } from 'tailwindcss'
 import plugin from 'tailwindcss/plugin'
 import typography from '@tailwindcss/typography'
-import { sans, mono } from './theme'
 import reset from 'tw-reset'
 import fluid, { extract, fontSize, type FluidThemeConfig } from 'fluid-tailwind'
 import svgToDataUri from 'mini-svg-data-uri'
 // @ts-expect-error undocumented API
 import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette'
 import type { ResolvableTo } from 'tailwindcss/types/config'
+import defaultTheme from 'tailwindcss/defaultTheme'
 
 export default {
 	presets: [reset],
@@ -51,6 +51,7 @@ export default {
 			},
 			colors: {
 				slate: {
+					825: '#1A2133',
 					850: '#151c2e',
 					925: '#090e1e'
 				}
@@ -59,8 +60,8 @@ export default {
 				'4.5': '1.125rem'
 			},
 			fontFamily: {
-				sans,
-				mono
+				sans: ['"Inter var"', ...defaultTheme.fontFamily.sans],
+				mono: ['"Fira Code VF"', ...defaultTheme.fontFamily.mono]
 			},
 			fontSize: {
 				// '6xl': ['4rem', '4rem']

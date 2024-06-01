@@ -31,7 +31,7 @@
 		"@astrojs/vercel": "^7.3.1",
 		"sharp": "^0.33.2",
 		"sharp-cli": "^4.2.0",
-		"tw-reset": "^0.0.2",
+		"tw-reset": "^0.0.5",
 		"typescript": ">=5.0.0"
 	}
 }
