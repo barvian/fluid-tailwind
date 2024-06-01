@@ -98,7 +98,7 @@ export default {
 							'@apply border-t border-slate-100': {}
 						},
 						a: {
-							'@apply font-semibold no-underline border-b border-sky-300 hover:border-b-2': {}
+							'@apply font-semibold no-underline border-b hover:border-b-2': {}
 						},
 						code: {
 							'@apply before:hidden after:hidden': {}
