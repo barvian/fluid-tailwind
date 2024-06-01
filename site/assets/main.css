@@ -27,7 +27,7 @@
 	}
 
 	.expressive-code .frame {
-		@apply !overflow-clip dark:after:pointer-events-none dark:after:absolute dark:after:inset-0 dark:after:z-10 dark:after:size-full dark:after:rounded-[--header-border-radius] dark:after:ring dark:after:ring-inset dark:after:ring-white/10;
+		@apply !overflow-clip dark:after:pointer-events-none dark:after:absolute dark:after:inset-0 dark:after:z-10 dark:after:size-full dark:after:rounded-[--header-border-radius] dark:after:ring dark:after:ring-inset dark:after:ring-slate-300/10;
 	}
 
 	.expressive-code .frame.has-title:not(.is-terminal) .title {
