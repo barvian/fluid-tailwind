@@ -103,6 +103,9 @@ export default {
 						code: {
 							'@apply before:hidden after:hidden': {}
 						},
+						summary: {
+							'@apply font-semibold cursor-pointer hover:text-[--tw-prose-links]': {}
+						},
 						h3: {
 							'margin-top': '2.4em'
 						},
