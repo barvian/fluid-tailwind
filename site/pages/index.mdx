@@ -161,11 +161,14 @@ can't generate a `clamp()`, it will output an empty rule with a comment in the s
 ```
 
 You should be able to see this if you have the [official IntelliSense plugin](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
-installed and hover over the class. Otherwise, you can see it if you click the location for the empty rule in your browser's inspector:
+installed and hover over the class. Otherwise, you can see it if you click the location for the empty rule in your browser's inspector.
 
-<div class="aspect-[952/554] @container max-w-[882px] mt-[2em]">
-  <video src={inspector} poster={(await getImage({ src: poster })).src} autoplay controls muted class="rounded-[1.1cqw] my-0 overflow-clip" />
-</div>
+<details>
+  <summary class="font-semibold cursor-pointer">View fluid errors in the inspector</summary>
+  <div class="aspect-[952/554] @container max-w-[882px] mt-[2em]">
+    <video src={inspector} poster={(await getImage({ src: poster })).src} autoplay controls muted class="rounded-[1.1cqw] my-0 overflow-clip" />
+  </div>
+</details>
 
 ## Configuration
 
