@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs'
 import sectionize from 'remark-sectionize'
 import vercel from '@astrojs/vercel/static'
 import intersectingDirective from './directives/intersecting/register'
-import { opacify } from 'color2k'
+import { transparentize } from 'color2k'
 import config from './tailwind.config'
 import resolveConfig from 'tailwindcss/resolveConfig'
 const {
@@ -30,7 +30,7 @@ const codeOptions = {
 			terminalBackground: colors.slate['825'],
 			terminalTitlebarDotsForeground: colors.slate['600'],
 			terminalTitlebarDotsOpacity: '1',
-			terminalTitlebarBorderBottomColor: opacify(colors.slate['500'], 0.3),
+			terminalTitlebarBorderBottomColor: transparentize(colors.slate['500'], 0.7),
 			terminalTitlebarBackground: colors.slate['825'],
 			inlineButtonBorder: colors.slate['600'],
 			inlineButtonForeground: colors.slate['400'],
@@ -41,8 +41,8 @@ const codeOptions = {
 			editorBackground: colors.slate['825'],
 			editorActiveTabForeground: colors.sky['300'],
 			editorActiveTabBackground: colors.slate['825'],
-			editorActiveTabBorderColor: opacify(colors.slate['500'], 0.3),
-			editorTabBarBorderBottomColor: opacify(colors.slate['500'], 0.3),
+			editorActiveTabBorderColor: transparentize(colors.slate['500'], 0.7),
+			editorTabBarBorderBottomColor: transparentize(colors.slate['500'], 0.7),
 			editorActiveTabIndicatorBottomColor: colors.sky['300'],
 			editorActiveTabIndicatorHeight: '1.5px',
 			editorTabBarBackground: colors.slate['850'],
@@ -51,12 +51,12 @@ const codeOptions = {
 		},
 		textMarkers: {
 			inlineMarkerBorderWidth: '0',
-			markBackground: opacify(colors.sky['300'], 0.15),
+			markBackground: transparentize(colors.sky['300'], 0.85),
 			markBorderColor: colors.sky['400'],
-			insBackground: opacify(colors.teal['400'], 0.15),
+			insBackground: transparentize(colors.teal['400'], 0.85),
 			insDiffIndicatorColor: colors.teal['400'],
 			insBorderColor: colors.teal['400'],
-			delBackground: opacify(colors.rose['400'], 0.15),
+			delBackground: transparentize(colors.rose['400'], 0.85),
 			delBorderColor: colors.rose['400'],
 			delDiffIndicatorColor: colors.rose['400']
 		}
