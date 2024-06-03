@@ -7,32 +7,33 @@ import { readFileSync } from 'node:fs'
 import sectionize from 'remark-sectionize'
 import vercel from '@astrojs/vercel/static'
 import intersectingDirective from './directives/intersecting/register'
+import { opacify } from 'color2k'
 import config from './tailwind.config'
 import resolveConfig from 'tailwindcss/resolveConfig'
 const {
-	theme: { colors, fontFamily }
+	theme: { colors, fontFamily, fontSize, boxShadow, borderRadius, spacing }
 } = resolveConfig(config)
 
 /** @type {import('astro-expressive-code').AstroExpressiveCodeOptions} */
 const codeOptions = {
 	theme: ExpressiveCodeTheme.fromJSONString(readFileSync('./vstheme.json', 'utf8')),
 	styleOverrides: {
-		uiFontSize: '0.75rem',
+		uiFontSize: fontSize.xs[0],
 		uiFontFamily: fontFamily.sans.join(', '),
 		codeFontFamily: fontFamily.mono.join(', '),
-		codeFontSize: '0.875rem',
-		codePaddingBlock: '1.25rem',
-		uiPaddingBlock: '0.5rem',
-		borderRadius: '0.75rem',
+		codeFontSize: fontSize.sm[0],
+		codePaddingBlock: spacing['5'],
+		uiPaddingBlock: spacing['2'],
+		borderRadius: borderRadius.xl,
 		borderWidth: '1px',
 		frames: {
 			terminalBackground: colors.slate['825'],
 			terminalTitlebarDotsForeground: colors.slate['600'],
 			terminalTitlebarDotsOpacity: '1',
-			terminalTitlebarBorderBottomColor: `${colors.slate['500']}4d`,
+			terminalTitlebarBorderBottomColor: opacify(colors.slate['500'], 0.3),
 			terminalTitlebarBackground: colors.slate['825'],
-			inlineButtonBorder: '#494f66',
-			inlineButtonForeground: '#94a3b8',
+			inlineButtonBorder: colors.slate['600'],
+			inlineButtonForeground: colors.slate['400'],
 			inlineButtonBackground: colors.slate['700'],
 			inlineButtonBackgroundHoverOrFocusOpacity: '.5',
 			tooltipSuccessBackground: colors.sky['500'],
@@ -40,22 +41,22 @@ const codeOptions = {
 			editorBackground: colors.slate['825'],
 			editorActiveTabForeground: colors.sky['300'],
 			editorActiveTabBackground: colors.slate['825'],
-			editorActiveTabBorderColor: `${colors.slate['500']}4d`,
-			editorTabBarBorderBottomColor: `${colors.slate['500']}4d`,
+			editorActiveTabBorderColor: opacify(colors.slate['500'], 0.3),
+			editorTabBarBorderBottomColor: opacify(colors.slate['500'], 0.3),
 			editorActiveTabIndicatorBottomColor: colors.sky['300'],
 			editorActiveTabIndicatorHeight: '1.5px',
 			editorTabBarBackground: colors.slate['850'],
 			editorTabBorderRadius: '0',
-			frameBoxShadowCssValue: '0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a'
+			frameBoxShadowCssValue: boxShadow.md
 		},
 		textMarkers: {
 			inlineMarkerBorderWidth: '0',
-			markBackground: `${colors.sky['300']}26`,
+			markBackground: opacify(colors.sky['300'], 0.15),
 			markBorderColor: colors.sky['400'],
-			insBackground: `${colors.teal['400']}26`,
+			insBackground: opacify(colors.teal['400'], 0.15),
 			insDiffIndicatorColor: colors.teal['400'],
 			insBorderColor: colors.teal['400'],
-			delBackground: `${colors.rose['400']}26`,
+			delBackground: opacify(colors.rose['400'], 0.15),
 			delBorderColor: colors.rose['400'],
 			delDiffIndicatorColor: colors.rose['400']
 		}
