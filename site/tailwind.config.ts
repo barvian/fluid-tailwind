@@ -145,17 +145,11 @@ export default {
 		fluid,
 		typography,
 		plugin(({ addVariant, matchUtilities, theme }) => {
-			addVariant('current', '&[aria-current="page"]')
 			addVariant('light', '@media (prefers-color-scheme: light)')
-			addVariant('group-current', ':merge(.group)[aria-current="page"] &')
-			addVariant('aria-hidden', '&[aria-hidden="true"]')
 			addVariant('js', '[data-js]:root &')
 			addVariant('no-js', ':root:not([data-js]) &')
 			addVariant('not-last-of-type', '&:not(:last-of-type)')
 			addVariant('not-first-of-type', '&:not(:first-of-type)')
-			addVariant('group-not-last-of-type', ':merge(.group):not(:last-of-type) &')
-			addVariant('group-not-first-of-type', ':merge(.group):not(:first-of-type) &')
-			addVariant('fonts-loaded', [':root:not([data-js]) &', '[data-fonts-loaded]:root &'])
 
 			matchUtilities(
 				{
