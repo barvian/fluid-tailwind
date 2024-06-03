@@ -7,12 +7,17 @@ import { readFileSync } from 'node:fs'
 import sectionize from 'remark-sectionize'
 import vercel from '@astrojs/vercel/static'
 import intersectingDirective from './directives/intersecting/register'
-import { transparentize } from 'color2k'
+import { parseToRgba, rgba } from 'color2k'
 import config from './tailwind.config'
 import resolveConfig from 'tailwindcss/resolveConfig'
 const {
 	theme: { colors, fontFamily, fontSize, boxShadow, borderRadius, spacing }
 } = resolveConfig(config)
+
+const adjustAlpha = (color: string, a: number) => {
+	const [r, g, b] = parseToRgba(color)
+	return rgba(r, g, b, a)
+}
 
 /** @type {import('astro-expressive-code').AstroExpressiveCodeOptions} */
 const codeOptions = {
@@ -30,7 +35,7 @@ const codeOptions = {
 			terminalBackground: colors.slate['825'],
 			terminalTitlebarDotsForeground: colors.slate['600'],
 			terminalTitlebarDotsOpacity: '1',
-			terminalTitlebarBorderBottomColor: transparentize(colors.slate['500'], 0.7),
+			terminalTitlebarBorderBottomColor: adjustAlpha(colors.slate['500'], 0.3),
 			terminalTitlebarBackground: colors.slate['825'],
 			inlineButtonBorder: colors.slate['600'],
 			inlineButtonForeground: colors.slate['400'],
@@ -41,8 +46,8 @@ const codeOptions = {
 			editorBackground: colors.slate['825'],
 			editorActiveTabForeground: colors.sky['300'],
 			editorActiveTabBackground: colors.slate['825'],
-			editorActiveTabBorderColor: transparentize(colors.slate['500'], 0.7),
-			editorTabBarBorderBottomColor: transparentize(colors.slate['500'], 0.7),
+			editorActiveTabBorderColor: adjustAlpha(colors.slate['500'], 0.3),
+			editorTabBarBorderBottomColor: adjustAlpha(colors.slate['500'], 0.3),
 			editorActiveTabIndicatorBottomColor: colors.sky['300'],
 			editorActiveTabIndicatorHeight: '1.5px',
 			editorTabBarBackground: colors.slate['850'],
@@ -51,12 +56,12 @@ const codeOptions = {
 		},
 		textMarkers: {
 			inlineMarkerBorderWidth: '0',
-			markBackground: transparentize(colors.sky['300'], 0.85),
+			markBackground: adjustAlpha(colors.sky['300'], 0.15),
 			markBorderColor: colors.sky['400'],
-			insBackground: transparentize(colors.teal['400'], 0.85),
+			insBackground: adjustAlpha(colors.teal['400'], 0.15),
 			insDiffIndicatorColor: colors.teal['400'],
 			insBorderColor: colors.teal['400'],
-			delBackground: transparentize(colors.rose['400'], 0.85),
+			delBackground: adjustAlpha(colors.rose['400'], 0.15),
 			delBorderColor: colors.rose['400'],
 			delDiffIndicatorColor: colors.rose['400']
 		}
