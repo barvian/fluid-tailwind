@@ -3,14 +3,19 @@
 		class="relative mt-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-400 text-white ring-2 ring-rose-400"
 		aria-label="Bad"
 	>
-		<svg width="6" height="6" class="overflow-visible" role="presentation">
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			fill="none"
+			viewBox="0 0 24 24"
+			stroke-width="2"
+			stroke="currentColor"
+			class="size-3"
+		>
 			<path
-				d="M0 0L6 6M6 0L0 6"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
 				stroke-linecap="round"
 				stroke-linejoin="round"
+				d="M6 18 18 6M6 6l12 12"
+				vector-effect="non-scaling-stroke"
 			/>
 		</svg>
 		<div

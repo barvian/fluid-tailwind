@@ -6,14 +6,19 @@
 	<div
 		class="relative mt-1 flex h-4 w-4 items-center justify-center rounded-full bg-cyan-500 text-white ring-2 ring-cyan-500 dark:bg-sky-500 dark:ring-sky-500"
 	>
-		<svg width="6" height="4.5" class="overflow-visible" role="presentation">
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			fill="none"
+			viewBox="0 0 24 24"
+			stroke-width="2"
+			stroke="currentColor"
+			class="size-2.5"
+		>
 			<path
-				d="M6 0L2 4.5L0 2.5"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
 				stroke-linecap="round"
 				stroke-linejoin="round"
+				d="m4.5 12.75 6 6 9-13.5"
+				vector-effect="non-scaling-stroke"
 			/>
 		</svg>
 		{#if line}
