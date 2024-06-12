@@ -78,7 +78,7 @@ when the viewport is between the start and end point
 
 ## Limitations
 
-Due to CSS restrictions, fluid expressions can only be computed if the start/end values and points are lengths literals (i.e. `1rem`) with the same unit.
+Due to CSS restrictions, fluid expressions can only be computed if the start/end values and points are length literals (i.e. `1rem`) with the same unit.
 
 <Tip.Bad>Trying to interpolate between two different units</Tip.Bad>
 ```html
@@ -119,7 +119,7 @@ Due to CSS restrictions, fluid expressions can only be computed if the start/end
 Tailwind v3's [default screens](https://tailwindcss.com/docs/screens) are in `px`, while its default
 [spacing](https://tailwindcss.com/docs/customizing-spacing#default-spacing-scale) and
 [font sizes](https://tailwindcss.com/docs/font-size) are in `rem`.
-This doesn't bode well with the CSS restrictions mentioned above, so `fluid-tailwind` provides `rem` equivalents
+This doesn't bode well with the CSS restrictions mentioned above, so `fluid-tailwind` provides `rem` replacements
 for the default screens:
 
 ```js title="tailwind.config.js" ins={6} ins=", screens"
@@ -136,7 +136,7 @@ export default {
 <Tip.Info>[Tailwind v4 will use `rem` screens by default](https://github.com/tailwindlabs/tailwindcss/pull/13469).</Tip.Info>
 
 Similarly, the line heights used for Tailwind's default font sizes `5xl`–`9xl` are unitless, which can't be fluidized.
-`fluid-tailwind` provides `rem` equivalents for those as well:
+`fluid-tailwind` provides `rem` replacements for those as well:
 
 ```js title="tailwind.config.js" ins={7} ins=", fontSize"
 import fluid, { extract, screens, fontSize } from 'fluid-tailwind'
