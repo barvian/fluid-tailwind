@@ -34,7 +34,7 @@
 	})
 </script>
 
-<div class="{cls} @container pointer-events-none h-full" role="presentation">
+<div class="{cls} @container pointer-events-none h-full" aria-hidden="true">
 	<div
 		bind:this={resizable}
 		class="@container pointer-events-auto relative h-full rounded-xl bg-white shadow-xl ring-1 ring-inset ring-white/10 dark:bg-slate-800"
