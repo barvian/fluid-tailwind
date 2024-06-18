@@ -1,7 +1,7 @@
 ---
 layout: ./_Layout.astro
 title: Fluid for Tailwind CSS - Build better responsive designs in less code.
-description: A clamp() plugin for Tailwind that works with every utility.
+description: Scale values between breakpoints without media queries.
 headline: Build better responsive designs in less code.
 ---
 import Split from './_Split.svelte'
@@ -78,7 +78,7 @@ when the viewport is between the start and end point
 
 ## Limitations
 
-Due to CSS restrictions, fluid `clamp()` functions can only be generated if the start/end values and points are length literals (i.e. `1rem`) with the same unit.
+Due to CSS restrictions, fluid utilities only work if the start/end values and points are length literals (i.e. `1rem`) with the same unit.
 
 <Tip.Bad>Values with different units</Tip.Bad>
 ```html
@@ -153,8 +153,8 @@ export default {
 
 ### Troubleshooting
 
-Tailwind doesn't currently provide any error reporting tools for plugins, so in case a fluid utility
-can't generate a `clamp()`, it will output an empty rule with a comment in the selector:
+Tailwind doesn't currently provide any error reporting tools for plugins, so in case a fluid utility fails,
+it will output an empty rule with a comment in the selector:
 
 ```css
 .\~mt-\[10px\]\/\[1\.5rem\] /* error - Start `10px` and end `1.5rem` units don't match */ {}
