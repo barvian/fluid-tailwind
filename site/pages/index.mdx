@@ -80,12 +80,12 @@ when the viewport is between the start and end point
 
 Due to CSS restrictions, fluid `clamp()` functions can only be generated if the start/end values and points are length literals (i.e. `1rem`) with the same unit.
 
-<Tip.Bad>Trying to interpolate between two different units</Tip.Bad>
+<Tip.Bad>Values with different units</Tip.Bad>
 ```html
 <h1 class="~p-[1rem]/[18px]">
 ```
 
-<Tip.Bad>Trying to set `font-size` in `rem` when the screens are in `px`</Tip.Bad>
+<Tip.Bad>Values with different units than points</Tip.Bad>
 <Split rows="grid-rows-[auto]">
   ```html
   <h1 class="~text-[1rem]/[2rem]">
@@ -104,12 +104,12 @@ Due to CSS restrictions, fluid `clamp()` functions can only be generated if the 
   ```
 </Split>
 
-<Tip.Bad>Using non-literal values like `calc()`</Tip.Bad>
+<Tip.Bad>Non-literal values like `calc()`</Tip.Bad>
 ```html
 <h1 class="~text-base/[calc(1.5rem-2px)]">
 ```
 
-<Tip.Bad>Trying to interpolate between non-lengths like colors</Tip.Bad>
+<Tip.Bad>Non-lengths like colors</Tip.Bad>
 ```html
 <h1 class="~text-white/red-500">
 ```
