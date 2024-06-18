@@ -1,6 +1,6 @@
 [![Fluid for Tailwind CSS](https://fluid.tw/preview.webp)](https://fluid.tw)
 
-A fluid `clamp()` plugin for Tailwind that works with every utility.
+A [`clamp()`](https://developer.mozilla.org/en-US/docs/Web/CSS/clamp) plugin for Tailwind that works with every utility.
 
 ---
 

@@ -1,7 +1,7 @@
 ---
 layout: ./_Layout.astro
 title: Fluid for Tailwind CSS - Build better responsive designs in less code.
-description: A fluid clamp() plugin for Tailwind that works with every utility.
+description: A clamp() plugin for Tailwind that works with every utility.
 headline: Build better responsive designs in less code.
 ---
 import Split from './_Split.svelte'
@@ -78,7 +78,7 @@ when the viewport is between the start and end point
 
 ## Limitations
 
-Due to CSS restrictions, fluid expressions can only be computed if the start/end values and points are length literals (i.e. `1rem`) with the same unit.
+Due to CSS restrictions, fluid `clamp()` functions can only be generated if the start/end values and points are length literals (i.e. `1rem`) with the same unit.
 
 <Tip.Bad>Trying to interpolate between two different units</Tip.Bad>
 ```html
