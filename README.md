@@ -1,6 +1,6 @@
 # Fluid for Tailwind CSS
 
-https://github.com/barvian/fluid-tailwind/assets/868352/bbe73e57-83ee-41aa-8b51-58ad0c97363d
+https://github.com/barvian/fluid-tailwind/assets/868352/521f0537-85cc-46b0-8654-ca704abbd11c
 
 Scale values between breakpoints without media queries.
 
