@@ -78,14 +78,14 @@ when the viewport is between the smallest and largest breakpoints, by default
 
 ## Limitations
 
-Due to CSS restrictions, fluid utilities only work if the start/end values and points are length literals (i.e. `1rem`) with the same unit.
+Due to CSS restrictions, fluid utilities only work if the start/end values and breakpoints are length literals (i.e. `1rem`) with the same unit.
 
 <Tip.Bad>Values with different units</Tip.Bad>
 ```html
 <h1 class="~p-[1rem]/[18px]">
 ```
 
-<Tip.Bad>Values with different units than points</Tip.Bad>
+<Tip.Bad>Values with different units than breakpoints</Tip.Bad>
 <Split rows="grid-rows-[auto]">
   ```html
   <h1 class="~text-[1rem]/[2rem]">
