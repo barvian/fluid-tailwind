@@ -72,9 +72,9 @@ import poster from './_inspector.png'
 
 Here's a quick overview:
 * The `~` modifier makes a utility fluid
-* Fluid utilities interpolate between their start and end value (separated by `/`)
-when the viewport is between the start and end point
-* The start and end points default to your smallest and largest screen, but [they can be customized](#custom-default-screens) or [overridden per-utility](#customize-screens-per-utility)
+* Fluid utilities scale between their start and end values (separated by `/`)
+when the viewport is between the smallest and largest breakpoints, by default
+* The default start/end breakpoints [can be customized](#custom-default-screens) or [overridden per-utility](#customize-screens-per-utility)
 
 ## Limitations
 
@@ -116,11 +116,11 @@ Due to CSS restrictions, fluid utilities only work if the start/end values and p
 
 ### Tailwind's default theme
 
-Tailwind v3's [default screens](https://tailwindcss.com/docs/screens) are in `px`, while its default
+Tailwind v3's [default breakpoints](https://tailwindcss.com/docs/screens) are in `px`, while its default
 [spacing](https://tailwindcss.com/docs/customizing-spacing#default-spacing-scale) and
 [font sizes](https://tailwindcss.com/docs/font-size) are in `rem`.
 This doesn't bode well with the CSS restrictions mentioned above, so `fluid-tailwind` provides `rem` replacements
-for the default screens:
+for the default breakpoints:
 
 ```js title="tailwind.config.js" ins={6} ins=", screens"
 import fluid, { extract, screens } from 'fluid-tailwind'
@@ -133,7 +133,7 @@ export default {
   // ...
 }
 ```
-<Tip.Info>[Tailwind v4 will use `rem` screens by default](https://github.com/tailwindlabs/tailwindcss/pull/13469).</Tip.Info>
+<Tip.Info>[Tailwind v4 will use `rem` breakpoints by default](https://github.com/tailwindlabs/tailwindcss/pull/13469).</Tip.Info>
 
 Similarly, the line heights used for Tailwind's default font sizes `5xl`–`9xl` are unitless, which can't be fluidized.
 `fluid-tailwind` provides `rem` replacements for those as well:
@@ -172,12 +172,12 @@ installed and hover over the class. Otherwise, you can see it if you click the l
 
 ## Configuration
 
-### Custom default screens
+### Custom default breakpoints
 
-The default start and end screens can be set with a tuple `[start, end]`, where each
-value is a simple screen width.
+The default start and end breakopints can be set with a tuple `[start, end]`, where each
+value is a length literal.
 Either value can be omitted, in which case the plugin will use your smallest and largest
-screen, respectively.
+breakpoint, respectively.
 
 ```js title="tailwind.config.js" ins={5-8}
 // ...
@@ -195,9 +195,9 @@ export default {
 
 ## Advanced
 
-### Customize screens per-utility
+### Customize breakpoints per-utility
 
-You can change the start/end screens for an individual fluid utility with
+You can customize the start/end breakpoints for a fluid utility with
 the included `~` variant. For example:
 
 <Resizer client:load height="h-32">
@@ -207,29 +207,29 @@ the included `~` variant. For example:
 <h1 class="~md/lg:~text-base/4xl">Quick increase</h1>
 ```
 
-You can omit either start or end screen to use your [global defaults](#custom-default-screens):
+You can omit either start or end breakpoint to use your [global defaults](#custom-default-screens):
 
-<Tip.Good>Set start screen to `md`, end screen as default</Tip.Good>
+<Tip.Good>Set start breakpoint to `md` (end breakpoint defaults to largest)</Tip.Good>
 ```html mark="~md:"
 <div class="~md:~text-base/4xl">
 ```
 
-<Tip.Good>Set end screen to `lg`, start screen as default</Tip.Good>
+<Tip.Good>Set end breakpoint to `lg` (start breakpoint defaults to smallest)</Tip.Good>
 ```html mark="~/lg:"
 <div class="~/lg:~text-base/4xl">
 ```
 
-#### Arbitrary start screens
+#### Arbitrary start breakpoint
 
-If you want to set an arbitrary start screen with the `~` variant, you have to use
-`~min-[]` (just as you'd have to use `min-[]` to set an [arbitrary screen breakpoint](https://tailwindcss.com/docs/responsive-design#arbitrary-values)):
+If you want to set an arbitrary start breakpoint with the `~` variant, you have to use
+`~min-[]` (just as you'd have to use `min-[]` to set an [arbitrary breakpoint](https://tailwindcss.com/docs/responsive-design#arbitrary-values)):
 
-<Tip.Bad>Trying to use `~[]:` to set an arbitrary start screen</Tip.Bad>
+<Tip.Bad>Trying to use `~[]:` to set an arbitrary start breakpoint</Tip.Bad>
 ```html del="~[20rem]"
 <div class="~[20rem]/lg:~text-base/4xl">
 ```
 
-<Tip.Good>Using `~min-[]` to set an arbitrary start screen</Tip.Good>
+<Tip.Good>Using `~min-[]` to set an arbitrary start breakpoint</Tip.Good>
 ```html mark="~min-[20rem]"
 <div class="~min-[20rem]/lg:~text-base/4xl">
 ```
@@ -246,7 +246,7 @@ To negate fluid utilities, the dash comes after the fluid `~` modifier:
 ### Container queries
 
 If you have the [official container query](https://github.com/tailwindlabs/tailwindcss-container-queries) plugin
-installed, you can make the start/end points relative to the nearest `@container` rather than the viewport by using the `~@` variant:
+installed, you can make fluid utilities scale between the nearest `@container` widths rather than screen breakpoints by using the `~@` variant:
 
 ```html mark="~@md/lg:"
 <h1 class="~@md/lg:~text-base/4xl">Relative to container</h1>
@@ -262,7 +262,7 @@ Just like the `~` variant, both start and end containers are optional and will u
 
 #### Custom default containers
 
-The default containers can be set in the same way as screens.
+The default containers can be set in the same way as breakpoints.
 Either value can be omitted, in which case the plugin will use your smallest and
 largest container, respectively.
 
@@ -297,7 +297,7 @@ export default {
 }
 ```
 
-### Combining with breakpoints
+### Combining with media queries
 
 To really get crazy, you can combine fluid values with
 container or media queries, as such:
@@ -310,10 +310,8 @@ container or media queries, as such:
 ```
 
 Here's how this works:
-1. By default, we interpolate our font-size between `base` and `4xl` until the viewport
-is our `md` screen
-1. When we get to our `lg` screen, we interpolate between the opposite `4xl` and `base`, starting
-when the viewport is our `lg` screen
+1. We scale our font-size between `base` and `4xl` between our smallest and `md` breakpoints
+1. We scale in the opposite direction between our `lg` and largest breakpoints
 
 ### Using with a custom prefix or separator
 
