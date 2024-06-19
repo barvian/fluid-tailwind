@@ -174,8 +174,7 @@ installed and hover over the class. Otherwise, you can see it if you click the l
 
 ### Custom default breakpoints
 
-The default start/end breakpoints can be set with a tuple `[start, end]`, where each
-one is a length literal.
+The default start/end breakpoints can be set with a tuple of length literals `[start, end]`.
 Either can be omitted, in which case the plugin will use your smallest and largest
 breakpoint, respectively.
 
@@ -255,7 +254,7 @@ installed, you can make fluid utilities scale between the nearest `@container` w
 
 Just like the `~` variant, both start and end containers are optional and will use your [defaults](#custom-default-containers) if unset.
 
-<Tip.Good>Set end container to `lg`, start container as default</Tip.Good>
+<Tip.Good>Set end container to `lg`, start container to default</Tip.Good>
 ```html mark="~@/lg:"
 <div class="~@/lg:~text-base/4xl">
 ```
