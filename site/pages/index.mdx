@@ -74,7 +74,7 @@ Here's a quick overview:
 * The `~` modifier makes a utility fluid
 * Fluid utilities scale between their start and end values (separated by `/`)
 when the viewport is between the smallest and largest breakpoints, by default
-* The default start/end breakpoints [can be customized](#custom-default-screens) or [overridden per-utility](#customize-screens-per-utility)
+* The default start/end breakpoints [can be customized](#custom-default-breakpoints) or [overridden per-utility](#customize-breakpoints-per-utility)
 
 ## Limitations
 
@@ -174,9 +174,9 @@ installed and hover over the class. Otherwise, you can see it if you click the l
 
 ### Custom default breakpoints
 
-The default start and end breakopints can be set with a tuple `[start, end]`, where each
-value is a length literal.
-Either value can be omitted, in which case the plugin will use your smallest and largest
+The default start/end breakpoints can be set with a tuple `[start, end]`, where each
+one is a length literal.
+Either one can be omitted, in which case the plugin will use your smallest and largest
 breakpoint, respectively.
 
 ```js title="tailwind.config.js" ins={5-8}
@@ -207,14 +207,14 @@ the included `~` variant. For example:
 <h1 class="~md/lg:~text-base/4xl">Quick increase</h1>
 ```
 
-You can omit either start or end breakpoint to use your [global defaults](#custom-default-screens):
+You can omit either start or end breakpoint to use your [global defaults](#custom-default-breakpoints):
 
-<Tip.Good>Set start breakpoint to `md` (end breakpoint defaults to largest)</Tip.Good>
+<Tip.Good>Set start breakpoint to `md`, end breakpoint to default</Tip.Good>
 ```html mark="~md:"
 <div class="~md:~text-base/4xl">
 ```
 
-<Tip.Good>Set end breakpoint to `lg` (start breakpoint defaults to smallest)</Tip.Good>
+<Tip.Good>Set end breakpoint to `lg`, start breakpoint to default</Tip.Good>
 ```html mark="~/lg:"
 <div class="~/lg:~text-base/4xl">
 ```
@@ -251,7 +251,7 @@ installed, you can make fluid utilities scale between the nearest `@container` w
 ```html mark="~@md/lg:"
 <h1 class="~@md/lg:~text-base/4xl">Relative to container</h1>
 ```
-<Tip.Info>This may look confusing if you use [named containers](https://github.com/tailwindlabs/tailwindcss-container-queries#named-containers). Sorry about that; there's only so many ways to get values into Tailwind. In general, when you see the fluid `~` modifier, you know the `/` denotes a start/end pair.</Tip.Info>
+<Tip.Info>This may look confusing if you use [named containers](https://github.com/tailwindlabs/tailwindcss-container-queries#named-containers). Sorry about that; there's only so many ways to pass data into Tailwind. In general, when you see the fluid `~` modifier, you know the `/` denotes a start/end pair.</Tip.Info>
 
 Just like the `~` variant, both start and end containers are optional and will use your [global defaults](#custom-default-containers) if unset.
 
@@ -263,7 +263,7 @@ Just like the `~` variant, both start and end containers are optional and will u
 #### Custom default containers
 
 The default containers can be set in the same way as breakpoints.
-Either value can be omitted, in which case the plugin will use your smallest and
+Either one can be omitted, in which case the plugin will use your smallest and
 largest container, respectively.
 
 ```js title="tailwind.config.js" ins={7}
@@ -299,7 +299,7 @@ export default {
 
 ### Combining with media queries
 
-To really get crazy, you can combine fluid values with
+To really get crazy, you can combine fluid utilities with
 container or media queries, as such:
 
 <Resizer client:load height="h-32" tooNarrowClass="xl:hidden">
