@@ -5,6 +5,7 @@ import type {
 	ExtractorFn,
 	KeyValuePair,
 	PluginAPI,
+	PluginCreator,
 	ResolvableTo,
 	ThemeConfig
 } from 'tailwindcss/types/config'
@@ -300,7 +301,7 @@ const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
 	// Handle the rewrites and potential errors:
 	const rewrite = (
 		container: Root,
-		[startBP, endBP]: [Length | RawValue, Length | RawValue],
+		[startBP, endBP]: [(Length | RawValue)?, (Length | RawValue)?],
 		atContainer?: string | true
 	) => {
 		try {
@@ -399,8 +400,7 @@ const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
 	)
 }
 // Make sure it's named fluid, b/c it shows up in IntelliSense:
-const fluid = plugin.withOptions((options: PluginOptions = {}) =>
-	// Organized this way to attach the symbol correctly, and also assuage Prettier:
+const fluid = plugin.withOptions<PluginOptions>((options) => 
 	Object.assign((api: PluginAPI) => fluidPlugin(options, api), { [IS_FLUID_PLUGIN]: true })
 )
 export default fluid

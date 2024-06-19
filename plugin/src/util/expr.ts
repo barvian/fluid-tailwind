@@ -46,7 +46,7 @@ export const generate = (
 	}: {
 		startBP?: RawValue | Length
 		endBP?: RawValue | Length
-		atContainer?: string | true
+		atContainer?: string | true | undefined
 		type?: boolean
 		final?: boolean
 		negate?: boolean
