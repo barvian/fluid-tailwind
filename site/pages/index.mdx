@@ -153,8 +153,8 @@ export default {
 
 ### Troubleshooting
 
-Tailwind doesn't currently provide any error reporting tools for plugins, so in case a fluid utility fails,
-it will output an empty rule with a comment in the selector:
+Tailwind doesn't currently provide any error reporting tools for plugins, so if a fluid utility fails,
+it will output an empty rule with a comment containing the reason:
 
 ```css
 .\~mt-\[10px\]\/\[1\.5rem\] /* error - Start `10px` and end `1.5rem` units don't match */ {}
