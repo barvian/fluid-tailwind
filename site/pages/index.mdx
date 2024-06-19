@@ -1,7 +1,7 @@
 ---
 layout: ./_Layout.astro
 title: Fluid for Tailwind CSS - Build better responsive designs in less code.
-description: Scale values between breakpoints without media queries.
+description: Scale sizes between breakpoints without media queries.
 headline: Build better responsive designs in less code.
 ---
 import Split from './_Split.svelte'
@@ -72,13 +72,13 @@ import poster from './_inspector.png'
 
 Here's a quick overview:
 * The `~` modifier makes a utility fluid
-* Fluid utilities scale between their start and end values (separated by `/`)
+* Fluid utilities scale between their start/end values
 when the viewport is between the smallest and largest breakpoints, by default
 * The default start/end breakpoints [can be customized](#custom-default-breakpoints) or [overridden per-utility](#customize-breakpoints-per-utility)
 
 ## Limitations
 
-Due to CSS restrictions, fluid utilities only work if the start/end values and breakpoints are length literals (i.e. `1rem`) with the same unit.
+Due to CSS restrictions, fluid utilities require the start/end values and breakpoints to be length literals (i.e. `1rem`) with the same unit.
 
 <Tip.Bad>Values with different units</Tip.Bad>
 ```html
@@ -176,7 +176,7 @@ installed and hover over the class. Otherwise, you can see it if you click the l
 
 The default start/end breakpoints can be set with a tuple `[start, end]`, where each
 one is a length literal.
-Either one can be omitted, in which case the plugin will use your smallest and largest
+Either can be omitted, in which case the plugin will use your smallest and largest
 breakpoint, respectively.
 
 ```js title="tailwind.config.js" ins={5-8}
@@ -207,7 +207,7 @@ the included `~` variant. For example:
 <h1 class="~md/lg:~text-base/4xl">Quick increase</h1>
 ```
 
-You can omit either start or end breakpoint to use your [global defaults](#custom-default-breakpoints):
+You can omit either start or end breakpoint to use your [defaults](#custom-default-breakpoints):
 
 <Tip.Good>Set start breakpoint to `md`, end breakpoint to default</Tip.Good>
 ```html mark="~md:"
@@ -253,7 +253,7 @@ installed, you can make fluid utilities scale between the nearest `@container` w
 ```
 <Tip.Info>This may look confusing if you use [named containers](https://github.com/tailwindlabs/tailwindcss-container-queries#named-containers). Sorry about that; there's only so many ways to pass data into Tailwind. In general, when you see the fluid `~` modifier, you know the `/` denotes a start/end pair.</Tip.Info>
 
-Just like the `~` variant, both start and end containers are optional and will use your [global defaults](#custom-default-containers) if unset.
+Just like the `~` variant, both start and end containers are optional and will use your [defaults](#custom-default-containers) if unset.
 
 <Tip.Good>Set end container to `lg`, start container as default</Tip.Good>
 ```html mark="~@/lg:"
@@ -263,7 +263,7 @@ Just like the `~` variant, both start and end containers are optional and will u
 #### Custom default containers
 
 The default containers can be set in the same way as breakpoints.
-Either one can be omitted, in which case the plugin will use your smallest and
+Either can be omitted, in which case the plugin will use your smallest and
 largest container, respectively.
 
 ```js title="tailwind.config.js" ins={7}
