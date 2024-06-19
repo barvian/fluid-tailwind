@@ -1,6 +1,6 @@
 [![Fluid for Tailwind CSS](https://fluid.tw/preview.webp)](https://fluid.tw)
 
-Scale sizes between breakpoints without media queries.
+Scale values between breakpoints without media queries.
 
 ---
 

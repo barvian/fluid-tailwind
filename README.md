@@ -2,7 +2,7 @@
 
 https://github.com/barvian/fluid-tailwind/assets/868352/bbe73e57-83ee-41aa-8b51-58ad0c97363d
 
-Scale sizes between breakpoints without media queries.
+Scale values between breakpoints without media queries.
 
 ---
 
