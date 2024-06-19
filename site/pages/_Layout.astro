@@ -16,6 +16,7 @@ import { getImage } from 'astro:assets'
 import Stargazers from '/components/Stargazers.svelte'
 import Link from '/components/Link.astro'
 import External from '/components/icons/External.astro'
+import { Content as Lead } from './_lead.mdx'
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
@@ -130,7 +131,7 @@ const path = relative(root, file)
 			<div
 				class="prose prose-lg prose-slate dark:prose-invert mt-6 max-w-3xl text-balance text-center dark:text-slate-300"
 			>
-				{frontmatter.description}
+				<Lead />
 			</div>
 			<div class="~mt-6/10 flex flex-wrap items-center justify-center gap-6">
 				<a
