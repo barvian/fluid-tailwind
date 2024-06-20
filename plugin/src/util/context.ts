@@ -14,7 +14,7 @@ export type PluginOptions = {
 	checkSC144?: boolean
 }
 
-type Breakpoints = [string] | [undefined, string] | [string, string]
+type Breakpoints = [string?, string?]
 export type ResolvedFluidThemeConfig = Partial<{
 	defaultScreens: Breakpoints
 	defaultContainers: Breakpoints
