@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"target": "es2022",
+		"allowJs": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"verbatimModuleSyntax": true,
+		"strict": true,
+		"exactOptionalPropertyTypes": true,
+		"noUncheckedIndexedAccess": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitOverride": true,
+		"declaration": true,
+		"module": "ES2022",
+		"moduleResolution": "Bundler",
+		"stripInternal": true,
+		"outDir": "dist",
+		"lib": ["es2022", "DOM", "DOM.Iterable"]
+	},
+	"include": ["src/**/*.ts", "jest/**/*.ts", "tests/**/*.ts"]
+}

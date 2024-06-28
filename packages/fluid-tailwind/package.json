@@ -8,8 +8,8 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/barvian/fluid-tailwind.git",
-		"directory": "plugin"
+		"url": "https://github.com/barvian/fluid-tailwind",
+		"directory": "packages/fluid-tailwind"
 	},
 	"bugs": {
 		"url": "https://github.com/barvian/fluid-tailwind/issues"

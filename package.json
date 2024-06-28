@@ -5,7 +5,8 @@
 		"prettier": "^3.2.5",
 		"prettier-plugin-astro": "^0.13.0",
 		"prettier-plugin-svelte": "^3.1.2",
-		"prettier-plugin-tailwindcss": "^0.5.14"
+		"prettier-plugin-tailwindcss": "^0.5.14",
+		"typescript": ">=5.5"
 	},
 	"scripts": {
 		"build": "pnpm -r build",
