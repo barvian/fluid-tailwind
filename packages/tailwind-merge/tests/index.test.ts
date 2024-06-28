@@ -11,7 +11,7 @@ it('errors if the prefix is set', () => {
 })
 
 it(`doesn't add static utilities`, () => {
-	expect(twMerge('self-auto ~self-auto/baseline')).toBe('self-auto ~self-auto/baseline')
+	expect(twMerge('relative ~relative')).toBe('relative ~relative')
 })
 
 it(`handles custom class groups`, () => {
