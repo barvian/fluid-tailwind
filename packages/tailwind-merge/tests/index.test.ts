@@ -14,6 +14,10 @@ it(`doesn't add static utilities`, () => {
 	expect(twMerge('relative ~relative')).toBe('relative ~relative')
 })
 
+it('validates fluid utilities correctly', () => {
+	expect(twMerge('m-[2px] ~m-[2px]')).toBe('m-[2px] ~m-[2px]')
+})
+
 it(`handles custom class groups`, () => {
 	const twMerge = extendTailwindMerge<'test'>(
 		{

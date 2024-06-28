@@ -1,5 +1,10 @@
 import { mergeConfigs, type Config } from 'tailwind-merge'
 
+const fluidValidator = (value: string) => {
+	const parts = value.split('/')
+	return parts.length >= 2
+}
+
 export function withFluid(config: Config<string, string>) {
 	if (config.prefix)
 		throw new Error(`@fluid-tailwind/tailwind-merge doesn't work with custom prefixes`)
@@ -13,8 +18,8 @@ export function withFluid(config: Config<string, string>) {
 					.map((obj) =>
 						Object.fromEntries(
 							Object.entries(obj).flatMap(([name, defs]) => [
-								[`~${name}`, defs],
-								[`~-${name}`, defs]
+								[`~${name}`, [fluidValidator]],
+								[`~-${name}`, [fluidValidator]]
 							])
 						)
 					)
