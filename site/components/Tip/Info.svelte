@@ -9,7 +9,7 @@
 		viewBox="0 0 24 24"
 		role="presentation"
 		fill="currentColor"
-		class="size-5 text-slate-400 dark:text-slate-600"
+		class="size-5 shrink-0 text-slate-400 dark:text-slate-600"
 	>
 		<path
 			fill-rule="evenodd"
