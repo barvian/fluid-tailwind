@@ -128,6 +128,9 @@ export default {
 						},
 						'.expressive-code+.InfoTip': {
 							'@apply -mt-3': {}
+						},
+						'.Steps': {
+							'@apply my-6': {}
 						}
 					}
 				},

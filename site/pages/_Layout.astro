@@ -11,7 +11,7 @@ import { searchForWorkspaceRoot } from 'vite'
 import { relative } from 'node:path'
 import logo from '/assets/logo.svg'
 import preview from '/public/preview.png'
-import pkg from '/../plugin/package.json'
+import pkg from '/../packages/fluid-tailwind/package.json'
 import { getImage } from 'astro:assets'
 import Stargazers from '/components/Stargazers.svelte'
 import Link from '/components/Link.astro'
@@ -20,7 +20,7 @@ import { Content as Lead } from './_lead.mdx'
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
-const repo = pkg.repository.url.replace(/^git\+/, '').replace(/\.git$/, '')
+const repo = pkg.repository.url
 
 const previewOptimized = await getImage({ src: preview, format: 'png' })
 const image = import.meta.env.URL
