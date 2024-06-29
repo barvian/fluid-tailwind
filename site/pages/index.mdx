@@ -17,8 +17,8 @@ import poster from './_inspector.png'
 ## Features
 
 * Works with **every utility** (including plugins)
-* Full **Intellisense** support
-* First-class [`tailwind-merge` support](#tailwind-merge)
+* Full **IntelliSense** support
+* First-class [tailwind-merge support](#tailwind-merge)
 * Ensures fluid type meets [accessibility requirements](#fluid-type-accessibility-errors)
 * **Flexible** enough to handle advanced use cases
 
@@ -350,38 +350,22 @@ you'll need to pass them in to the extractor as well:
 
 ## Integrations
 
-### [`tailwind-merge`](https://github.com/dcastil/tailwind-merge)
+### tailwind-merge
 
-`fluid-tailwind` officially supports `tailwind-merge` via a plugin.
+`fluid-tailwind` officially supports [tailwind-merge](https://github.com/dcastil/tailwind-merge) via a plugin:
 
-#### Use `fluid-tailwind` with `tailwind-merge`
+```sh frame="none"
+npm install --save @fluid-tailwind/tailwind-merge
+```
 
-<Steps.Root>
-  <Steps.Item>
-    <>
-      ### Install the package
+For best results, include it after any other tailwind-merge plugins:
 
-      Install `@fluid-tailwind/tailwind-merge` via npm.
-    </>
-    <Fragment slot="code">
-    ```sh
-    npm install -D @fluid-tailwind/tailwind-merge
-    ```
-    </Fragment>
-  </Steps.Item>
-  <Steps.Item>
-    <>
-      ### Extend `tailwind-merge`
+```js
+import { extendTailwindMerge } from 'tailwind-merge'
+import { withFluid } from '@fluid-tailwind/tailwind-merge'
 
-      For more information, see the [`tailwind-merge` plugin guide](https://github.com/dcastil/tailwind-merge/blob/v2.3.0/docs/configuration.md#using-tailwind-merge-plugins).
-    </>
-    <Fragment slot="code">
-      ```js
-      import { extendTailwindMerge } from 'tailwind-merge'
-      import { withFluid } from '@fluid-tailwind/tailwind-merge'
+export const twMerge = extendTailwindMerge(/* ... */, withFluid)
+```
 
-      export const twMerge = extendTailwindMerge(withFluid)
-      ```
-    </Fragment>
-  </Steps.Item>
-</Steps.Root>
+{/* <Tip.Warn>tailwind-merge currently doesn't merge the fluid variants (i.e. `~sm/lg:`, `~@sm/lg:`) correctly.</Tip.Warn> */}
+

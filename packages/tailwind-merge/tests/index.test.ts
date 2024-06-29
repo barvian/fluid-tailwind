@@ -75,6 +75,6 @@ it('works with variants', () => {
 		'~text-2xl/3xl sm:~sm:~text-3xl/4xl'
 	)
 	expect(twMerge('text-base sm:text-lg ~text-2xl/3xl sm:~sm:~text-3xl/4xl')).toBe(
-		'sm:text-lg ~text-2xl/3xl sm:~sm:~text-3xl/4xl' // TODO: ideally this should be '~text-2xl/3xl sm:~sm:~text-3xl/4xl'
+		'~text-2xl/3xl sm:~sm:~text-3xl/4xl'
 	)
 })

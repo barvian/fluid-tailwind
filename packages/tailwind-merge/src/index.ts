@@ -23,7 +23,7 @@ export function withFluid(config: Config<string, string>) {
 	const buildFluidValidator =
 		(defs: Exclude<ClassDefinition, ClassObject | ThemeGetter>[]): ClassValidator =>
 		(val) => {
-			// TODO: this won't handle values with `/` in them
+			// TODO: this won't handle values with `/` in them, but TW chokes on those anyway
 			const parts = val.split('/')
 			return (
 				parts.length === 2 &&
@@ -40,8 +40,8 @@ export function withFluid(config: Config<string, string>) {
 		toplevel = false
 	): [fluidValidator: ClassValidator, ...ClassObject[]] => {
 		// Separate class objects from other defs:
-		const nonObjDefs: Exclude<ClassDefinition, ThemeGetter | ClassObject>[] = []
 		const objDefs: ClassObject[] = []
+		const nonObjDefs: Exclude<ClassDefinition, ThemeGetter | ClassObject>[] = []
 
 		// Resolve theme getters first
 		resolveThemeGetters(group).forEach((def) => {
@@ -73,7 +73,8 @@ export function withFluid(config: Config<string, string>) {
 
 	return mergeConfigs(config, {
 		extend: {
-			classGroups
+			classGroups,
+			ignoredVariants: [(variant) => variant.startsWith('~')]
 		}
 	})
 }

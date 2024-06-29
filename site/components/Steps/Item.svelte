@@ -6,7 +6,7 @@
 	style:counter-increment="step"
 >
 	<div
-		class="prose prose-sm prose-slate dark:prose-invert prose-h3:text-sm/[inherit] prose-h3:mb-2 prose-h3:font-semibold col-span-2 mb-6 mt-0 lg:mb-0"
+		class="prose prose-sm prose-slate dark:prose-invert prose-h3:text-sm/[inherit] prose-h3:mb-2 prose-h3:font-semibold prose-h4:text-sm/[inherit] prose-h4:mb-2 prose-h4:font-semibold col-span-2 mb-6 mt-0 lg:mb-0"
 	>
 		<slot />
 	</div>
