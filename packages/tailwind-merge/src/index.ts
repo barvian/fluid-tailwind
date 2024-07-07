@@ -73,8 +73,15 @@ export function withFluid(config: Config<string, string>) {
 
 	return mergeConfigs(config, {
 		extend: {
-			classGroups,
-			ignoredVariants: [(variant) => variant.startsWith('~')]
+			classGroups
+		},
+		experimentalParseClassName({ className, parseClassName }) {
+			const parsed = parseClassName(className)
+
+			return {
+				...parsed,
+				modifiers: parsed.modifiers.filter((modifier) => !modifier.startsWith('~'))
+			}
 		}
 	})
 }

@@ -30,7 +30,7 @@
 		"prepublishOnly": "pnpm run build && pnpm run test"
 	},
 	"peerDependencies": {
-		"tailwind-merge": "^2.3.0"
+		"tailwind-merge": "~2.4.0"
 	},
 	"devDependencies": {
 		"bun": "^1.1.17",
