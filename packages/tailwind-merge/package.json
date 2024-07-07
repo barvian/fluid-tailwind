@@ -33,6 +33,7 @@
 		"tailwind-merge": "~2.4.0"
 	},
 	"devDependencies": {
+		"tailwind-merge": "~2.4.0",
 		"bun": "^1.1.17",
 		"@types/bun": "^1.1.3",
 		"tsup": "^8.1.0",

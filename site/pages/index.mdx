@@ -358,12 +358,11 @@ you'll need to pass them in to the extractor as well:
 npm install --save @fluid-tailwind/tailwind-merge
 ```
 
-For best results, include it after any other tailwind-merge plugins:
+For best results, include it after any other [tailwind-merge plugins](https://github.com/dcastil/tailwind-merge/blob/v2.3.0/docs/configuration.md#using-tailwind-merge-plugins):
 
-```js
+```js mark=", withFluid"
 import { extendTailwindMerge } from 'tailwind-merge'
 import { withFluid } from '@fluid-tailwind/tailwind-merge'
 
 export const twMerge = extendTailwindMerge(/* ... */, withFluid)
 ```
-
