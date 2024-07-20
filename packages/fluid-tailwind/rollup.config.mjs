@@ -46,8 +46,11 @@ export default defineConfig({
 			}
 		},
 		nodeExternals({
-			builtinsPrefix: 'strip', // for skypack, which adds them on top
-			exclude: 'tailwindcss-priv' // which is to say, don't mark it as external
+			builtinsPrefix: 'strip', // for Skypack, which adds them on top
+			exclude: [
+				'map-obj', 'filter-obj', // https://github.com/barvian/fluid-tailwind/issues/39
+				'tailwindcss-priv' // for Skypack, which can't handle importing tailwindcss
+			] 
 		}),
 		typescript({
 			noEmitOnError: true,
