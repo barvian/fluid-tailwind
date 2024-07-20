@@ -85,8 +85,8 @@ importers:
         specifier: ^3.2.0
         version: 3.4.3
       tailwindcss-priv:
-        specifier: npm:tailwindcss@3.4.3
-        version: tailwindcss@3.4.3
+        specifier: npm:tailwindcss@3.4.6
+        version: tailwindcss@3.4.6
       tslib:
         specifier: ^2.6.2
         version: 2.6.2
@@ -95,10 +95,6 @@ importers:
         version: 5.4.5
 
   packages/tailwind-merge:
-    dependencies:
-      tailwind-merge:
-        specifier: ~2.4.0
-        version: 2.4.0
     devDependencies:
       '@types/bun':
         specifier: ^1.1.3
@@ -106,6 +102,9 @@ importers:
       bun:
         specifier: ^1.1.17
         version: 1.1.17
+      tailwind-merge:
+        specifier: ~2.4.0
+        version: 2.4.0
       tsup:
         specifier: ^8.1.0
         version: 8.1.0(postcss@8.4.35)(typescript@5.5.2)
@@ -3135,6 +3134,11 @@ packages:
 
   tailwindcss@3.4.3:
     resolution: {integrity: sha512-U7sxQk/n397Bmx4JHbJx/iSOOv5G+II3f1kpLpY2QeUv5DcPdcTsYLlusZfq1NthHS1c1cZoyFmmkex1rzke0A==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+
+  tailwindcss@3.4.6:
+    resolution: {integrity: sha512-1uRHzPB+Vzu57ocybfZ4jh5Q3SdlH7XW23J5sQoM9LhE9eIOlzxer/3XPSsycvih3rboRsvt0QCmzSrqyOYUIA==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -6982,6 +6986,33 @@ snapshots:
   tailwind-merge@2.4.0: {}
 
   tailwindcss@3.4.3:
+    dependencies:
+      '@alloc/quick-lru': 5.2.0
+      arg: 5.0.2
+      chokidar: 3.6.0
+      didyoumean: 1.2.2
+      dlv: 1.1.3
+      fast-glob: 3.3.2
+      glob-parent: 6.0.2
+      is-glob: 4.0.3
+      jiti: 1.21.0
+      lilconfig: 2.1.0
+      micromatch: 4.0.5
+      normalize-path: 3.0.0
+      object-hash: 3.0.0
+      picocolors: 1.0.1
+      postcss: 8.4.35
+      postcss-import: 15.1.0(postcss@8.4.35)
+      postcss-js: 4.0.1(postcss@8.4.35)
+      postcss-load-config: 4.0.2(postcss@8.4.35)
+      postcss-nested: 6.0.1(postcss@8.4.35)
+      postcss-selector-parser: 6.0.15
+      resolve: 1.22.8
+      sucrase: 3.35.0
+    transitivePeerDependencies:
+      - ts-node
+
+  tailwindcss@3.4.6:
     dependencies:
       '@alloc/quick-lru': 5.2.0
       arg: 5.0.2

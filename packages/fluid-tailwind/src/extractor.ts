@@ -1,3 +1,6 @@
+// TODO: incorporate
+// https://github.com/tailwindlabs/tailwindcss/compare/v3.4.3...v3.4.6
+
 import type { ExtractorFn } from "tailwindcss/types/config"
 // @ts-expect-error untyped source file
 import * as regex from 'tailwindcss-priv/src/lib/regex'
