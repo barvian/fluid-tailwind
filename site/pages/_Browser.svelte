@@ -125,7 +125,9 @@
 						})
 				}}
 			>
-				<div class="h-8 w-1.5 rounded-full bg-slate-500/60 group-hover:bg-slate-500/80" />
+				<div
+					class="h-8 w-1.5 rounded-full bg-slate-500/60 backdrop-blur-sm group-hover:bg-slate-500/80"
+				/>
 			</button>
 		{/if}
 	</div>
