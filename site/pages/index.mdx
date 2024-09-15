@@ -181,6 +181,23 @@ export default {
 }
 ```
 
+### Fluid type accessibility checks
+
+By default, the plugin will not generate fluid type that [would fail WCAG Success Criterion 1.4.4](https://www.smashingmagazine.com/2023/11/addressing-accessibility-concerns-fluid-type/).
+You can configure this with the `checkSC144` option:
+
+```js title="tailwind.config.js" ins={6}
+// ...
+export default {
+  // ...
+  plugins: [
+    fluid({
+      checkSC144: false // default: true
+    })
+  ]
+}
+```
+
 ## Advanced
 
 ### Customize breakpoints per-utility
@@ -265,23 +282,6 @@ export default {
     })
   },
   // ...
-}
-```
-
-### Fluid type accessibility errors
-
-By default, the plugin will not generate fluid type that [would fail WCAG Success Criterion 1.4.4](https://www.smashingmagazine.com/2023/11/addressing-accessibility-concerns-fluid-type/).
-You can configure this with the `checkSC144` option:
-
-```js title="tailwind.config.js" ins={6}
-// ...
-export default {
-  // ...
-  plugins: [
-    fluid({
-      checkSC144: false // default: true
-    })
-  ]
 }
 ```
 

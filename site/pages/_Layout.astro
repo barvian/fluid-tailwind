@@ -168,7 +168,7 @@ const path = relative(root, file)
 	<div class="~lg:~gap-x-6/10 container grid grid-cols-1 lg:grid-cols-[auto_minmax(0,1fr)]">
 		<div class="relative w-[13rem] max-lg:hidden">
 			<div class="~lg:~pr-6/10 sticky top-0 -mt-10 max-h-screen overflow-y-auto py-10">
-				<TOC {headings} client:load />
+				<TOC headings={headings.filter((h) => h.slug !== 'features')} client:load />
 			</div>
 		</div>
 		<main>
