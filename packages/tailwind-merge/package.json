@@ -3,7 +3,7 @@
 	"publishConfig": {
 		"access": "public"
 	},
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"author": "Maxwell Barvian",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
@@ -30,7 +30,7 @@
 		"prepublishOnly": "pnpm run build && pnpm run test"
 	},
 	"peerDependencies": {
-		"tailwind-merge": "~2.4.0"
+		"tailwind-merge": "^2.4.0"
 	},
 	"devDependencies": {
 		"tailwind-merge": "~2.4.0",
