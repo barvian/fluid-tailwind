@@ -45,12 +45,16 @@ import poster from './_inspector.png'
     </>
     <Fragment slot="code">
       ```js title="tailwind.config.js" ins={1,6,10} mark=/\: (\{)/ mark="files:" mark=/(\}),/
-      import fluid, { extract } from 'fluid-tailwind'
+      import fluid, { extract, screens, fontSize } from 'fluid-tailwind'
 
       export default {
         content: {
           files: [/* ... */],
           extract
+        },  
+        theme: {
+          screens, // can be omitted in tailwind v4
+          fontSize
         },
         // ...
         plugins: [
