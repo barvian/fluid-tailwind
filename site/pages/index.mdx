@@ -44,7 +44,7 @@ import poster from './_inspector.png'
       The custom extractor lets you use the new `~` modifier in your Tailwind classes.
     </>
     <Fragment slot="code">
-      ```js title="tailwind.config.js" ins={1,6,10} mark=/\: (\{)/ mark="files:" mark=/(\}),/
+      ```js title="tailwind.config.js" ins={1,6,9} mark=/\: (\{)/ mark="files:" mark=/(\}),/
       import fluid, { extract } from 'fluid-tailwind'
 
       export default {
@@ -52,7 +52,6 @@ import poster from './_inspector.png'
           files: [/* ... */],
           extract
         },
-        // ...
         plugins: [
           fluid
         ]
@@ -62,10 +61,29 @@ import poster from './_inspector.png'
   </Steps.Item>
   <Steps.Item>
     <>
-      ### Continue reading to the end of the [limitations section](#limitations)
+      ### Use `rem`-based `screens` and `fontSize`
 
-      There may be additional installation steps depending on your Tailwind configuration.
+      See the [limitations section](#limitations) for more information.
     </>
+    <Fragment slot="code">
+      ```js title="tailwind.config.js" ins={6,7} ins=", screens, fontSize" mark=/20(rem)/
+      import fluid, { extract, screens, fontSize } from 'fluid-tailwind'
+
+      export default {
+        // ...
+        theme: {
+          screens, // Tailwind's default screens, in `rem`
+          fontSize, // Tailwind's default font sizes, in `rem` (including line heights)
+          extend: { 
+            screens: {
+              xs: '20rem'
+            }
+          }
+        },
+        // ...
+      }
+      ```
+    </Fragment>
   </Steps.Item>
 </Steps.Root>
 
@@ -83,81 +101,6 @@ Here's a quick overview:
 * Fluid utilities scale between their start/end values
 when the viewport is between the start and end breakpoints
 * The start and end breakpoints default to the smallest and largest screen, but they [can be customized](#custom-default-breakpoints) or [overridden per-utility](#customize-breakpoints-per-utility)
-
-## Limitations
-
-Due to CSS restrictions, fluid utilities require the start/end values and breakpoints to be length literals (i.e. `1rem`) with the same unit.
-
-<Tip.Bad>Values with different units</Tip.Bad>
-```html
-<h1 class="~p-[1rem]/[18px]">
-```
-
-<Tip.Bad>Values with different units than breakpoints</Tip.Bad>
-<Split rows="grid-rows-[auto]">
-  ```html
-  <h1 class="~text-[1rem]/[2rem]">
-  ```
-  ```js title="tailwind.config.js"
-  export default {
-    // ...
-    theme: {
-      screens: {
-        'sm': '320px',
-        '2xl': '1280px' 
-      }
-    }
-    // ...
-  }
-  ```
-</Split>
-
-<Tip.Bad>Non-literal values like `calc()`</Tip.Bad>
-```html
-<h1 class="~text-base/[calc(1.5rem-2px)]">
-```
-
-<Tip.Bad>Non-lengths like colors</Tip.Bad>
-```html
-<h1 class="~text-white/red-500">
-```
-
-### Tailwind's default theme
-
-Tailwind v3's [default breakpoints](https://tailwindcss.com/docs/screens) are in `px`, while its default
-[spacing](https://tailwindcss.com/docs/customizing-spacing#default-spacing-scale) and
-[font sizes](https://tailwindcss.com/docs/font-size) are in `rem`.
-This doesn't bode well with the CSS restrictions mentioned above, so `fluid-tailwind` provides `rem` replacements
-for the default breakpoints:
-
-```js title="tailwind.config.js" ins={6} ins=", screens"
-import fluid, { extract, screens } from 'fluid-tailwind'
-
-export default {
-  // ...
-  theme: {
-    screens
-  },
-  // ...
-}
-```
-<Tip.Info>[Tailwind v4 will use `rem` breakpoints by default](https://github.com/tailwindlabs/tailwindcss/pull/13469).</Tip.Info>
-
-Similarly, the line heights used for Tailwind's default font sizes `5xl`–`9xl` are unitless, which can't be fluidized.
-`fluid-tailwind` provides `rem` replacements for those as well:
-
-```js title="tailwind.config.js" ins={7} ins=", fontSize"
-import fluid, { extract, screens, fontSize } from 'fluid-tailwind'
-
-export default {
-  // ...
-  theme: {
-    screens,
-    fontSize
-  },
-  // ...
-}
-```
 
 ## Configuration
 
@@ -347,6 +290,82 @@ import { withFluid } from '@fluid-tailwind/tailwind-merge'
 
 export const twMerge = extendTailwindMerge(/* ... */, withFluid)
 ```
+
+## Limitations
+
+Due to CSS restrictions, fluid utilities require the start/end values and breakpoints to be length literals (i.e. `1rem`) with the same unit.
+
+<Tip.Bad>Values with different units</Tip.Bad>
+```html
+<h1 class="~p-[1rem]/[18px]">
+```
+
+<Tip.Bad>Values with different units than breakpoints</Tip.Bad>
+<Split rows="grid-rows-[auto]">
+  ```html
+  <h1 class="~text-[1rem]/[2rem]">
+  ```
+  ```js title="tailwind.config.js"
+  export default {
+    // ...
+    theme: {
+      screens: {
+        'sm': '320px',
+        '2xl': '1280px' 
+      }
+    },
+    // ...
+  }
+  ```
+</Split>
+
+<Tip.Bad>Non-literal values like `calc()`</Tip.Bad>
+```html
+<h1 class="~text-base/[calc(1.5rem-2px)]">
+```
+
+<Tip.Bad>Non-lengths like colors</Tip.Bad>
+```html
+<h1 class="~text-white/red-500">
+```
+
+{/*
+### Tailwind's default theme
+
+Tailwind v3's [default breakpoints](https://tailwindcss.com/docs/screens) are in `px`, while its default
+[spacing](https://tailwindcss.com/docs/customizing-spacing#default-spacing-scale) and
+[font sizes](https://tailwindcss.com/docs/font-size) are in `rem`.
+This doesn't bode well with the CSS restrictions mentioned above, so `fluid-tailwind` provides `rem` replacements
+for the default breakpoints:
+
+```js title="tailwind.config.js" ins={6} ins=", screens"
+import fluid, { extract, screens } from 'fluid-tailwind'
+
+export default {
+  // ...
+  theme: {
+    screens
+  },
+  // ...
+}
+```
+<Tip.Info>[Tailwind v4 will use `rem` breakpoints by default](https://github.com/tailwindlabs/tailwindcss/pull/13469).</Tip.Info>
+
+Similarly, the line heights used for Tailwind's default font sizes `5xl`–`9xl` are unitless, which can't be fluidized.
+`fluid-tailwind` provides `rem` replacements for those as well:
+
+```js title="tailwind.config.js" ins={7} ins=", fontSize"
+import fluid, { extract, screens, fontSize } from 'fluid-tailwind'
+
+export default {
+  // ...
+  theme: {
+    screens,
+    fontSize
+  },
+  // ...
+}
+```*/}
 
 ## Troubleshooting
 
