@@ -42,9 +42,10 @@ import poster from './_inspector.png'
       ### Add the plugin and [extractor](https://tailwindcss.com/docs/content-configuration#customizing-extraction-logic)
 
       The custom extractor lets you use the new `~` modifier in your Tailwind classes.
+      Note the object format for `content`.
     </>
     <Fragment slot="code">
-      ```js title="tailwind.config.js" ins={1,6,9} mark=/\: (\{)/ mark="files:" mark=/(\}),/
+      ```js title="tailwind.config.js" ins={1,6,9} ins=/\: (\{)/ ins="files:" ins="},"
       import fluid, { extract } from 'fluid-tailwind'
 
       export default {
