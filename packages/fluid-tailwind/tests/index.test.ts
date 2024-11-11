@@ -301,6 +301,16 @@ it(`warns if custom prefix wasn't passed into extractor`, async () => {
 	)
 })
 
+// #54
+it(`allows calling extract with no parameters`, () => {
+	return run({
+		content: {
+			files: [{ raw: html`` }],
+			extract: extract()
+		}
+	})
+})
+
 it(`warns if different prefix was passed into extractor`, async () => {
 	const result = await run({
 		prefix: 'tw-',

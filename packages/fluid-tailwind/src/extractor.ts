@@ -20,8 +20,8 @@ PASSED_PREFIX = Symbol(), PASSED_SEPARATOR = Symbol(), IS_FLUID_EXTRACT = Symbol
  * Tailwind's default extractor, with small tweaks to support the ~ modifier.
  */
 function extract(content: string): ReturnType<ExtractorFn>
-function extract(options: ExtractorOptions): ExtractorFn
-function extract(contentOrOptions: string | ExtractorOptions): ReturnType<ExtractorFn> | ExtractorFn {
+function extract(options?: ExtractorOptions): ExtractorFn
+function extract(contentOrOptions?: string | ExtractorOptions): ReturnType<ExtractorFn> | ExtractorFn {
   if (typeof contentOrOptions === 'string') {
     defaultPatterns ??= Array.from(buildRegExps())
     let results: string[] = []
@@ -48,8 +48,8 @@ function extract(contentOrOptions: string | ExtractorOptions): ReturnType<Extrac
     return results
   }, {
     [IS_FLUID_EXTRACT]: true,
-    [PASSED_PREFIX]: contentOrOptions.prefix ?? DEFAULT_PREFIX,
-    [PASSED_SEPARATOR]: contentOrOptions.separator ?? DEFAULT_SEPARATOR
+    [PASSED_PREFIX]: contentOrOptions?.prefix ?? DEFAULT_PREFIX,
+    [PASSED_SEPARATOR]: contentOrOptions?.separator ?? DEFAULT_SEPARATOR
   })
 }
 extract[IS_FLUID_EXTRACT] = true
