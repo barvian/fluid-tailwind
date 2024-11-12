@@ -114,6 +114,26 @@ it(`negates utilities that support negatives`, async () => {
 	`)
 })
 
+// #57
+it(`negates utilities with arbitrary variants`, async () => {
+	const result = await run({
+		content: [
+			{
+				raw: html`<div class="data-[size]:~-mt-1/2"></div>`
+			}
+		]
+	})
+	expect(result.css).toMatchFormattedCss(css`
+		.data-\[size\]\:\~-mt-1\/2[data-size] {
+			margin-top: clamp(
+				-0.5rem,
+				-0.07rem + -0.45vw,
+				-0.25rem
+			); /* fluid from -0.25rem at 40rem to -0.5rem at 96rem */
+		}
+	`)
+})
+
 it(`doesn't negate utilities that don't support negatives`, async () => {
 	const result = await run({
 		content: [
