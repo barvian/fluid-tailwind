@@ -75,11 +75,11 @@ function* buildRegExps({ separator = DEFAULT_SEPARATOR, prefix: _prefix = DEFAUL
       regex.pattern([
         // Utility Name / Group Name
         regex.any([
-          /[-~]?(?:\w+)/,
-          // ^ NEW:
+          /~?-?(?:\w+)/,
+          //^ NEW
 
           // This is here to make sure @container supports everything that other utilities do
-          /~?@(?:\w+)/,
+          /@(?:\w+)/,
         ]),
   
         // Normal/Arbitrary values
@@ -136,8 +136,7 @@ function* buildRegExps({ separator = DEFAULT_SEPARATOR, prefix: _prefix = DEFAUL
 
 
         // With variant modifier (e.g.: group-[..]/modifier)
-        regex.pattern([/([^\s"'`\[\\]+-)?\[[^\s"'`]+\]\/\w+/, separator]),
-
+        regex.pattern([/([^\s"'`\[\\]+-)?\[[^\s"'`]+\]\/[\w_-]+/, separator]),
 
         regex.pattern([/([^\s"'`\[\\]+-)?\[[^\s"'`]+\]/, separator]),
         regex.pattern([/[^\s"'`\[\\]+/, separator]),
@@ -146,7 +145,7 @@ function* buildRegExps({ separator = DEFAULT_SEPARATOR, prefix: _prefix = DEFAUL
       // With quotes allowed
       regex.any([
         // With variant modifier (e.g.: group-[..]/modifier)
-        regex.pattern([/([^\s"'`\[\\]+-)?\[[^\s`]+\]\/\w+/, separator]),
+        regex.pattern([/([^\s"'`\[\\]+-)?\[[^\s`]+\]\/[\w_-]+/, separator]),
 
         regex.pattern([/([^\s"'`\[\\]+-)?\[[^\s`]+\]/, separator]),
         regex.pattern([/[^\s`\[\\]+/, separator]),
@@ -170,7 +169,7 @@ function* buildRegExps({ separator = DEFAULT_SEPARATOR, prefix: _prefix = DEFAUL
     }
   
     // 5. Inner matches
-    yield /[^<>"'`\s.(){}[\]#=%$]*[^<>"'`\s.(){}[\]#=%:$]/g
+    yield /[^<>"'`\s.(){}[\]#=%$][^<>"'`\s(){}[\]#=%$]*[^<>"'`\s.(){}[\]#=%:$]/g
   }
   
   // We want to capture any "special" characters
