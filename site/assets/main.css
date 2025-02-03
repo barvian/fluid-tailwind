@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@config "../tailwind.config.ts";
 
 @layer base {
 	@font-face {
@@ -23,7 +22,7 @@
 
 @layer components {
 	.container {
-		@apply ~px-5/10 mx-auto w-full max-w-7xl;
+		@apply /*px-fl-5/10*/ mx-auto w-full max-w-7xl;
 	}
 
 	.expressive-code .frame {

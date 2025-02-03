@@ -19,7 +19,6 @@ import poster from './_inspector.png'
 * Works with **every utility** (including other plugins)
 * Full **IntelliSense** support
 * First-class [tailwind-merge support](#tailwind-merge)
-* Ensures fluid type meets [accessibility requirements](#fluid-type-accessibility-errors)
 * **Flexible** enough to handle advanced use cases
 
 ## Installation
@@ -39,50 +38,14 @@ import poster from './_inspector.png'
   </Steps.Item>
   <Steps.Item>
     <>
-      ### Add the plugin and [extractor](https://tailwindcss.com/docs/content-configuration#customizing-extraction-logic)
-
-      The custom extractor lets you use the new `~` modifier in your Tailwind classes.
-      Note the object format for `content`.
+      ### Add the plugin
     </>
     <Fragment slot="code">
-      ```js title="tailwind.config.js" ins={1,6,9} ins=/\: (\{)/ ins="files:" ins="},"
-      import fluid, { extract } from 'fluid-tailwind'
+      ```css title="app.css" ins={2}
+      @import "tailwindcss";
+      @plugin "fluid-tailwind";
 
-      export default {
-        content: {
-          files: [/* ... */],
-          extract
-        },
-        plugins: [
-          fluid
-        ]
-      }
-      ```
-    </Fragment>
-  </Steps.Item>
-  <Steps.Item>
-    <>
-      ### Use `rem`-based `screens` and `fontSize`
-
-      See the [limitations section](#limitations) for more information.
-    </>
-    <Fragment slot="code">
-      ```js title="tailwind.config.js" ins={6,7} ins=", screens, fontSize" mark=/20(rem)/
-      import fluid, { extract, screens, fontSize } from 'fluid-tailwind'
-
-      export default {
-        // ...
-        theme: {
-          screens, // Tailwind's default screens, in `rem`
-          fontSize, // Tailwind's default font sizes, in `rem` (including line heights)
-          extend: { 
-            screens: {
-              xs: '20rem'
-            }
-          }
-        },
-        // ...
-      }
+      /* ... */
       ```
     </Fragment>
   </Steps.Item>
@@ -91,141 +54,91 @@ import poster from './_inspector.png'
 ## Basic usage
 
 <Resizer client:load height="h-32">
-  <button class="bg-sky-500 hover:bg-sky-400 ~@lg/2xl:~px-4/8 ~@lg/2xl:~py-2/3.5 ~@lg/2xl:~text-sm/xl rounded-full font-semibold text-white">Fluid button</button>
+  <button class="bg-sky-500 hover:bg-sky-400 @fl-lg/2xl px-fl-4/8 py-fl-2/3.5 text-fl-sm/xl rounded-full font-semibold text-white">Fluid button</button>
 </Resizer>
-```html mark=/(\~.*?)\s+/
-<button class="bg-sky-500 ~px-4/8 ~py-2/4 ~text-sm/xl ...">Fluid button</button>
+```html mark="px-fl-4/8 py-fl-2/3.5 text-fl-sm/xl"
+<button class="bg-sky-500 px-fl-4/8 py-fl-2/3.5 text-fl-sm/xl ...">Fluid button</button>
 ```
 
-Here's a quick overview:
-* The `~` modifier makes a utility fluid
-* Fluid utilities scale between their start/end values
-when the viewport is between the start and end breakpoints
-* The start and end breakpoints default to the smallest and largest screen, but they [can be customized](#custom-default-breakpoints) or [overridden per-utility](#customize-breakpoints-per-utility)
+Make a utility fluid by adding the `-fl` suffix. Fluid utilities scale
+between their `start/end` values when the viewport is between the start and end breakpoints
+(by default these are the smallest and largest breakpoints).
 
 ## Configuration
 
 ### Custom default breakpoints
 
-The default start/end breakpoints can be set with a tuple of length literals `[start, end]`.
-Either can be omitted, in which case the plugin will use your smallest and largest
-breakpoint, respectively.
+The default start/end breakpoints can be configured in your theme:
 
-```js title="tailwind.config.js" ins={5-8}
-// ...
-export default {
-  // ...
-  theme: {
-    /** @type {import('fluid-tailwind').FluidThemeConfig} */
-    fluid: ({ theme }) => ({
-      defaultScreens: ['20rem', theme('screens.lg')]
-    })
-  },
-  // ...
-}
-```
-
-### Fluid type accessibility checks
-
-By default, the plugin will not generate fluid type that [would fail WCAG Success Criterion 1.4.4](https://www.smashingmagazine.com/2023/11/addressing-accessibility-concerns-fluid-type/).
-You can configure this with the `checkSC144` option:
-
-```js title="tailwind.config.js" ins={6}
-// ...
-export default {
-  // ...
-  plugins: [
-    fluid({
-      checkSC144: false // default: true
-    })
-  ]
+```css title="app.css" ins={3-4}
+/* ... */
+@theme inline {
+  --fluid-default-start-breakpoint: 20rem;
+  --fluid-default-end-breakpoint: var(--breakpoint-xl);
 }
 ```
 
 ## Advanced
 
-### Customize breakpoints per-utility
+### Override breakpoints per-element
 
-You can customize the start/end breakpoints for a fluid utility with
-the included `~` variant. For example:
+You can override the default start/end breakpoints on an element with
+the included `fl` utility. For example:
 
 <Resizer client:load height="h-32">
-  <span class="text-slate-900 dark:text-slate-100 font-semibold ~@xl/2xl:~text-base/4xl text-center block">Quick increase</span>
+  <span class="text-slate-900 dark:text-slate-100 font-semibold @fl-xl/2xl text-fl-base/4xl text-center block">Quick increase</span>
 </Resizer>
-```html mark="~md/lg:"
-<h1 class="~md/lg:~text-base/4xl">Quick increase</h1>
+```html mark="fl-md/lg"
+<h1 class="fl-md/lg text-fl-base/4xl">Quick increase</h1>
 ```
 
 You can omit either start or end breakpoint to use your [defaults](#custom-default-breakpoints):
 
 <Tip.Good>Set start breakpoint to `md`, end breakpoint to default</Tip.Good>
-```html mark="~md:"
-<div class="~md:~text-base/4xl">
+```html mark="fl-md"
+<div class="fl-md text-fl-base/4xl">
 ```
 
 <Tip.Good>Set end breakpoint to `lg`, start breakpoint to default</Tip.Good>
-```html mark="~/lg:"
-<div class="~/lg:~text-base/4xl">
-```
-
-#### Arbitrary start breakpoint
-
-If you want to set an arbitrary start breakpoint with the `~` variant, you have to use
-`~min-[]` (just as you'd have to use `min-[]` to set an [arbitrary breakpoint](https://tailwindcss.com/docs/responsive-design#arbitrary-values)):
-
-<Tip.Bad>Trying to use `~[]:` to set an arbitrary start breakpoint</Tip.Bad>
-```html del="~[20rem]"
-<div class="~[20rem]/lg:~text-base/4xl">
-```
-
-<Tip.Good>Using `~min-[]` to set an arbitrary start breakpoint</Tip.Good>
-```html mark="~min-[20rem]"
-<div class="~min-[20rem]/lg:~text-base/4xl">
+```html mark="fl/lg"
+<div class="fl/lg text-fl-base/4xl">
 ```
 
 ### Negative values
 
-To negate fluid utilities, the dash comes after the fluid `~` modifier:
+When using the built-in negative prefix, Tailwind only negates the start value.
+To negate both values, add a dash before the end value as well:
 
 <Tip.Good>Negating a fluid utility</Tip.Good>
-```html mark=/\~(\-)/
-<div class="~-mt-3/5">
+```html mark=/\(\-)5/
+<div class="-mt-fl-3/-5">
 ```
 
 ### Container queries
 
-If you have the [official container query](https://github.com/tailwindlabs/tailwindcss-container-queries) plugin
-installed, you can make fluid utilities scale between the nearest `@container` widths rather than screen breakpoints by using the `~@` variant:
+You can make fluid utilities scale between the nearest `@container` widths rather than breakpoints by using the `@fl` utility:
 
-```html mark="~@md/lg:"
-<h1 class="~@md/lg:~text-base/4xl">Relative to container</h1>
+```html mark="@fl-md/lg"
+<h1 class="@fl-md/lg text-fl-base/4xl">Relative to container</h1>
 ```
-<Tip.Info>This may look confusing if you use [named containers](https://github.com/tailwindlabs/tailwindcss-container-queries#named-containers). Sorry about that; there's only so many ways to pass data into Tailwind. In general, when you see the fluid `~` modifier, you know the `/` denotes a start/end pair.</Tip.Info>
+{/* <Tip.Info>This may look confusing if you use [named containers](https://tailwindcss.com/docs/responsive-design#named-containers). Sorry about that; there's only so many ways to pass data into Tailwind. In general, when you see the fluid `fl` keyword, you know the `/` denotes a start/end pair.</Tip.Info> */}
 
-Just like the `~` variant, both start and end containers are optional and will use your [defaults](#custom-default-containers) if unset.
+Just like the `fl` utility, both start and end containers are optional and will use your [defaults](#custom-default-containers) if unset.
 
 <Tip.Good>Set end container to `lg`, start container to default</Tip.Good>
-```html mark="~@/lg:"
-<div class="~@/lg:~text-base/4xl">
+```html mark="@fl/lg"
+<div class="@fl/lg text-fl-base/4xl">
 ```
 
 #### Custom default containers
 
-The default containers can be set in the same way as breakpoints.
-Either can be omitted, in which case the plugin will use your smallest and
-largest container, respectively.
+The default containers can be configured in the same way as breakpoints.
 
-```js title="tailwind.config.js" ins={7}
-// ...
-export default {
-  // ...
-  theme: {
-    /** @type {import('fluid-tailwind').FluidThemeConfig} */
-    fluid: ({ theme }) => ({
-      defaultContainers: [, theme('containers.2xl')]
-    })
-  },
-  // ...
+```css title="app.css" ins={3-4}
+/* ... */
+@theme inline {
+  --fluid-default-start-container: 5rem;
+  --fluid-default-end-container: var(--container-xl);
 }
 ```
 
@@ -237,41 +150,13 @@ container or media queries, as such:
 <Resizer client:load height="h-32" tooNarrowClass="xl:hidden">
   <span class="text-slate-900 dark:text-slate-100 font-semibold italic ~@lg/2xl:~text-base/4xl @2xl:~@2xl/4xl:~text-4xl/base text-center block">Whoa!</span>
 </Resizer>
-```html mark="~/md:" mark="lg:~lg:"
-<h1 class="~/md:~text-base/4xl lg:~lg:~text-4xl/base">Whoa!</h1>
+```html
+<h1 class="fl/md text-fl-base/4xl lg:fl-lg lg:text-fl-4xl/base">Whoa!</h1>
 ```
 
 Here's how this works:
 1. We scale our font-size between `base` and `4xl` between our smallest and `md` breakpoints
 1. We scale in the opposite direction between our `lg` and largest breakpoints
-
-### Using with a custom prefix or separator
-
-If you're using a custom [`prefix`](https://tailwindcss.com/docs/configuration#prefix) or
-[`separator`](https://tailwindcss.com/docs/configuration#separator),
-you'll need to pass them in to the extractor as well:
-
-<Split rows="grid-rows-[auto]">
-  ```js title="tailwind.config.js" ins={9-10}
-  import fluid, { extract } from 'fluid-tailwind'
-
-  export default {
-    prefix: 'tw-',
-    separator: '_',
-    content: {
-      files: [/* ... */],
-      extract: extract({
-        prefix: 'tw-',
-        separator: '_'
-      })
-    },
-    // ...
-  }
-  ```
-  ```html title="index.html" mark="tw-"
-  <div class="~tw-text-sm/xl">
-  ```
-</Split>
 
 ## Integrations
 
@@ -291,98 +176,3 @@ import { withFluid } from '@fluid-tailwind/tailwind-merge'
 
 export const twMerge = extendTailwindMerge(/* ... */, withFluid)
 ```
-
-## Limitations
-
-Due to CSS restrictions, fluid utilities require the start/end values and breakpoints to be length literals (i.e. `1rem`) with the same unit.
-
-<Tip.Bad>Values with different units</Tip.Bad>
-```html
-<h1 class="~p-[1rem]/[18px]">
-```
-
-<Tip.Bad>Values with different units than breakpoints</Tip.Bad>
-<Split rows="grid-rows-[auto]">
-  ```html
-  <h1 class="~text-[1rem]/[2rem]">
-  ```
-  ```js title="tailwind.config.js"
-  export default {
-    // ...
-    theme: {
-      screens: {
-        'sm': '320px',
-        '2xl': '1280px' 
-      }
-    },
-    // ...
-  }
-  ```
-</Split>
-
-<Tip.Bad>Non-literal values like `calc()`</Tip.Bad>
-```html
-<h1 class="~text-base/[calc(1.5rem-2px)]">
-```
-
-<Tip.Bad>Non-lengths like colors</Tip.Bad>
-```html
-<h1 class="~text-white/red-500">
-```
-
-{/*
-### Tailwind's default theme
-
-Tailwind v3's [default breakpoints](https://tailwindcss.com/docs/screens) are in `px`, while its default
-[spacing](https://tailwindcss.com/docs/customizing-spacing#default-spacing-scale) and
-[font sizes](https://tailwindcss.com/docs/font-size) are in `rem`.
-This doesn't bode well with the CSS restrictions mentioned above, so `fluid-tailwind` provides `rem` replacements
-for the default breakpoints:
-
-```js title="tailwind.config.js" ins={6} ins=", screens"
-import fluid, { extract, screens } from 'fluid-tailwind'
-
-export default {
-  // ...
-  theme: {
-    screens
-  },
-  // ...
-}
-```
-<Tip.Info>[Tailwind v4 will use `rem` breakpoints by default](https://github.com/tailwindlabs/tailwindcss/pull/13469).</Tip.Info>
-
-Similarly, the line heights used for Tailwind's default font sizes `5xl`–`9xl` are unitless, which can't be fluidized.
-`fluid-tailwind` provides `rem` replacements for those as well:
-
-```js title="tailwind.config.js" ins={7} ins=", fontSize"
-import fluid, { extract, screens, fontSize } from 'fluid-tailwind'
-
-export default {
-  // ...
-  theme: {
-    screens,
-    fontSize
-  },
-  // ...
-}
-```*/}
-
-## Troubleshooting
-
-Tailwind doesn't currently provide any error reporting tools for plugins, so if a fluid utility fails,
-it will output an empty rule with a comment containing the reason:
-
-```css
-.\~mt-\[10px\]\/\[1\.5rem\] /* error - Start `10px` and end `1.5rem` units don't match */ {}
-```
-
-You should be able to see this if you have the [official IntelliSense plugin](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
-installed and hover over the class. Otherwise, you can see it if you click the location for the empty rule in your browser's inspector.
-
-<details>
-  <summary>View fluid errors in the inspector</summary>
-  <div class="aspect-[952/554] @container max-w-[882px] mt-[2em]">
-    <video src={inspector} poster={(await getImage({ src: poster })).src} autoplay controls muted class="rounded-[1.1cqw] my-0 overflow-clip" />
-  </div>
-</details>

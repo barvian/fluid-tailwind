@@ -1,41 +1,21 @@
 import type { Config } from 'tailwindcss'
 import plugin from 'tailwindcss/plugin'
 import typography from '@tailwindcss/typography'
-import reset from 'tw-reset'
-import fluid, { extract, fontSize, type FluidThemeConfig } from 'fluid-tailwind'
+import fluid, { type FluidThemeConfig } from 'fluid-tailwind'
 import svgToDataUri from 'mini-svg-data-uri'
-// @ts-expect-error undocumented API
 import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette'
-import type { ResolvableTo } from 'tailwindcss/types/config'
+// import type { ResolvableTo } from 'tailwindcss/types/config'
 import defaultTheme from 'tailwindcss/defaultTheme'
 
 export default {
-	presets: [reset],
-	corePlugins: {
-		container: false
-	},
-	content: {
-		files: ['./{pages,layouts,components}/**/*.{html,js,svelte,ts,astro,mdx}'],
-		transform: {
-			mdx: (src) =>
-				src
-					// Ignore classes in code blocks
-					.replaceAll(/```.*?```/gs, '')
-					// Only return stuff in <component>s
-					.match(/<[^/].*?>/g)
-					?.join() ?? ''
-		},
-		extract
-	},
 	theme: {
-		fontSize,
 		extend: {
 			screens: {
 				xs: '30rem'
 			},
-			fluid: (({ theme }) => ({
-				defaultScreens: [, theme('screens.xl')]
-			})) satisfies FluidThemeConfig,
+			// fluid: (({ theme }) => ({
+			// 	defaultEndScreen: theme('screens.xl')
+			// })) satisfies FluidThemeConfig,
 			animation: {
 				parallax: 'parallax linear both'
 			},
@@ -83,7 +63,7 @@ export default {
 			supports: {
 				sda: 'timeline-scope: none'
 			},
-			typography: (({ theme }) => ({
+			typography: ({ theme }) => ({
 				DEFAULT: {
 					css: {
 						'&>section': {
@@ -141,11 +121,11 @@ export default {
 						}
 					}
 				}
-			})) satisfies ResolvableTo<Record<string, unknown>>
+			})
 		}
 	},
 	plugins: [
-		fluid,
+		// fluid,
 		typography,
 		plugin(({ addVariant, matchUtilities, theme }) => {
 			addVariant('light', '@media (prefers-color-scheme: light)')
