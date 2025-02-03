@@ -6,12 +6,12 @@ import type {
 	ThemeConfig
 } from 'tailwindcss/types/config'
 import mapObject, { mapObjectSkip } from 'map-obj'
-import { error } from './errors'
 import { Length } from './css'
 import { unique } from './set'
+import { error } from './errors'
 
 export type PluginOptions = {
-	checkSC144?: boolean
+	className?: string
 }
 
 type Breakpoints = [string?, string?]
@@ -23,7 +23,7 @@ export type ResolvedFluidThemeConfig = Partial<{
 export default function getContext(
 	config: PluginAPI['config'],
 	theme: PluginAPI['theme'],
-	{ checkSC144 = true }: PluginOptions = {}
+	{ className = 'fl' }: PluginOptions = {}
 ) {
 	const prefix: PrefixConfig = config('prefix')
 	const separator: SeparatorConfig = config('separator')
@@ -60,50 +60,41 @@ export default function getContext(
 	let _defaultEndContainer: string | Length | undefined
 	return {
 		get screens() {
-			return _screens ?? (_screens = filterBreakpoints('screens'))
+			return _screens ??= filterBreakpoints('screens')
 		},
 		get sortedScreens() {
-			return _sortedScreens ?? (_sortedScreens = sortBreakpoints(this.screens, 'screens'))
+			return _sortedScreens ??= sortBreakpoints(this.screens, 'screens')
 		},
 		get defaultStartScreen() {
-			return (
-				_defaultStartScreen ??
-				(_defaultStartScreen = themeConfig.defaultScreens?.[0] ?? this.sortedScreens[0])
-			)
+			return
+				_defaultStartScreen ??= themeConfig.defaultScreens?.[0] ?? this.sortedScreens[0]
 		},
 		get defaultEndScreen() {
-			return (
-				_defaultEndScreen ??
-				(_defaultEndScreen =
-					themeConfig.defaultScreens?.[1] ?? this.sortedScreens[this.sortedScreens.length - 1])
-			)
+			return 
+				_defaultEndScreen ??=
+					themeConfig.defaultScreens?.[1] ?? this.sortedScreens[this.sortedScreens.length - 1]
 		},
 		get containers() {
-			return _containers ?? (_containers = filterBreakpoints('containers'))
+			return _containers ??= filterBreakpoints('containers')
 		},
 		get sortedContainers() {
 			return (
-				_sortedContainers ?? (_sortedContainers = sortBreakpoints(this.containers, 'containers'))
+				_sortedContainers ??= sortBreakpoints(this.containers, 'containers')
 			)
 		},
 		get defaultStartContainer() {
-			return (
-				_defaultStartContainer ??
-				(_defaultStartContainer = themeConfig.defaultContainers?.[0] ?? this.sortedContainers[0])
-			)
+			return
+				_defaultStartContainer ??= themeConfig.defaultContainers?.[0] ?? this.sortedContainers[0]
 		},
 		get defaultEndContainer() {
-			return (
-				_defaultEndContainer ??
-				(_defaultEndContainer =
+			return 
+				_defaultEndContainer ??=
 					themeConfig.defaultContainers?.[1] ??
-					this.sortedContainers[this.sortedContainers.length - 1])
-			)
+					this.sortedContainers[this.sortedContainers.length - 1]
 		},
 		theme,
-		prefix,
 		separator,
-		checkSC144
+		className
 	}
 }
 export type Context = ReturnType<typeof getContext>
