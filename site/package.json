@@ -12,20 +12,20 @@
 	},
 	"dependencies": {
 		"@astrojs/check": "^0.9.4",
-		"@astrojs/mdx": "^4.0.8",
-		"@astrojs/svelte": "^7.0.4",
+		"@astrojs/mdx": "^4.2.0",
+		"@astrojs/svelte": "^7.0.6",
 		"@tailwindcss/typography": "^0.5.16",
-		"astro": "^5.2.3",
-		"astro-expressive-code": "^0.40.1",
+		"astro": "^5.5.2",
+		"astro-expressive-code": "^0.40.2",
 		"filter-obj": "^6.1.0",
 		"fluid-tailwind": "workspace:*",
 		"mini-svg-data-uri": "^1.4.4",
 		"remark-sectionize": "^2.1.0",
 		"svelte": "^5.19.6",
-		"tailwindcss": "^4.0.0",
-		"@tailwindcss/vite": "^4.0.0",
+		"tailwindcss": "^4.0.14",
+		"@tailwindcss/vite": "^4.0.14",
 		"unist-util-flatmap": "^1.0.0",
-		"vite": "^6.0.11"
+		"vite": "^6.2.2"
 	},
 	"devDependencies": {
 		"@astrojs/vercel": "^8.0.5",

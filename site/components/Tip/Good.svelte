@@ -24,7 +24,7 @@
 		{#if line}
 			<div
 				class="absolute left-[0.46875rem] top-full mt-1 h-[1.375rem] w-px rounded-full bg-cyan-500/30 dark:bg-sky-400/30"
-			/>
+			></div>
 		{/if}
 	</div>
 	<p class="m-0 flex-1 text-base font-semibold text-slate-900 dark:text-slate-200">

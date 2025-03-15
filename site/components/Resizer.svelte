@@ -36,6 +36,6 @@
 			class="h-8 w-1.5 rounded-full bg-slate-500/60 group-hover:bg-slate-500/80 {$resizing
 				? 'bg-slate-500/80'
 				: ''}"
-		/>
+		></div>
 	</button>
 </div>

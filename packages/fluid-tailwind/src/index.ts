@@ -1,12 +1,6 @@
 import plugin from 'tailwindcss/plugin'
-import { corePlugins } from 'tailwindcss-priv/src/corePlugins'
-import type {
-	KeyValuePair,
-	PluginAPI,
-	PluginCreator,
-	ResolvableTo,
-	ThemeConfig
-} from 'tailwindcss/types/config'
+import corePlugins from './corePlugins'
+import type { PluginAPI } from 'tailwindcss/plugin'
 import defaultTheme from 'tailwindcss/defaultTheme'
 import { includeKeys } from 'filter-obj'
 import * as log from './util/log'
@@ -61,7 +55,9 @@ function getFluidAPI(
 							// See note about default modifiers above
 							if (end === null && DEFAULT) end = DEFAULT
 							
-							return origFn('clamp(0, 0.5vh, 1)', { modifier: null }) // don't pass along the modifier
+							return {
+								[`@apply ${util}-[clamp(0,0.5vh,1)]`]: {}
+							}
 						}
 					},
 					{
@@ -89,7 +85,7 @@ function getFluidAPI(
 
 const IS_FLUID_PLUGIN = Symbol()
 const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
-	const { config, theme, corePlugins: corePluginEnabled, matchUtilities } = api
+	const { config, theme, matchUtilities } = api
 	const context = getContext(config, theme, options)
 	const { screens, containers, className } = context
 
@@ -156,9 +152,7 @@ const fluidPlugin = (options: PluginOptions = {}, api: PluginAPI) => {
 		// Filter out fontSize plugin
 		filter: (utils, options) => !utils.includes('text') || !options?.type?.includes('length')
 	})
-	Object.values(corePlugins).forEach((corePlugin) => {
-		corePlugin(fluidCoreAPI)
-	})
+	corePlugins(fluidCoreAPI)
 
 	// Add fluid versions of other plugins
 	// ---

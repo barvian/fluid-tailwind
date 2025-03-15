@@ -105,7 +105,7 @@
 				class="absolute -right-3.5 top-1/2 -mt-3.5 h-7 w-7 rounded-[100%] border-2 border-white/50 bg-black/50 transition"
 				class:opacity-50={!animating}
 				class:scale-[85%]={animating}
-			/>
+			></div>
 		{/if}
 		{#if didAnimate}
 			<button
@@ -127,7 +127,7 @@
 			>
 				<div
 					class="h-8 w-1.5 rounded-full bg-slate-500/60 backdrop-blur-sm group-hover:bg-slate-500/80"
-				/>
+				></div>
 			</button>
 		{/if}
 	</div>

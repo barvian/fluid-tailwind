@@ -20,7 +20,7 @@
 		</svg>
 		<div
 			class="absolute left-[0.46875rem] top-full mt-1 h-6 w-px rounded-full bg-rose-200 dark:bg-rose-200/25"
-		/>
+		></div>
 	</div>
 	<p class="m-0 flex-1 text-base font-semibold text-slate-900 dark:text-slate-200">
 		<slot />

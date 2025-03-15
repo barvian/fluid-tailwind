@@ -41,7 +41,7 @@ import poster from './_inspector.png'
       ### Add the plugin
     </>
     <Fragment slot="code">
-      ```css title="app.css" ins={2}
+      ```css title="globals.css" ins={2}
       @import "tailwindcss";
       @plugin "fluid-tailwind";
 
@@ -70,7 +70,7 @@ between their `start/end` values when the viewport is between the start and end 
 
 The default start/end breakpoints can be configured in your theme:
 
-```css title="app.css" ins={3-4}
+```css title="globals.css" ins={3-4}
 /* ... */
 @theme inline {
   --fluid-default-start-breakpoint: 20rem;
@@ -134,7 +134,7 @@ Just like the `fl` utility, both start and end containers are optional and will 
 
 The default containers can be configured in the same way as breakpoints.
 
-```css title="app.css" ins={3-4}
+```css title="globals.css" ins={3-4}
 /* ... */
 @theme inline {
   --fluid-default-start-container: 5rem;
